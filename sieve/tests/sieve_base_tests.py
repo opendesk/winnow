@@ -1,7 +1,7 @@
 import os
 import unittest
 from sieve.product_sieve import ProductSieve
-from jsonschema import ValidationError
+from sieve.product_exceptions import ProductExceptionFailedValidation
 
 
 class TestValidSieve(unittest.TestCase):
@@ -29,7 +29,7 @@ class TestValidSieve(unittest.TestCase):
                    }
         }
 
-        self.assertRaises(ValidationError, ProductSieve, product_description)
+        self.assertRaises(ProductExceptionFailedValidation, ProductSieve, product_description)
 
         # missing description
         product_description = {"name": "My Table",
@@ -40,7 +40,7 @@ class TestValidSieve(unittest.TestCase):
                    }
         }
 
-        self.assertRaises(ValidationError, ProductSieve, product_description)
+        self.assertRaises(ProductExceptionFailedValidation, ProductSieve, product_description)
 
         # missing description
         product_description = {
@@ -214,7 +214,7 @@ class TestSieveMerge(unittest.TestCase):
 
         constraints_sieve = ProductSieve(some_constraints)
         merged_sieve = self.base_sieve.merge(constraints_sieve)
-        self.assertTrue(isinstance(merged_sieve, ProductSieve))
+        #self.assertTrue(iskindof(merged_sieve, ProductSieve))
 
         ## correct keys
         self.assertTrue(merged_sieve.keys == frozenset(["color", "material", "size", "age"]))
