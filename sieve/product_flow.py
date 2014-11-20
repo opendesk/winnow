@@ -1,7 +1,10 @@
 import time
+import json
 
 from product_sieve import ProductSieve
-from product_exceptions import ProductExceptionFailedValidation, ProductExceptionLookupFailed
+from fileset_sieve import FilesetSieve
+from context_sieve import ContextSieve
+from product_exceptions import ProductExceptionFailedValidation, ProductExceptionLookupFailed, ProductExceptionNoAllowed
 
 """
 ## Steps
@@ -68,52 +71,102 @@ from product_exceptions import ProductExceptionFailedValidation, ProductExceptio
 
 
 """
-  use object hash for identity
 
+TODO
 
-  verson_no/verson_no/verson_no
+ hashing
 
+ complex values
 
+ value references
 
-  "standard@git_object_hash"
-
-  use git hash for this
-
-  /hash@rev/hash@rev
-
-  range/design
-
-
-  product/lean/desk/standard.json
-  config/lean/desk/
-  fileset/lean/desk/ply
-
-
-  materials/od/wood/cnc
-
+ option dependency and extension
 
 """
 
-def publish_product(db, product_dict, src_url):
-    """
-    Publishes a product document to to given db
-
-    - validate (the product documents)
-    - patch (to expand the child document with the parent graph)
-
-    Might raise ProductExceptionFailedValidation, ProductExceptionLookupFailed
-
-    :param db: The db to save in and to look for ancestors
-    :param product_dict: The Product
-    :param src_url: The reference src for this document
-    """
-
-    product = ProductSieve(product_dict, src_url)
-    ## this does a sanity check on expanding the product
-    expanded = product.with_expanded_ancestors(db)
 
 
-    db.set(product_dict, product.uri)
+"""
+1. product model published
+  - validate (the product documents)
+  - patch (to expand the child document with the parent graph)
+  -> inputs: product documents, upstream product graph
+  => outputs: product documents
+"""
+
+def publish_product(db, product_json):
+
+    product = ProductSieve.from_json(product_json)
+    patched = product.patch_upstream(db)
+    product.save(db)
+
+"""
+2. CAD files published
+  - validate (the fileset documents)
+  - allows (check the fileset docs are allowed by their products)
+  -> inputs: fileset documents, products
+  => outputs: fileset documents
+"""
+
+def publish_fileset(db, fileset_json, cad_files=None):
+
+    fileset = FilesetSieve.from_json(fileset_json)
+    frozen_product = fileset.freeze_product(db)
+
+    if not frozen_product.allows(fileset):
+        raise ProductExceptionNoAllowed
+
+    fileset.add_files(db, cad_files)
+    fileset.save(db)
+
+
+"""
+3. API is queried for configuration options
+  - merge (context filters are applied to the product model)
+  - extract (configuration option subset from merged document)
+  -> inputs: context filters, products
+  => outputs: configuration options[, merged document?]
+"""
+
+
+def publish_context(db, context_json):
+
+    context = ContextSieve.from_json(context_json)
+    context.save(db)
+
+
+def get_contextualised_product(db, product_uri, context_uris, extractions=None):
+
+    product_json = db.get(product_uri)
+
+    if product_json is None:
+        raise ProductExceptionLookupFailed("get_configuration_options: Couldn't find product %s" % product_uri)
+
+    product = ProductSieve.from_json(product_json)
+
+    for context_uri in context_uris:
+        context_json = db.get(context_uri)
+        if context_json is None:
+            raise ProductExceptionLookupFailed("get_configuration_options: Couldn't find context %s" % context_uri)
+        context = ContextSieve.from_json(context_json)
+        if not product.is_frozen:
+                product = product.patch_upstream(db)
+                product.save(db, overwrite=False)
+        product = product.merge(context)
+
+    if extractions is None:
+        return product
+    else:
+        return product.extract(extractions)
+
+
+
+
+
+
+
+
+
 
 
 

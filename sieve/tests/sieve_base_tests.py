@@ -1,7 +1,23 @@
 import os
 import unittest
-from sieve.product_sieve import ProductSieve
-from sieve.product_exceptions import ProductExceptionFailedValidation
+from sieve.sieve import Sieve
+from copy import deepcopy
+from sieve.product_exceptions import ProductExceptionFailedValidation, ProductExceptionNoAllowed
+
+
+BASE_PRODUCT =  {u"name": u"table",
+                    u"description": u"This is a very nice table",
+                    u"options":{
+                        u"configuration":{
+                            u"color": [u"red", u"green", u"blue"],
+                            u"size": [u"big", u"small"]
+                        },
+                        u"manufacturing":{
+                            u"tool": [u"cnc", u"laser"],
+                            u"material": [u"wood", u"metal", u"plastic"]
+                        }
+                    }
+                }
 
 
 class TestValidSieve(unittest.TestCase):
@@ -9,177 +25,83 @@ class TestValidSieve(unittest.TestCase):
 
     def test_valid_sieve(self):
 
-        product_description = {"name": "My Table",
-                   "uri": "123",
-                   "description": "This is a very nice table",
-                   "options":{
-                       "color": ["red", "green", "blue"],
-                       "size": ["big", "small"],
-                   }
-        }
+        Sieve(BASE_PRODUCT)
 
-        ProductSieve(product_description)
+        broken_option = deepcopy(BASE_PRODUCT)
+        broken_option[u"options"][u"configuration"] = u"text"
 
+        self.assertRaises(ProductExceptionFailedValidation, Sieve, broken_option)
 
-        # missing title
-        product_description = {"description": "This is a very nice table",
-                   "options":{
-                       "color": ["red", "green", "blue"],
-                       "size": ["big", "small"],
-                   }
-        }
+        broken_option = deepcopy(BASE_PRODUCT)
+        broken_option[u"options"] = u"text"
 
-        self.assertRaises(ProductExceptionFailedValidation, ProductSieve, product_description)
+        self.assertRaises(ProductExceptionFailedValidation, Sieve, broken_option)
 
-        # missing description
-        product_description = {"name": "My Table",
-                               "uri": "123",
-                   "options":{
-                       "color": ["red", "green", "blue"],
-                       "size": ["big", "small"],
-                   }
-        }
+        broken_option = deepcopy(BASE_PRODUCT)
+        broken_option[u"options"] = u"text"
 
-        self.assertRaises(ProductExceptionFailedValidation, ProductSieve, product_description)
+        self.assertRaises(ProductExceptionFailedValidation, Sieve, broken_option)
 
-        # missing description
-        product_description = {
-            "name": "My Table",
-            "uri": "123",
-            "description": "This is a very nice table",
-
-        }
-
-        ProductSieve(product_description)
-
-
-    def test_valid_sieve_with_choice(self):
-
-        product_description = {"name": "My Table",
-                    "uri": "123",
-                   "description": "This is a very nice table",
-                   "options":{
-                       "color": ["red", "green", "blue"],
-                       "size": ["big", "small"],
-                   }
-        }
-
-        ProductSieve(product_description)
-
-
-    def test_dependencies(self):
-
-        product_description =  {"name": "My Table",
-                                "uri": "123",
-                                "description": "This is a very nice table",
-                                "options":{
-                                    "color": ["red", "green", "blue"],
-                                    "size": ["big", "small"],
-                                    "wheels": ["none", "front", "back", "both"],
-                                },
-                                "dependencies": {
-                                    "wheels": {
-                                        "size": "big",
-                                        "colour": ["red", "green"]
-                                    }
-                                }
-                            }
-
-        ProductSieve(product_description)
 
 
 class TestSieveAllows(unittest.TestCase):
 
 
     def setUp(self):
-        product_description = {"name": "My Table",
-                    "uri": "123",
-                   "description": "This is a very nice table",
-                   "options":{
-                       "color": ["red", "green", "blue"],
-                       "size": ["big", "small"],
-                   }
-        }
-
-        self.base_sieve = ProductSieve(product_description)
+        self.base_sieve = Sieve(BASE_PRODUCT)
 
 
     def test_allows_subset(self):
 
-        configured_product = {"name": "My Table",
-                    "uri": "123",
-                   "description": "This is a very nice table",
-                   "options":{
-                       "color": "red",
-                       "size": "big",
-                   }
-        }
+        configured_option = deepcopy(BASE_PRODUCT)
+        configured_option[u"options"][u"configuration"][u"color"] = u"red"
+        configured_sieve = Sieve(configured_option)
 
-        configured_sieve = ProductSieve(configured_product)
+        self.assertTrue(self.base_sieve.allows(configured_sieve))
+
+        configured_option = deepcopy(BASE_PRODUCT)
+        configured_option[u"options"][u"configuration"][u"color"] = [u"red", u"green"]
+        configured_sieve = Sieve(configured_option)
+
+        self.assertTrue(self.base_sieve.allows(configured_sieve))
+
+        configured_option = deepcopy(BASE_PRODUCT)
+        configured_option[u"options"][u"configuration"][u"color"] = [u"red", u"green"]
+        configured_option[u"options"][u"manufacturing"][u"tool"] = [u"cnc"]
+        configured_sieve = Sieve(configured_option)
 
         self.assertTrue(self.base_sieve.allows(configured_sieve))
 
 
     def test_allows_subset_without_a_key(self):
 
-        configured_product = {"name": "My Table",
-                    "uri": "123",
-                   "description": "This is a very nice table",
-                   "options":{
-                       "color": "red",
-                   }
-        }
-
-        configured_sieve = ProductSieve(configured_product)
-
+        configured_option = deepcopy(BASE_PRODUCT)
+        del configured_option[u"options"][u"configuration"][u"color"]
+        configured_sieve = Sieve(configured_option)
         self.assertTrue(self.base_sieve.allows(configured_sieve))
 
 
-    def test_allows_subset_without_an_extra_key(self):
+    def test_allows_subset_without_an_optionset(self):
 
-        configured_product = {"name": "My Table",
-                    "uri": "123",
-                   "description": "This is a very nice table",
-                   "options":{
-                       "color": "red",
-                       "age": "old",
-                   }
-        }
-
-        configured_sieve = ProductSieve(configured_product)
-
+        configured_option = deepcopy(BASE_PRODUCT)
+        del configured_option[u"options"][u"configuration"]
+        configured_sieve = Sieve(configured_option)
         self.assertTrue(self.base_sieve.allows(configured_sieve))
 
 
-    def test_allows_partial_config(self):
+    def test_allows_subset_with_an_extra_key(self):
 
-        configured_product = {"name": "My Table",
-                    "uri": "123",
-                   "description": "This is a very nice table",
-                   "options":{
-                       "color": ["red", "green", "blue"],
-                       "age": "old",
-                   }
-        }
-
-        configured_sieve = ProductSieve(configured_product)
-
+        configured_option = deepcopy(BASE_PRODUCT)
+        configured_option[u"options"][u"configuration"][u"wheels"] = [u"big", u"small"]
+        configured_sieve = Sieve(configured_option)
         self.assertTrue(self.base_sieve.allows(configured_sieve))
 
 
     def test_allows_fails(self):
 
-        configured_product = {"name": "My Table",
-                    "uri": "123",
-                   "description": "This is a very nice table",
-                   "options":{
-                       "color": ["red", "green"],
-                       "size": "medium",
-                   }
-        }
-
-        configured_sieve = ProductSieve(configured_product)
-
+        configured_option = deepcopy(BASE_PRODUCT)
+        configured_option[u"options"][u"configuration"][u"color"] = u"purple"
+        configured_sieve = Sieve(configured_option)
         self.assertFalse(self.base_sieve.allows(configured_sieve))
 
 
@@ -187,132 +109,240 @@ class TestSieveMerge(unittest.TestCase):
 
 
     def setUp(self):
-        product_description = {"name": "My Table",
-                   "uri": "123",
-                   "description": "This is a very nice table",
-                   "options":{
-                       "color": ["red", "green", "blue"],
-                       "size": ["big", "small"],
-                       "material": ["metal", "wood", "paper"],
-                   }
-        }
-
-        self.base_sieve = ProductSieve(product_description)
+        self.base_sieve = Sieve(BASE_PRODUCT)
 
 
     def test_does_a_merge(self):
 
-        some_constraints = {"name": "Some Constraints",
-                    "uri": "567",
-                   "description": "These are some things which are possible",
-                   "options":{
-                       "color": ["green", "blue", "orange"],
-                       "size": ["big"],
-                       "age": ["old", "young"]
-                   }
-        }
+        other_dict =  {u"name": u"something",
+                            u"description": u"these are other options",
+                            u"options":{
+                                u"configuration":{
+                                    u"color": [u"red", u"blue"],
+                                    u"size": [u"big", u"medium", u"small"]
+                                },
+                                u"manufacturing":{
+                                    u"tool": [u"cnc", u"laser", u"plaster"],
+                                    u"days": [u"tuesday", u"thursday"]
+                                },
+                                u"refreshments":{
+                                    u"drinks": [u"beer", u"coffee"],
+                                    u"snacks": [u"crisps", u"cheese", u"apple"]
+                                }
+                            }
+                        }
 
-        constraints_sieve = ProductSieve(some_constraints)
-        merged_sieve = self.base_sieve.merge(constraints_sieve)
-        #self.assertTrue(iskindof(merged_sieve, ProductSieve))
+        expected =  {u"name": u"table",
+                    u"description": u"This is a very nice table",
+                    u"type": u"base",
+                    u"description": u"This is a very nice table",
+                    u"options":{
+                        u"configuration":{
+                            u"color": [u"blue", u"red"],
+                            u"size": [u"big", u"small"]
+                        },
+                        u"manufacturing":{
+                            u"tool": [u"cnc", u"laser"],
+                            u"material": [u"wood", u"metal", u"plastic"],
+                            u"days": [u"tuesday", u"thursday"]
+                        },
+                        u"refreshments":{
+                            u"drinks": [u"beer", u"coffee"],
+                            u"snacks": [u"crisps", u"cheese", u"apple"]
+                        }
+                    }
 
-        ## correct keys
-        self.assertTrue(merged_sieve.keys == frozenset(["color", "material", "size", "age"]))
+                }
 
-        ## name
-        self.assertEqual(merged_sieve.name, "%s + %s" % (self.base_sieve.name, constraints_sieve.name))
+        other_sieve = Sieve(other_dict)
+        merged = self.base_sieve.merge(other_sieve)
+        self.maxDiff = None
+        self.assertEqual(merged.json_dict, expected)
 
-        ## values
-        self.assertEqual(merged_sieve.options["color"], frozenset(["green", "blue"]))
-        self.assertEqual(merged_sieve.options["size"], frozenset(["big"]))
-        self.assertEqual(merged_sieve.options["material"], frozenset(["metal", "wood", "paper"]))
-        self.assertEqual(merged_sieve.options["age"], frozenset(["old", "young"]))
+
+
+
+class TestSieveExtract(unittest.TestCase):
+
+    def setUp(self):
+        self.base_sieve = Sieve(BASE_PRODUCT)
 
 
     def test_can_extract(self):
 
-        extraction = self.base_sieve.extract(["color", "size"])
-        self.assertTrue(extraction.keys == frozenset(["color", "size"]))
-        self.assertEqual(extraction.options["color"], frozenset(["red", "green", "blue"]))
-        self.assertEqual(extraction.options["size"], frozenset(["big", "small"]))
+        expected =  {u"name": u"table",
+                    u"description": u"This is a very nice table",
+                    u"type": u"base",
+                    u"options":{
+                        u"configuration":{
+                            u"color": [u"red", u"green", u"blue"],
+                            u"size": [u"big", u"small"]
+                        }
+                    }
+                }
+
+        extracted = self.base_sieve.extract([u"configuration"])
+        self.maxDiff = None
+        self.assertEqual(extracted.json_dict, expected)
+
+
+
+class TestSievePatch(unittest.TestCase):
+
+    def setUp(self):
+        self.base_sieve = Sieve(BASE_PRODUCT)
 
 
     def test_does_a_patch(self):
 
-        a_child = {"name": "A Child",
-                    "uri": "567",
-                   "description": "New things I want",
-                   "options":{
-                       "color": ["green", "blue", "orange"],
-                       "size": "big",
-                       "age": ["old", "young"]
-                   }
-        }
+        first_dict =  {u"name": u"something",
+                            u"description": u"these are other options",
+                            u"options":{
+                                u"configuration":{
+                                    u"size": [u"big", u"medium", u"small"]
+                                },
+                                u"manufacturing":{
+                                    u"tool": [u"cnc", u"laser", u"plaster"],
+                                    u"days": [u"tuesday", u"thursday"]
+                                },
+                                u"refreshments":{
+                                    u"drinks": [u"beer", u"coffee"],
+                                    u"snacks": [u"crisps", u"cheese", u"apple"]
+                                }
+                            }
+                        }
 
-        child_sieve = ProductSieve(a_child)
+        expected =  {u"name": u"something",
+                    u"description": u"these are other options",
+                    u"type": u"base",
+                    u"options":{
+                        u"configuration":{
+                            u"color": [u"red", u"green", u"blue"],
+                            u"size": [u"big", u"medium", u"small"]
+                        },
+                        u"manufacturing":{
+                            u"tool": [u"cnc", u"laser", u"plaster"],
+                            "material": [u"wood", u"metal", u"plastic"],
+                            u"days": [u"tuesday", u"thursday"]
+                        },
+                        u"refreshments":{
+                            u"drinks": [u"beer", u"coffee"],
+                            u"snacks": [u"crisps", u"cheese", u"apple"]
+                        }
+                    }
+                }
 
-        patched_sieve = self.base_sieve.patch(child_sieve)
-
-        ## correct keys
-        self.assertTrue(patched_sieve.keys == frozenset(["color", "material", "size", "age"]))
-
-        ## name
-        self.assertEqual(patched_sieve.name, "%s ++ %s" % (self.base_sieve.name, child_sieve.name))
-
-        ## values
-        self.assertEqual(patched_sieve.options["color"], frozenset(["green", "blue", "orange"]))
-        self.assertEqual(patched_sieve.options["size"], frozenset(["big"]))
-        self.assertEqual(patched_sieve.options["material"], frozenset(["metal", "wood", "paper"]))
-        self.assertEqual(patched_sieve.options["age"], frozenset(["old", "young"]))
+        first_sieve = Sieve(first_dict)
+        patched = first_sieve.patch(self.base_sieve)
+        self.maxDiff = None
+        self.assertEqual(patched.json_dict, expected)
 
 
     def test_match(self):
 
-        configured_product_1 = {"name": "My Table",
-                    "uri": "1",
-                   "description": "This is a very nice table",
-                   "options":{
-                       "color": "red",
-                       "size": "big",
+        configured_product_1 = {u"name": u"cat",
+                   u"description": u"This is a very nice table",
+                   u"options":{
+                        u"configuration":{
+                            u"color": u"red",
+                            u"size": u"big"
+                        },
                    }
         }
 
 
-        configured_product_2 = {"name": "My Table",
-                    "uri": "2",
-                   "description": "This is a very nice table",
-                   "options":{
-                       "color": "red",
+        configured_product_2 = {u"name": u"dog",
+                   u"description": u"This is a very nice table",
+                   u"options":{
+                        u"configuration":{
+                            u"color": u"red",
+                        },
                    }
         }
 
 
-        configured_product_3 = {"name": "My Table",
-                    "uri": "3",
-                   "description": "This is a very nice table",
-                   "options":{
-                       "color": "red",
-                       "age": "old",
+        configured_product_3 = {u"name": u"fish",
+                   u"description": u"This is a very nice table",
+                   u"options":{
+                        u"configuration":{
+                            u"color": u"red",
+                            u"size": u"old"
+                        },
                    }
         }
 
-        configured_product_4 = {"name": "My Table",
-                    "uri": "123",
-                   "description": "This is a very nice table",
-                   "options":{
-                       "color": ["red", "green"],
-                       "size": "medium",
+        configured_product_4 = {u"name": u"goat",
+                   u"description": u"This is a very nice table",
+                   u"options":{
+                        u"configuration":{
+                            u"color": [u"red", u"green"],
+                            u"size": u"small"
+                        },
                    }
         }
 
 
-        found = self.base_sieve.match([ProductSieve(configured_product_1),
-                                       ProductSieve(configured_product_2),
-                                       ProductSieve(configured_product_3),
-                                       ProductSieve(configured_product_4)])
+        found = self.base_sieve.match([Sieve(configured_product_1),
+                                       Sieve(configured_product_2),
+                                       Sieve(configured_product_3),
+                                       Sieve(configured_product_4)])
 
 
-        self.assertEqual(len(found), 3)
+        self.assertEqual(set([f.name for f in found]), set([u'cat', u'dog', u'goat']))
+
+
+class TestSieveHistory(unittest.TestCase):
+
+
+    def setUp(self):
+        self.base_sieve = Sieve(BASE_PRODUCT)
+
+
+    def test_does_a_patch(self):
+
+        first_dict =  {u"name": u"something",
+                            u"description": u"these are other options",
+                            u"options":{
+                                u"configuration":{
+                                    u"size": [u"big", u"medium", u"small"]
+                                },
+                                u"manufacturing":{
+                                    u"tool": [u"cnc", u"laser", u"plaster"],
+                                    u"days": [u"tuesday", u"thursday"]
+                                },
+                                u"refreshments":{
+                                    u"drinks": [u"beer", u"coffee"],
+                                    u"snacks": [u"crisps", u"cheese", u"apple"]
+                                }
+                            }
+                        }
+
+        expected =  {u"name": u"something",
+                    u"description": u"these are other options",
+                    u"type": u"base",
+                    u"options":{
+                        u"configuration":{
+                            u"color": [u"red", u"green", u"blue"],
+                            u"size": [u"big", u"medium", u"small"]
+                        },
+                        u"manufacturing":{
+                            u"tool": [u"cnc", u"laser", u"plaster"],
+                            "material": [u"wood", u"metal", u"plastic"],
+                            u"days": [u"tuesday", u"thursday"]
+                        },
+                        u"refreshments":{
+                            u"drinks": [u"beer", u"coffee"],
+                            u"snacks": [u"crisps", u"cheese", u"apple"]
+                        }
+                    }
+                }
+
+        first_sieve = Sieve(first_dict)
+        patched = first_sieve.patch(self.base_sieve)
+        self.maxDiff = None
+        self.assertEqual(patched.json_dict, expected)
+
+
 
 """
 References
