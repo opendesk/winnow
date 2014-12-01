@@ -27,12 +27,12 @@ from product_exceptions import ProductExceptionFailedValidation, ProductExceptio
   -> inputs: context filters, products
   => outputs: configuration options[, merged document?]
 
-4. customer makes configuration choices
-  - validate (the choice document)
-  - merge (context filters are applied to the product model)
-  - allows (check the choice document against the merged document)
-  -> inputs: choice document, context filters, products
-  => outputs: choice document, quantified configuration
+
+
+
+
+
+
 
 5. general file set lookup
   - for each quantified configuration:
@@ -130,9 +130,9 @@ def publish_fileset(db, fileset_json, cad_files=None):
 
 
 def publish_context(db, context_json):
-
     context = ContextSieve.from_json(context_json)
     context.save(db)
+
 
 
 def get_contextualised_product(db, product_uri, context_uris, extractions=None):
@@ -144,20 +144,71 @@ def get_contextualised_product(db, product_uri, context_uris, extractions=None):
 
     product = ProductSieve.from_json(product_json)
 
-    for context_uri in context_uris:
-        context_json = db.get(context_uri)
-        if context_json is None:
-            raise ProductExceptionLookupFailed("get_configuration_options: Couldn't find context %s" % context_uri)
-        context = ContextSieve.from_json(context_json)
-        if not product.is_frozen:
-                product = product.patch_upstream(db)
-                product.save(db, overwrite=False)
-        product = product.merge(context)
+    return product.merge_and_extract(db, product, context_uris, extractions)
 
-    if extractions is None:
-        return product
-    else:
-        return product.extract(extractions)
+
+
+
+
+
+
+"""
+4. customer makes configuration choices
+  - validate (the choice document)
+  - merge (context filters are applied to the product model)
+  - allows (check the choice document against the merged document)
+  -> inputs: choice document, context filters, products
+  => outputs: choice document, quantified configuration
+
+"""
+
+
+def get_quantified_configuration(db, choice_json, context_uris, quantity):
+
+    choice = ProductSieve.from_json(choice_json)
+    product = ProductSieve.from_json(db.get(choice.uri))
+
+    if not product.allows(choice):
+        raise ProductExceptionFailedValidation
+
+    quantified_configuration = choice.merge_and_extract(db, choice, context_uris)
+    quantified_configuration.json_dict[u"quantity"] = quantity
+
+    return quantified_configuration
+
+
+
+"""
+5. general file set lookup
+  - for each quantified configuration:
+    - match (filesets that match the quantified configuration)
+  -> inputs: quantified configuration, fileset model
+  => outputs: filesets[, relevance info about them?]
+"""
+
+
+
+def find_file_sets(db, quantified_configuration, possible_filesets):
+
+    return quantified_configuration.reverse_match(possible_filesets)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

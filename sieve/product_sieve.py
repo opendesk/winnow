@@ -3,6 +3,8 @@ import json
 import time
 from product_exceptions import ProductExceptionFailedValidation, ProductExceptionLookupFailed
 from sieve import PublishedSieve
+from context_sieve import ContextSieve
+
 
 import requests
 import hashlib
@@ -56,6 +58,9 @@ class ProductSieve(PublishedSieve):
             "description": {
                 "type": "string"
             },
+            "quantity": {
+                "type": "number"
+            },
             "uri": {
                 "type": "string"
             },
@@ -92,5 +97,22 @@ class ProductSieve(PublishedSieve):
         version = self.version
         return u"%s@xxxxxxxx::%s::%s::%s" % (self.uri, version[0], version[1], version[2])
 
+
+    def merge_and_extract(db, product, context_uris, extractions=None):
+
+        for context_uri in context_uris:
+            context_json = db.get(context_uri)
+            if context_json is None:
+                raise ProductExceptionLookupFailed("get_configuration_options: Couldn't find context %s" % context_uri)
+            context = ContextSieve.from_json(context_json)
+            if not product.is_frozen:
+                    product = product.patch_upstream(db)
+                    product.save(db, overwrite=False)
+            product = product.merge(context)
+
+        if extractions is None:
+            return product
+        else:
+            return product.extract(extractions)
 
 

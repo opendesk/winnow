@@ -203,6 +203,9 @@ class Sieve(object):
     def match(self, others):
         return [other for other in others if self.allows(other)]
 
+    def reverse_match(self, others):
+        return [other for other in others if other.allows(self)]
+
 
     def get_option_set_names(self):
         return set(self.json_dict["options"].keys())

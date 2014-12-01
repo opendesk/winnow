@@ -174,9 +174,7 @@ class TestPublishingFilesets(unittest.TestCase):
         self.assertEqual(fetched_text, u"some text in files one")
 
         fetched_doc = self.db.get(u"fileset/paul/office/table/ply/ply")
-
         self.maxDiff = None
-
         self.assertEqual(json.loads(fetched_doc), expected)
 
 
@@ -279,6 +277,7 @@ class TestContexts(unittest.TestCase):
         config = product_flow.get_contextualised_product(self.db, u"product/paul/office/table", [u"context/uk_production_context"], extractions=[u"configuration"])
         self.maxDiff = None
         self.assertEqual(config.json_dict, expected)
+
 #
 #
 #     def test_get_contextualised_many(self):
