@@ -4,6 +4,7 @@ import time
 from product_exceptions import ProductExceptionFailedValidation, ProductExceptionLookupFailed
 from sieve import PublishedSieve
 from context_sieve import ContextSieve
+from fileset_sieve import FilesetSieve
 
 
 import requests
@@ -13,20 +14,6 @@ import hashlib
 
 Product
 
-name: Is a meaningful name which identifies an individual product
-design: Is a familly of products
-
-design and name are used to create a unique uri in the OpenDesk namespace
-
-upstream is the url of a product from which this product inherits.
-This may be a uri in the OpenDesk namespace like this: design_name/product_name
-Or it may be an http or git reference
-
-Such a reference reffers to the head version of this model unless the reference is qualified with a git object ref
-
-design_name/product_name@1234567890
-
-
 """
 
 
@@ -34,7 +21,7 @@ design_name/product_name@1234567890
 
 class ProductSieve(PublishedSieve):
 
-    SIEVE_TYPE = "product"
+    SIEVE_TYPE = u"product"
 
     SIEVE_SCHEMA = {
         "$schema": "http://json-schema.org/draft-04/schema#",
@@ -64,7 +51,10 @@ class ProductSieve(PublishedSieve):
             "uri": {
                 "type": "string"
             },
-            "frozen_uri": {
+            "snapshot": {
+                "type": "boolean"
+            },
+            "key": {
                 "type": "string"
             },
             "version": {
@@ -79,35 +69,43 @@ class ProductSieve(PublishedSieve):
             "upstream": {
                 "type": "string"
             },
+            "history_hash": {
+                "type": "string"
+            },
             "history": {
                 "type": "array"
             },
             "options": {},
         },
         "additionalProperties": False,
-        "required": ["uri", "name", "description", "type", "range", "design", "version"],
+        "required": ["name", "description", "range", "design", "version"],
     }
 
+    @classmethod
+    def publish(cls, db, product_json):
+        product = cls.from_doc(product_json)
+        snapshot = product.take_snapshot(db)
+        product.save(db, index=product.get_canonical_uri())
+        return product
 
-    def get_uri(self):
+
+    def get_canonical_uri(self):
         return "%s/%s/%s/%s" % (self.SIEVE_TYPE, self.range, self.design, self.name)
 
 
-    def get_version_uri(self):
-        version = self.version
-        return u"%s@xxxxxxxx::%s::%s::%s" % (self.uri, version[0], version[1], version[2])
+    def merge_and_extract(self, db, context_uris, extractions=None):
 
+        product = self
 
-    def merge_and_extract(db, product, context_uris, extractions=None):
+        if not product.is_snapshot():
+            product = product.take_snapshot(db)
+            product.save(db)
 
         for context_uri in context_uris:
             context_json = db.get(context_uri)
             if context_json is None:
                 raise ProductExceptionLookupFailed("get_configuration_options: Couldn't find context %s" % context_uri)
             context = ContextSieve.from_json(context_json)
-            if not product.is_frozen:
-                    product = product.patch_upstream(db)
-                    product.save(db, overwrite=False)
             product = product.merge(context)
 
         if extractions is None:
@@ -116,3 +114,11 @@ class ProductSieve(PublishedSieve):
             return product.extract(extractions)
 
 
+    def matching_filesets(self, db, context_uris):
+        contextualised = self.merge_and_extract(db, context_uris)
+        possible_filesets = self.all_canonical_filesets(db)
+        return contextualised.match_intersects(possible_filesets)
+
+
+    def all_canonical_filesets(self, db):
+        return [FilesetSieve.from_json(j) for j in db.query({u"type": u"fileset", u"product": self.get_canonical_uri()})]

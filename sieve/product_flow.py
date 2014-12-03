@@ -93,12 +93,10 @@ TODO
   -> inputs: product documents, upstream product graph
   => outputs: product documents
 """
-
 def publish_product(db, product_json):
 
-    product = ProductSieve.from_json(product_json)
-    patched = product.patch_upstream(db)
-    product.save(db)
+    return ProductSieve.publish(db, product_json)
+
 
 """
 2. CAD files published
@@ -107,17 +105,9 @@ def publish_product(db, product_json):
   -> inputs: fileset documents, products
   => outputs: fileset documents
 """
+def publish_fileset(db, fileset_json):
 
-def publish_fileset(db, fileset_json, cad_files=None):
-
-    fileset = FilesetSieve.from_json(fileset_json)
-    frozen_product = fileset.freeze_product(db)
-
-    if not frozen_product.allows(fileset):
-        raise ProductExceptionNoAllowed
-
-    fileset.add_files(db, cad_files)
-    fileset.save(db)
+    return FilesetSieve.publish(db, fileset_json)
 
 
 """
@@ -127,28 +117,26 @@ def publish_fileset(db, fileset_json, cad_files=None):
   -> inputs: context filters, products
   => outputs: configuration options[, merged document?]
 """
-
-
 def publish_context(db, context_json):
-    context = ContextSieve.from_json(context_json)
-    context.save(db)
 
+    return ContextSieve.publish(db, context_json)
 
 
 def get_contextualised_product(db, product_uri, context_uris, extractions=None):
 
     product_json = db.get(product_uri)
-
     if product_json is None:
         raise ProductExceptionLookupFailed("get_configuration_options: Couldn't find product %s" % product_uri)
 
     product = ProductSieve.from_json(product_json)
-
-    return product.merge_and_extract(db, product, context_uris, extractions)
-
+    return product.merge_and_extract(db, context_uris, extractions=extractions)
 
 
+def get_configuration_json(db, product_uri, context_uris):
 
+    contextualised_product = get_contextualised_product(db, product_uri, context_uris, extractions=[u"configuration"])
+
+    return json.dumps(contextualised_product.doc, indent=2, sort_keys=True)
 
 
 
@@ -165,17 +153,18 @@ def get_contextualised_product(db, product_uri, context_uris, extractions=None):
 
 def get_quantified_configuration(db, choice_json, context_uris, quantity):
 
-    choice = ProductSieve.from_json(choice_json)
-    product = ProductSieve.from_json(db.get(choice.uri))
+    choices = ProductSieve.from_doc(choice_json)
+    canonical_product = choices.canonical(db)
+    snapshot = canonical_product.take_snapshot(db)
 
-    if not product.allows(choice):
+    if not snapshot.allows(choices):
         raise ProductExceptionFailedValidation
 
-    quantified_configuration = choice.merge_and_extract(db, choice, context_uris)
-    quantified_configuration.json_dict[u"quantity"] = quantity
-
+    configured_product = snapshot.merge(choices)
+    configured_product.doc[u"quantity"] = quantity
+    quantified_configuration = configured_product.merge_and_extract(db, context_uris)
+    quantified_configuration.save(db)
     return quantified_configuration
-
 
 
 """
@@ -187,10 +176,14 @@ def get_quantified_configuration(db, choice_json, context_uris, quantity):
 """
 
 
+def find_file_sets(db, quantified_configuration_uri, context_uris):
 
-def find_file_sets(db, quantified_configuration, possible_filesets):
+    quantified_configuration_json = db.get(quantified_configuration_uri)
+    if quantified_configuration_json is None:
+        raise ProductExceptionLookupFailed("find_file_sets: Couldn't find quantified_configuration %s" % quantified_configuration_uri)
 
-    return quantified_configuration.reverse_match(possible_filesets)
+    quantified_configuration = ProductSieve.from_json(quantified_configuration_json)
+    return quantified_configuration.matching_filesets(db, context_uris)
 
 
 

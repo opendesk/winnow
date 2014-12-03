@@ -23,14 +23,15 @@ class ContextSieve(PublishedSieve):
             },
             "options": {},
         },
-        "required": ["type", "name", "description"],
+        "required": ["name", "description"],
 
     }
 
+    @classmethod
+    def publish(self, db, context_json):
+        context = ContextSieve.from_doc(context_json)
+        context.save(db, index=context.get_canonical_uri())
 
-    def get_uri(self):
+
+    def get_canonical_uri(self):
         return "%s/%s" % (self.SIEVE_TYPE, self.name)
-
-
-    uri = property(get_uri)
-

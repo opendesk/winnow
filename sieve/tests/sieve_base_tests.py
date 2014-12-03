@@ -1,4 +1,3 @@
-import os
 import unittest
 from sieve.sieve import Sieve
 from copy import deepcopy
@@ -134,8 +133,6 @@ class TestSieveMerge(unittest.TestCase):
 
         expected =  {u"name": u"table",
                     u"description": u"This is a very nice table",
-                    u"type": u"base",
-                    u"description": u"This is a very nice table",
                     u"options":{
                         u"configuration":{
                             u"color": [u"blue", u"red"],
@@ -157,7 +154,7 @@ class TestSieveMerge(unittest.TestCase):
         other_sieve = Sieve(other_dict)
         merged = self.base_sieve.merge(other_sieve)
         self.maxDiff = None
-        self.assertEqual(merged.json_dict, expected)
+        self.assertEqual(merged.doc, expected)
 
 
 
@@ -172,7 +169,6 @@ class TestSieveExtract(unittest.TestCase):
 
         expected =  {u"name": u"table",
                     u"description": u"This is a very nice table",
-                    u"type": u"base",
                     u"options":{
                         u"configuration":{
                             u"color": [u"red", u"green", u"blue"],
@@ -183,7 +179,7 @@ class TestSieveExtract(unittest.TestCase):
 
         extracted = self.base_sieve.extract([u"configuration"])
         self.maxDiff = None
-        self.assertEqual(extracted.json_dict, expected)
+        self.assertEqual(extracted.get_json(), expected)
 
 
 
@@ -214,7 +210,6 @@ class TestSievePatch(unittest.TestCase):
 
         expected =  {u"name": u"something",
                     u"description": u"these are other options",
-                    u"type": u"base",
                     u"options":{
                         u"configuration":{
                             u"color": [u"red", u"green", u"blue"],
@@ -235,7 +230,7 @@ class TestSievePatch(unittest.TestCase):
         first_sieve = Sieve(first_dict)
         patched = first_sieve.patch(self.base_sieve)
         self.maxDiff = None
-        self.assertEqual(patched.json_dict, expected)
+        self.assertEqual(patched.get_json(), expected)
 
 
     def test_match(self):
@@ -319,7 +314,6 @@ class TestSieveHistory(unittest.TestCase):
 
         expected =  {u"name": u"something",
                     u"description": u"these are other options",
-                    u"type": u"base",
                     u"options":{
                         u"configuration":{
                             u"color": [u"red", u"green", u"blue"],
@@ -340,7 +334,7 @@ class TestSieveHistory(unittest.TestCase):
         first_sieve = Sieve(first_dict)
         patched = first_sieve.patch(self.base_sieve)
         self.maxDiff = None
-        self.assertEqual(patched.json_dict, expected)
+        self.assertEqual(patched.doc, expected)
 
 
 

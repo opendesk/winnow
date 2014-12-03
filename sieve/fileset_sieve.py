@@ -1,20 +1,7 @@
 import os
 import json
 from sieve import PublishedSieve
-from product_sieve import ProductSieve
 from product_exceptions import ProductExceptionFailedValidation, ProductExceptionLookupFailed, ProductExceptionNoAllowed
-
-
-
-"""
-
-Fileset
-
-files []
-
-
-"""
-
 
 
 
@@ -38,11 +25,11 @@ class FilesetSieve(PublishedSieve):
             "product": {
                 "type": "string"
             },
-            "product_frozen": {
+            "history_hash": {
                 "type": "string"
             },
-            "product_ancestors": {
-                "type": "array"
+            "product_snapshot": {
+                "type": "string"
             },
             "files": {
                 "type": "array"
@@ -56,48 +43,44 @@ class FilesetSieve(PublishedSieve):
             "history": {
                 "type": "array"
             },
-            "frozen_uri": {
-                "type": "string"
+            "quantity": {
+                "type": "number"
             },
             "options": {},
         },
         "additionalProperties": False,
-        "required": ["type", "uri", "name", "product", "description"],
+        "required": ["name", "product", "description"],
     }
 
+    @classmethod
+    def publish(self, db, fileset_json):
+        from product_sieve import ProductSieve
 
-    def freeze_product(self, db):
+        #ensure product ref is a snapshot
+        fileset_json_dict = json.loads(fileset_json)
+        product_json = db.get(fileset_json_dict[u"product"])
+        if product_json is None:
+            raise ProductExceptionLookupFailed("Couldn't find product %s in publish_fileset referred to by %s" % (self.product, self.doc))
 
-        product_dict = db.get(self.product)
+        product = ProductSieve.from_json(product_json)
+        if not product.is_snapshot:
+            product = product.take_snapshot(db)
+            product.save(db)
 
-        if product_dict is None:
-            raise ProductExceptionLookupFailed("Couldn't find product %s in publish_fileset referred to by %s" % (self.product, self.json_dict))
+        fileset_json_dict[u"product"] = product.uri
+        fileset = FilesetSieve.from_doc(json.dumps(fileset_json_dict))
+        fileset.product = product.get_canonical_uri()
 
-        product = ProductSieve(json.loads(product_dict))
-        if not product.is_frozen:
-            product = product.patch_upstream(db)
-            product.save(db, overwrite=False)
+        if not product.allows(fileset):
+            raise ProductExceptionNoAllowed
 
-        self.json_dict[u"product_frozen"] = product.frozen_uri
-        self.json_dict[u"product_history"] = product.history
+        fileset.save(db, index=fileset.get_canonical_uri())
 
-        return product
-
-
-    def add_files(self, db, cad_files):
-
-        files = []
-        self.json_dict[u"files"] = files
-
-        if cad_files is not None:
-            for k, v in cad_files.iteritems():
-                uri = self.uri_for_file_named(k)
-                self.files.append(uri)
-                db.set(uri, v)
 
 
     def uri_for_file_named(self, filename):
-        base, ext = os.path.splitext(self.product)
+        product = self.product.split("@")[0]
+        base, ext = os.path.splitext(product)
         parts = base.split("/")[1:4]
         path = "/".join(parts)
 
@@ -105,9 +88,12 @@ class FilesetSieve(PublishedSieve):
         return "%s/%s" % (base_uri, filename)
 
 
-    def get_uri(self):
+    def get_canonical_uri(self):
         return self.uri_for_file_named(self.name)
 
 
-    uri = property(get_uri)
+    def get_json(self):
 
+        as_json = super(FilesetSieve, self).get_json()
+        as_json[u"product"] = self.product;
+        return as_json
