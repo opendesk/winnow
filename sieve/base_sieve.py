@@ -3,22 +3,54 @@ import json
 import time
 import hashlib
 import requests
+
 import uuid
+import decimal
 from product_exceptions import ProductExceptionFailedValidation, ProductExceptionEmptyOptionValues, ProductExceptionLookupFailed
+from options_set import OptionsSet
 
-import sqlalchemy
-from sqlalchemy.ext.declarative import declarative_base
-
-Base = declarative_base()
 
 from copy import deepcopy
 
 
 def get_doc_hash(data):
+    """
+    This hash function replicates a git has for a blog
+    it is used to hash documents
+    """
     s = hashlib.sha1()
     s.update("blob %u\0" % len(data))
     s.update(data)
     return unicode(s.hexdigest())
+
+
+"""
+ Json encoding and decoding conventions
+"""
+
+class DecimalEncoder(json.JSONEncoder):
+    """
+    Patching the builtin jason encode to do decimals the way we want
+    ie ints as nt ad floats as floats
+    internally all numbers are stored as Decimals
+    """
+    def default(self, o):
+        if isinstance(o, decimal.Decimal):
+            if o.to_integral_value() == o:
+                return int(o)
+            else:
+                return float(o)
+        return super(DecimalEncoder, self).default(o)
+
+
+def json_loads(as_json):
+    return json.loads(as_json, parse_float=decimal.Decimal, parse_int=decimal.Decimal)
+
+
+def json_dumps(an_obj):
+    return json.dumps(an_obj, indent=4, sort_keys=True, cls=DecimalEncoder)
+
+
 
 class Sieve(object):
 
@@ -37,12 +69,7 @@ class Sieve(object):
             "options": {
                 "type": "object",
                 "patternProperties": {
-                    "[a-z]": {"type": "object",
-                        "patternProperties": {
-                        "[a-z]": {"oneOf": [{"type": "array"}, {"type": "string"}, {"type": "object"}, {"type": "number"}]},
-                        },
-                        "additionalProperties": False
-                    },
+                    "[a-z]": {"oneOf": [{"type": "array"}, {"type": "string"}, {"type": "object"}, {"type": "number"}]},
                 },
                 "additionalProperties": False
             },
@@ -51,12 +78,11 @@ class Sieve(object):
     }
 
 
-
-
     def __init__(self, doc):
 
 
         self.doc = deepcopy(doc)
+
 
         # try:
         #     if self.doc.get(u"type") is None:
@@ -71,10 +97,11 @@ class Sieve(object):
         except AttributeError, e:
             raise ProductExceptionFailedValidation(e)
 
-        for option_set_name, option_set in self.doc[u"options"].iteritems():
-            for key, options in option_set.iteritems():
-                if isinstance(options, list) and len(options) == 0:
-                    raise ProductExceptionEmptyOptionValues("The key %s has no possible values" % key)
+        for key, options in self.doc[u"options"].iteritems():
+            if isinstance(options, list) and len(options) == 0:
+                raise ProductExceptionEmptyOptionValues("The key %s has no possible values" % key)
+
+        self.options = OptionsSet(self.doc[u"options"])
 
     def get_timestamp(self):
         return unicode(time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime()))
@@ -89,7 +116,7 @@ class Sieve(object):
 
     @classmethod
     def from_json(cls, as_json):
-        return cls(json.loads(as_json))
+        return cls(json_loads(as_json))
 
 
     @classmethod
@@ -103,156 +130,41 @@ class Sieve(object):
 
 
     def intersects(self, other):
-        """
-        An intersection of keys
-        An intersection check on values
-        """
-        for option_set_name in self.options:
-            this_keys = self.get_keys(option_set_name)
-            that_keys = other.get_keys(option_set_name)
-            if this_keys is not None and that_keys is not None:
-                all_keys = this_keys.intersection(that_keys)
-                if all_keys is not None:
-                    for key in this_keys.intersection(that_keys):
-                        this = self.options_as_set(option_set_name, key)
-                        that = other.options_as_set(option_set_name, key)
-                        if that.isdisjoint(this):
-                            return False
-
-        return True
-
+        return self.options.intersects(other.options)
 
     def allows(self, other):
-        """
-        An intersection of keys
-        A subset check on values
-        """
-        for option_set_name in self.options:
-            this_keys = self.get_keys(option_set_name)
-            that_keys = other.get_keys(option_set_name)
-            if this_keys is not None and that_keys is not None:
-                all_keys = this_keys.intersection(that_keys)
-                if all_keys is not None:
-                    for key in this_keys.intersection(that_keys):
-                        this = self.options_as_set(option_set_name, key)
-                        that = other.options_as_set(option_set_name, key)
-                        if not that.issubset(this):
-                            return False
-
-        return True
-
-
-    def _merge_values(self, other, option_set_name, key):
-        self_values = self.options[option_set_name].get(key)
-        other_values = other.options[option_set_name].get(key)
-        if self_values is None:
-            return other_values
-        elif other_values is None:
-            return self_values
-        else:
-            this = self.options_as_set(option_set_name, key)
-            that = other.options_as_set(option_set_name, key)
-            values = list(this.intersection(that))
-            if values == []:
-                raise ProductExceptionEmptyOptionValues("The key %s has no possible values when %s is merged with %s" % (key, self.uri, other.uri))
-            values.sort()
-            return values
-
-
-    def _patch_values(self, other, option_set_name, key):
-        self_values = self.options[option_set_name].get(key)
-        other_values = other.options[option_set_name].get(key)
-        if self_values is None:
-            return other_values
-        else:
-            return self_values
+        return self.options.allows(other.options)
 
 
     def patch(self, other):
-        """
-        A union of all keys
-        Self values overwrite others
-        """
-
-        return self.combine(other, self._patch_values)
-
-
-    def merge(self, other):
-        """
-        A union of all keys
-        An intersection of values
-        """
-
-        return self.combine(other, self._merge_values)
-
-
-    def combine(self, other, combine_func):
-
         doc = deepcopy(self.doc)
-        options = {}
-        this_option_set_names = self.get_option_set_names()
-        that_option_set_names = other.get_option_set_names()
-
-        for option_set_name in this_option_set_names.union(that_option_set_names):
-            this_keys = self.get_keys(option_set_name)
-            that_keys = other.get_keys(option_set_name)
-            if this_keys is None:
-                options[option_set_name] = deepcopy(other.options[option_set_name])
-            elif that_keys is None:
-                options[option_set_name] = deepcopy(self.options[option_set_name])
-            else:
-                option_set = {}
-                options[option_set_name] = option_set
-                for key in this_keys.union(that_keys):
-                    option_set[key] = combine_func(other, option_set_name, key)
-
-        doc["options"] = options
+        doc["options"] = self.options.patch(other.options).store
         return self.__class__(doc)
 
 
-
-    def extract(self, option_set_names):
-        """
-        extracts a subset from the document as a new doc
-        """
+    def merge(self, other):
         doc = deepcopy(self.doc)
-        options = {}
-        for option_set_name in self.get_option_set_names():
-            if option_set_name in option_set_names:
-                options[option_set_name] = deepcopy(self.options[option_set_name])
+        doc["options"] = self.options.merge(other.options).store
+        return self.__class__(doc)
 
-        doc["options"] = options
+
+    def extract(self, key_names):
+        doc = deepcopy(self.doc)
+        doc["options"] = self.options.extract(key_names).store
         return self.__class__(doc)
 
 
     def match(self, others):
-        return [other for other in others if self.allows(other)]
+        return [other for other in others if self.options.allows(other.options)]
+
 
     def match_intersects(self, others):
-        return [other for other in others if self.intersects(other)]
+        return [other for other in others if self.options.intersects(other.options)]
+
 
     def reverse_match(self, others):
-        return [other for other in others if other.allows(self)]
+        return [other for other in others if other.options.allows(self.options)]
 
-
-    def get_option_set_names(self):
-        return set(self.doc["options"].keys())
-
-
-    def get_keys(self, option_set_name):
-        option_set = self.doc["options"].get(option_set_name)
-        if option_set is None:
-            return None
-        return set(option_set.keys())
-
-    def options_as_set(self, option_set, key):
-        value = self.doc["options"][option_set].get(key)
-        if isinstance(value, list):
-            return set(value)
-        elif isinstance(value, unicode):
-            return set([value])
-        else:
-            raise Exception("unknown type for option values %s" % value)
 
     def get_json(self):
         return self.doc
@@ -273,40 +185,19 @@ class PublishedSieve(Sieve):
             "description": {
                 "type": "string"
             },
-            "uri": {
-                "type": "string"
-            },
-            "history": {
-                "type": "array"
-            },
-            "created": {
-                "type": "string"
-            },
             "upstream": {
-                "type": "string"
-            },
-            "key": {
                 "type": "string"
             },
             "options": {
                 "type": "object",
                 "patternProperties": {
-                    "[a-z]": {"type": "object",
-                        "patternProperties": {
-                        "[a-z]": {"oneOf": [{"type": "array"}, {"type": "string"}, {"type": "object"}, {"type": "number"}]},
-                        },
-                        "additionalProperties": False
-                    },
+                    "[a-z]": {"oneOf": [{"type": "array"}, {"type": "string"}, {"type": "object"}, {"type": "number"}]},
                 },
                 "additionalProperties": False
             },
         },
         "required": ["name", "description", "options"],
     }
-
-    "uri", "history", "history_hash", "created", "snapshot"
-
-
 
     def __init__(self, doc, doc_hash=None, key=None, created=None, history=None, snapshot=False):
 
@@ -316,7 +207,7 @@ class PublishedSieve(Sieve):
             if doc_hash:
                 self.doc_hash = doc_hash
             else:
-                self.doc_hash = get_doc_hash(json.dumps(doc, indent=4, sort_keys=True))
+                self.doc_hash = get_doc_hash(json_dumps(doc))
             if key:
                 self.key = key
             if snapshot:
@@ -410,18 +301,18 @@ class PublishedSieve(Sieve):
     def save(self, db, index=None):
         if not hasattr(self, "key"):
             self.key = unicode(uuid.uuid4())
-        db.set(self.key, json.dumps(self.get_json()), uri=self.uri,  index=index)
+        db.set(self.key, json_dumps(self.get_json()), uri=self.uri,  index=index)
 
     @classmethod
     def from_doc(cls, doc_json):
         doc_hash = get_doc_hash(doc_json)
-        return cls(json.loads(doc_json), doc_hash=doc_hash)
+        return cls(json_loads(doc_json), doc_hash=doc_hash)
 
 
     @classmethod
     def from_json(cls, as_json):
 
-        as_dict = json.loads(as_json)
+        as_dict = json_loads(as_json)
         kwargs = {}
 
         for k in ["doc_hash", "key", "history", "created", 'snapshot']:

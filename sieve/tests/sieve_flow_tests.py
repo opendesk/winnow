@@ -190,7 +190,7 @@ class TestContexts(unittest.TestCase):
         expected = {
                     u"type": u"product",
                     u'created': get_timestamp(),
-                    u'uri': u'product/paul/office/table@6b646d28e46932ab8fadf5c8d242c39a9954b2b0',
+                    u'uri': u'product/paul/office/table@43ae2d69dcb6abe215919e44dee694afaca7dcdc',
                     u'history': [[u'start', u'product/paul/office/table@e1fc779995c82d9fe65c18008709b2929d799517'],
                                  [u'merge', u'context/uk_production_context@276359e7ce5d1097d4f3c57b143ca9a55507e527']],
                     u"snapshot": True,
@@ -203,11 +203,11 @@ class TestContexts(unittest.TestCase):
                         u"options":{
                             u"configuration":{
                                 u"color": [u"blue", u"green"],
-                                u"size": [u"big"],
+                                u"size": u"big",
                                 u"finish": [u"shiney", u"matt"]
                             },
                            u"manufacturing":{
-                                u"tool": [u"cnc"],
+                                u"tool": u"cnc",
                                 u"material": [u"metal", u"wood"]
                             }
                         }
@@ -227,7 +227,9 @@ class TestContexts(unittest.TestCase):
                     u"options":{
                         u"configuration":{
                             u"color": [u"green", u"blue", u"purple", u"orange"],
+
                             u"size": u"big",
+
                             u"finish": [u"shiney", u"matt"]
                         },
                         u"manufacturing":{
@@ -240,7 +242,7 @@ class TestContexts(unittest.TestCase):
         expected = {
                     u"type": u"product",
                     u'created': get_timestamp(),
-                    u'uri': u'product/paul/office/table@da4737af28413c87c2a9ebef6a935045e7902475',
+                    u'uri': u'product/paul/office/table@65679105dccd713c95d7b88d0384c04ec993332c',
                     u'snapshot': True,
                     u'history': [[u'start', u'product/paul/office/table@e1fc779995c82d9fe65c18008709b2929d799517'],
                                 [u'merge', u'context/uk_production_context@276359e7ce5d1097d4f3c57b143ca9a55507e527'],
@@ -254,7 +256,7 @@ class TestContexts(unittest.TestCase):
                         u"options":{
                             u"configuration":{
                                 u"color": [u"blue", u"green"],
-                                u"size": [u"big"],
+                                u"size": u"big",
                                 u"finish": [u"shiney", u"matt"]
                             }
                         }
@@ -292,7 +294,7 @@ class TestContexts(unittest.TestCase):
                     u"options":{
                         u"configuration":{
                             u"color": [u"blue", u"green"],
-                            u"size": [u"big"],
+                            u"size": u"big",
                             u"finish": [u"shiney", u"matt"]
                         }
                     }
@@ -338,7 +340,7 @@ class TestContexts(unittest.TestCase):
         expected = {
                     u"type": u"product",
                     u'created': get_timestamp(),
-                    u'uri': u'product/paul/office/table@5ed13220ee6ecc14f1e77e29046996ff8b3e4be9',
+                    u'uri': u'product/paul/office/table@f8f0003719dcabb10c246cdfc95b40a940b17b53',
                     u'snapshot': True,
                     u'history': [[u'start', u'product/paul/office/table@e1fc779995c82d9fe65c18008709b2929d799517'],
                         [u'merge', u'context/uk_production_context@276359e7ce5d1097d4f3c57b143ca9a55507e527'],
@@ -351,12 +353,12 @@ class TestContexts(unittest.TestCase):
                         u"description": u"This is a very nice table",
                         u"options":{
                             u"configuration":{
-                                u"color": [u"green"],
-                                u"size": [u"big"],
+                                u"color": u"green",
+                                u"size": u"big",
                                 u"finish": [u"matt", u"shiney"]
                             },
                            u"manufacturing":{
-                                u"tool": [u"cnc"],
+                                u"tool": u"cnc",
                                 u"material": [u"metal", u"wood"]
                             },
                             u"delivery":{
@@ -452,7 +454,7 @@ class TestContexts(unittest.TestCase):
 
         expected = {u"type": u"product",
                     u'created': get_timestamp(),
-                    u'uri': u'product/paul/office/table@9756c7d2a375f786754e96f6baca4ddbbd550f82',
+                    u'uri': u'product/paul/office/table@c0b174657516e59647b13ebe4b944ddaa5a42bc2',
                     u'snapshot': True,
                     u'history': [[u'start', u'product/paul/office/table@e1fc779995c82d9fe65c18008709b2929d799517'],
                                  [u'merge', u'product/paul/office/table@8251cfaa2f86fbd798a9f8e21a1fb72f4d1db7dd'],
@@ -466,13 +468,13 @@ class TestContexts(unittest.TestCase):
                         u"version": [0, 2, 3],
                         u"options":{
                             u"configuration":{
-                                u"color": [u"blue"],
-                                u"size": [u"big"],
-                                u"finish": [u"matt"]
+                                u"color": u"blue",
+                                u"size": u"big",
+                                u"finish": u"matt"
                             },
                             u'manufacturing': {
                                 u'material': [u'metal', u'wood'],
-                                u'tool': [u'cnc']
+                                u'tool': u'cnc'
                             }
                         }
                     }

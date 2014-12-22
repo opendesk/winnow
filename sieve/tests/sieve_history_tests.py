@@ -1,20 +1,16 @@
 import time
 import unittest
-from sieve.sieve import PublishedSieve, get_doc_hash
+from sieve.base_sieve import PublishedSieve, get_doc_hash
 from db import MockKVStore
 
 
 BASE_PRODUCT =  {u"name": u"table",
                     u"description": u"This is a very nice table",
                     u"options":{
-                        u"configuration":{
-                            u"color": [u"red", u"green", u"blue"],
-                            u"size": [u"big", u"small"]
-                        },
-                        u"manufacturing":{
-                            u"tool": [u"cnc", u"laser"],
-                            u"material": [u"wood", u"metal", u"plastic"]
-                        }
+                        u"color": [u"red", u"green", u"blue"],
+                        u"size": [u"big", u"small"],
+                        u"tool": [u"cnc", u"laser"],
+                        u"material": [u"wood", u"metal", u"plastic"]
                     }
                 }
 
@@ -34,42 +30,30 @@ class TestSieveMerge(unittest.TestCase):
         other_dict =  {u"name": u"something",
                             u"description": u"these are other options",
                             u"options":{
-                                u"configuration":{
-                                    u"color": [u"red", u"blue"],
-                                    u"size": [u"big", u"medium", u"small"]
-                                },
-                                u"manufacturing":{
-                                    u"tool": [u"cnc", u"laser", u"plaster"],
-                                    u"days": [u"tuesday", u"thursday"]
-                                },
-                                u"refreshments":{
-                                    u"drinks": [u"beer", u"coffee"],
-                                    u"snacks": [u"crisps", u"cheese", u"apple"]
-                                }
+                                u"color": [u"red", u"blue"],
+                                u"size": [u"big", u"medium", u"small"],
+                                u"tool": [u"cnc", u"laser", u"plaster"],
+                                u"days": [u"tuesday", u"thursday"],
+                                u"drinks": [u"beer", u"coffee"],
+                                u"snacks": [u"crisps", u"cheese", u"apple"]
                             }
                         }
 
         expected =  {   u"type": u"base",
                         u"created": get_timestamp(),
-                        u'history': [[u'start', u'base/table@38e442718dc0a0b4e9aa582042f306216e32702b'],
-                                    [u"merge", u"base/something@449ac0e21b41ce3fdf2f85275053aef74c567609"]],
-                        u'uri': u'base/table@97de1a2dba3dc684718e5aea5973556f628abf2b',
+                        u'history': [[u'start', u'base/table@14ce7c80b1563e38bdbf1ce33f4d07603dfc8520'],
+                                    [u"merge", u"base/something@82d5cad60480369715f597dc454aa6d897cf3cba"]],
+                        u'uri': u'base/table@33b082d1ad3506af8f937644f887c16a01b5d22e',
                         u"doc": {u"name": u"table",
                             u"description": u"This is a very nice table",
                             u"options":{
-                                u"configuration":{
-                                    u"color": [u"blue", u"red"],
-                                    u"size": [u"big", u"small"]
-                                },
-                                u"manufacturing":{
-                                    u"tool": [u"cnc", u"laser"],
-                                    u"material": [u"wood", u"metal", u"plastic"],
-                                    u"days": [u"tuesday", u"thursday"]
-                                },
-                                u"refreshments":{
-                                    u"drinks": [u"beer", u"coffee"],
-                                    u"snacks": [u"crisps", u"cheese", u"apple"]
-                                }
+                                u"color": [u"blue", u"red"],
+                                u"size": [u"big", u"small"],
+                                u"tool": [u"cnc", u"laser"],
+                                u"material": [u"wood", u"metal", u"plastic"],
+                                u"days": [u"tuesday", u"thursday"],
+                                u"drinks": [u"beer", u"coffee"],
+                                u"snacks": [u"crisps", u"cheese", u"apple"]
                             }
                         }
                     }
@@ -93,22 +77,20 @@ class TestSieveExtract(unittest.TestCase):
         expected =  {
                     u"type": u"base",
                     u"created": get_timestamp(),
-                    u'history': [[u'start', u'base/table@38e442718dc0a0b4e9aa582042f306216e32702b'],
-                                 [u"extract", [u"configuration"]]],
-                    u'uri': u'base/table@d3ce02d05b69bf0a1dbac911c6ded63a47aecdbd',
+                    u'history': [[u'start', u'base/table@14ce7c80b1563e38bdbf1ce33f4d07603dfc8520'],
+                                 [u"extract", [u"color", u"size"]]],
+                    u'uri': u'base/table@8c4e3238ac1c6d53167e9cb3c924a67ed670b086',
                     u"doc":{
                     u"name": u"table",
                         u"description": u"This is a very nice table",
                         u"options":{
-                            u"configuration":{
-                                u"color": [u"red", u"green", u"blue"],
-                                u"size": [u"big", u"small"]
-                            }
+                            u"color": [u"red", u"green", u"blue"],
+                            u"size": [u"big", u"small"]
                         }
                     }
                 }
 
-        extracted = self.base_sieve.extract([u"configuration"])
+        extracted = self.base_sieve.extract([u"color", u"size"])
         self.maxDiff = None
         self.assertEqual(extracted.get_json(), expected)
 
@@ -125,43 +107,31 @@ class TestSievePatch(unittest.TestCase):
         target_dict =  {u"name": u"something",
                             u"description": u"these are other options",
                             u"options":{
-                                u"configuration":{
-                                    u"size": [u"big", u"medium", u"small"]
-                                },
-                                u"manufacturing":{
-                                    u"tool": [u"cnc", u"laser", u"plaster"],
-                                    u"days": [u"tuesday", u"thursday"]
-                                },
-                                u"refreshments":{
-                                    u"drinks": [u"beer", u"coffee"],
-                                    u"snacks": [u"crisps", u"cheese", u"apple"]
-                                }
+                                u"size": [u"big", u"medium", u"small"],
+                                u"tool": [u"cnc", u"laser", u"plaster"],
+                                u"days": [u"tuesday", u"thursday"],
+                                u"drinks": [u"beer", u"coffee"],
+                                u"snacks": [u"crisps", u"cheese", u"apple"]
                             }
                         }
 
         expected =  {
                     u"type": u"base",
                     u"created": get_timestamp(),
-                    u'history': [[u'start', u'base/table@38e442718dc0a0b4e9aa582042f306216e32702b'],
-                                 [u"patch", u"base/something@4bcd2904e906c8ce7d75cc9135ff24520ac58686"]],
-                    u'uri': u'base/table@653e4d6134309239cbb3dcc29b13a473f94b3cff',
+                    u'history': [[u'start', u'base/table@14ce7c80b1563e38bdbf1ce33f4d07603dfc8520'],
+                                 [u"patch", u"base/something@b4fa6c27c2c634d61c472e92b4bc5744a77dc497"]],
+                    u'uri': u'base/table@ea9cf5c3936a6b4086b7d5640b61b2d2024cc822',
                     u"doc":{
                         u"name": u"table",
                         u"description": u"This is a very nice table",
                         u"options":{
-                            u"configuration":{
-                                u"color": [u"red", u"green", u"blue"],
-                                u"size": [u"big", u"small"]
-                            },
-                            u"manufacturing":{
-                                u"tool": [u"cnc", u"laser"],
-                                u"material": [u"wood", u"metal", u"plastic"],
-                                u"days": [u"tuesday", u"thursday"]
-                            },
-                            u"refreshments":{
-                                u"drinks": [u"beer", u"coffee"],
-                                u"snacks": [u"crisps", u"cheese", u"apple"]
-                            }
+                            u"color": [u"red", u"green", u"blue"],
+                            u"size": [u"big", u"small"],
+                            u"tool": [u"cnc", u"laser"],
+                            u"material": [u"wood", u"metal", u"plastic"],
+                            u"days": [u"tuesday", u"thursday"],
+                            u"drinks": [u"beer", u"coffee"],
+                            u"snacks": [u"crisps", u"cheese", u"apple"]
                         }
                     }
                 }
@@ -183,14 +153,10 @@ class TestSieveFreeze(unittest.TestCase):
                     u"description": u"This is a very nice table",
                     u"upstream": u"base/parent",
                     u"options":{
-                        u"configuration":{
-                            u"color": [u"red", u"green", u"blue"],
-                            u"size": [u"big", u"small"]
-                        },
-                        u"manufacturing":{
-                            u"tool": [u"cnc", u"laser"],
-                            u"material": [u"wood", u"metal", u"plastic"]
-                        }
+                        u"color": [u"red", u"green", u"blue"],
+                        u"size": [u"big", u"small"],
+                        u"tool": [u"cnc", u"laser"],
+                        u"material": [u"wood", u"metal", u"plastic"]
                     }
                 }
 
@@ -203,51 +169,39 @@ class TestSieveFreeze(unittest.TestCase):
         parent_dict =  {u"name": u"parent",
                             u"description": u"these are other options",
                             u"options":{
-                                u"configuration":{
-                                    u"size": [u"big", u"medium", u"small"]
-                                },
-                                u"manufacturing":{
-                                    u"tool": [u"cnc", u"laser", u"plaster"],
-                                    u"days": [u"tuesday", u"thursday"]
-                                },
-                                u"refreshments":{
-                                    u"drinks": [u"beer", u"coffee"],
-                                    u"snacks": [u"crisps", u"cheese", u"apple"]
-                                }
+                                u"size": [u"big", u"medium", u"small"],
+                                u"tool": [u"cnc", u"laser", u"plaster"],
+                                u"days": [u"tuesday", u"thursday"],
+                                u"drinks": [u"beer", u"coffee"],
+                                u"snacks": [u"crisps", u"cheese", u"apple"]
                             }
                         }
 
         expected =  {
                     u"type": u"base",
                     u"created": get_timestamp(),
-                    u'history': [[u'start', u'base/table@99e9c3de9c2d038ba9bfd4d084ecc83ab9cf6941'],
-                                 [u"patch", u"base/parent@15f81687d6b2c3b1b579004c7b421bae56a1a7f9"]],
+                    u'history': [[u'start', u'base/table@61ad825071616ba1f9cb959196ba558cbf6f46d1'],
+                                 [u"patch", u"base/parent@55ad519e41c4ce8e4c9fad7cc91d04696fc923e2"]],
                     u"snapshot": True,
-                    u'uri': u'base/table@bb7b97465584fc9110bfd8d76ff7ab50fd087ee9',
+                    u'uri': u'base/table@caacb9427005986c386acbe1fbbeebbe5c98e7f4',
                     u"doc":{
                         u"name": u"table",
                         u'upstream': u'base/parent',
                         u"description": u"This is a very nice table",
                         u"options":{
-                            u"configuration":{
-                                u"color": [u"red", u"green", u"blue"],
-                                u"size": [u"big", u"small"]
-                            },
-                            u"manufacturing":{
-                                u"tool": [u"cnc", u"laser"],
-                                u"material": [u"wood", u"metal", u"plastic"],
-                                u"days": [u"tuesday", u"thursday"]
-                            },
-                            u"refreshments":{
-                                u"drinks": [u"beer", u"coffee"],
-                                u"snacks": [u"crisps", u"cheese", u"apple"]
-                            }
+                            u"color": [u"red", u"green", u"blue"],
+                            u"size": [u"big", u"small"],
+                            u"tool": [u"cnc", u"laser"],
+                            u"material": [u"wood", u"metal", u"plastic"],
+                            u"days": [u"tuesday", u"thursday"],
+                            u"drinks": [u"beer", u"coffee"],
+                            u"snacks": [u"crisps", u"cheese", u"apple"]
                         }
                     }
                 }
 
         parent_sieve = PublishedSieve(parent_dict)
-        self.assertEqual(parent_sieve.uri, u'base/parent@15f81687d6b2c3b1b579004c7b421bae56a1a7f9')
+        self.assertEqual(parent_sieve.uri, u'base/parent@55ad519e41c4ce8e4c9fad7cc91d04696fc923e2')
         parent_sieve.save(self.db, index=u"base/parent")
         upstream_json = self.db.get(u"base/parent")
         upstream_sieve = PublishedSieve.from_json(upstream_json)
@@ -262,17 +216,11 @@ class TestSieveFreeze(unittest.TestCase):
         grand_parent_dict =  {u"name": u"grandad",
                             u"description": u"this is an older one",
                             u"options":{
-                                u"configuration":{
-                                    u"size": [u"big", u"medium", u"small"]
-                                },
-                                u"manufacturing":{
-                                    u"tool": [u"cnc", u"laser", u"plaster"],
-                                    u"days": [u"tuesday", u"thursday"]
-                                },
-                                u"refreshments":{
-                                    u"drinks": [u"beer", u"coffee"],
-                                    u"snacks": [u"crisps", u"cheese", u"apple"]
-                                }
+                                u"size": [u"big", u"medium", u"small"],
+                                u"tool": [u"cnc", u"laser", u"plaster"],
+                                u"days": [u"tuesday", u"thursday"],
+                                u"drinks": [u"beer", u"coffee"],
+                                u"snacks": [u"crisps", u"cheese", u"apple"]
                             }
                         }
 
@@ -280,44 +228,32 @@ class TestSieveFreeze(unittest.TestCase):
                         u"upstream": u"base/grandad",
                             u"description": u"these are other options",
                             u"options":{
-                                u"configuration":{
-                                    u"size": [u"big", u"medium", u"small"]
-                                },
-                                u"manufacturing":{
-                                    u"tool": [u"cnc", u"laser", u"plaster"],
-                                },
-                                u"refreshments":{
-                                    u"drinks": [u"beer", u"coffee", u"water"],
-                                }
+                                u"size": [u"big", u"medium", u"small"],
+                                u"tool": [u"cnc", u"laser", u"plaster"],
+                                u"drinks": [u"beer", u"coffee", u"water"],
                             }
                         }
 
         expected =  {
                     u"type": u"base",
                     u"created": get_timestamp(),
-                    u'history': [[u'start', u'base/table@99e9c3de9c2d038ba9bfd4d084ecc83ab9cf6941'],
-                                 [u"patch", u"base/parent@b39dd06a049cfc8093ae947eeadc661bb82f7d0c"],
-                                 [u"patch", u"base/grandad@1fe4aae68135113f73177de5b24e6636f227cdcd"]],
-                    u'uri': u'base/table@180929557c8fcc897eb941cd36a6356690c67db7',
+                    u'history': [[u'start', u'base/table@61ad825071616ba1f9cb959196ba558cbf6f46d1'],
+                                 [u"patch", u"base/parent@bf9c06ec14be8538051045fb0295c962788f59cc"],
+                                 [u"patch", u"base/grandad@8b7f701e5f0d13551a4b7ccfb62259c5c9f68517"]],
+                    u'uri': u'base/table@d2489b834bc5c963777c0911cb12d70ace2790e5',
                     u'snapshot': True,
                     u"doc":{
                         u"name": u"table",
                         u"description": u"This is a very nice table",
                         u'upstream': u'base/parent',
                         u"options":{
-                            u"configuration":{
-                                u"color": [u"red", u"green", u"blue"],
-                                u"size": [u"big", u"small"]
-                            },
-                            u"manufacturing":{
-                                u"tool": [u"cnc", u"laser"],
-                                u"material": [u"wood", u"metal", u"plastic"],
-                                u"days": [u"tuesday", u"thursday"]
-                            },
-                            u"refreshments":{
-                                u"drinks": [u"beer", u"coffee", u"water"],
-                                u"snacks": [u"crisps", u"cheese", u"apple"]
-                            }
+                            u"color": [u"red", u"green", u"blue"],
+                            u"size": [u"big", u"small"],
+                            u"tool": [u"cnc", u"laser"],
+                            u"material": [u"wood", u"metal", u"plastic"],
+                            u"days": [u"tuesday", u"thursday"],
+                            u"drinks": [u"beer", u"coffee", u"water"],
+                            u"snacks": [u"crisps", u"cheese", u"apple"]
                         }
                     }
                 }

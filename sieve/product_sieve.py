@@ -27,13 +27,7 @@ class ProductSieve(PublishedSieve):
         "$schema": "http://json-schema.org/draft-04/schema#",
         "type": "object",
         "properties": {
-            "type": {
-                "type": "string"
-            },
             "range": {
-                "type": "string"
-            },
-            "created": {
                 "type": "string"
             },
             "design": {
@@ -48,15 +42,6 @@ class ProductSieve(PublishedSieve):
             "quantity": {
                 "type": "number"
             },
-            "uri": {
-                "type": "string"
-            },
-            "snapshot": {
-                "type": "boolean"
-            },
-            "key": {
-                "type": "string"
-            },
             "version": {
                 "type": "array",
                 "items": {
@@ -68,12 +53,6 @@ class ProductSieve(PublishedSieve):
             },
             "upstream": {
                 "type": "string"
-            },
-            "history_hash": {
-                "type": "string"
-            },
-            "history": {
-                "type": "array"
             },
             "options": {},
         },
