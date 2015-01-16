@@ -102,8 +102,8 @@ class OptionSieveValue(BaseSieveValue):
 
         ## otherwise wrap it in a dict
         value =  {
-            "type": self.type,
-            "values": values,
+            u"type": self.type,
+            u"values": values,
         }
 
         if self.name is not None:
@@ -126,6 +126,10 @@ class OptionStringSieveValue(OptionSieveValue):
     def validate_single_value(self, value):
         if not isinstance(value, unicode):
             raise Exception("should be unicode %s" % value)
+
+
+    def __str__(self):
+        return str(self.values_lookup.keys())
 
 
     def _set_value_list(self, value_list):
@@ -205,8 +209,11 @@ class OptionStringSieveValue(OptionSieveValue):
 
                 if this_options is not None and that_options is not None:
                     new_value[u"options"] = OptionsSet(this_options).merge(OptionsSet(that_options)).store
-                else:
+                elif this_options is not None or that_options is not None:
                     new_value[u"options"] = this_options if this_options is not None else that_options
+                else:
+                    pass
+
                 values.append(new_value)
 
         ## if there is no intersection return None
@@ -240,6 +247,9 @@ class OptionObjectSieveValue(OptionSieveValue):
         self.value_list = value_list
         for v in value_list:
             self.validate_single_value(v)
+
+    def __str__(self):
+        return [v[u"value"] for v in self.value_list]
 
 
     def isdisjoint(self, other):

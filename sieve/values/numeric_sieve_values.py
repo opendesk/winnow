@@ -19,11 +19,15 @@ a list of ints, floats or decimals
 - proper versions
 
 {type: "numeric::range",
+name: "A name",
+description: "A description",
 max: 27,
 min: 12.5,
 }
 
 {type: "numeric::step",
+name: "A name",
+description: "A description",
 max: 27,
 min: 12.5,
 start: 12.5
@@ -31,10 +35,14 @@ step: 2
 }
 
 {type: "numeric::number",
+name: "A name",
+description: "A description",
 value: 36
 }
 
 {type: "numeric::set",
+name: "A name",
+description: "A description",
 value: [36, 29.0]
 }
 
@@ -73,6 +81,8 @@ class NumericSieveValue(BaseSieveValue):
 
 
         elif isinstance(value, dict):
+
+
             numeric_type = value[u"type"]
             if numeric_type == VALUE_TYPE_NUMERIC_NUMBER:
                 return NumericNumberSieveValue(value[u"value"])

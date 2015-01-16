@@ -1,0 +1,18 @@
+{
+    "category": "sheets", 
+    "description": "Cad files for 18mm ply", 
+    "files": [
+        "files/test_1.txt",
+        "files/test_2.txt"
+    ], 
+    "name": "Test Fileset",
+    "slug": "test_fileset",
+    "version": [1, 0, 1],
+    "options": {
+        "material": "all-ply", 
+        "sheet": "18mm", 
+        "thickness": 17.9, 
+        "tolerance": 0
+    }, 
+    "product": "products/lean/cafe-table/standard"
+}

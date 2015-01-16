@@ -1,4 +1,4 @@
-from sieve import PublishedSieve
+from sieve.base_sieve import PublishedSieve
 
 import os
 
@@ -12,10 +12,10 @@ class ContextSieve(PublishedSieve):
         "$schema": "http://json-schema.org/draft-04/schema#",
         "type": "object",
         "properties": {
-            "type": {
+            "name": {
                 "type": "string"
             },
-            "name": {
+            "slug": {
                 "type": "string"
             },
             "description": {
@@ -23,15 +23,15 @@ class ContextSieve(PublishedSieve):
             },
             "options": {},
         },
-        "required": ["name", "description"],
+        "required": ["name", "slug", "description", "options"],
 
     }
 
     @classmethod
     def publish(self, db, context_json):
         context = ContextSieve.from_doc(context_json)
+        print context.get_canonical_uri()
         context.save(db, index=context.get_canonical_uri())
 
-
     def get_canonical_uri(self):
-        return "%s/%s" % (self.SIEVE_TYPE, self.name)
+        return "%s/%s" % (self.SIEVE_TYPE, self.slug)

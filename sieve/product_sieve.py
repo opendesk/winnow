@@ -2,7 +2,7 @@ from jsonschema import validate, ValidationError
 import json
 import time
 from product_exceptions import ProductExceptionFailedValidation, ProductExceptionLookupFailed
-from sieve import PublishedSieve
+from sieve.base_sieve import PublishedSieve
 from context_sieve import ContextSieve
 from fileset_sieve import FilesetSieve
 
@@ -36,6 +36,9 @@ class ProductSieve(PublishedSieve):
             "name": {
                 "type": "string"
             },
+            "slug": {
+                "type": "string"
+            },
             "description": {
                 "type": "string"
             },
@@ -54,10 +57,16 @@ class ProductSieve(PublishedSieve):
             "upstream": {
                 "type": "string"
             },
+            "public": {
+                "type": "boolean"
+            },
+            "standard": {
+                "type": "boolean"
+            },
             "options": {},
         },
         "additionalProperties": False,
-        "required": ["name", "description", "range", "design", "version"],
+        "required": ["name", "slug", "description", "range", "design", "version"],
     }
 
     @classmethod
@@ -69,7 +78,7 @@ class ProductSieve(PublishedSieve):
 
 
     def get_canonical_uri(self):
-        return "%s/%s/%s/%s" % (self.SIEVE_TYPE, self.range, self.design, self.name)
+        return "%ss/%s/%s/%s" % (self.SIEVE_TYPE, self.range, self.design, self.slug)
 
 
     def merge_and_extract(self, db, context_uris, extractions=None):

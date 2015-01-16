@@ -1,6 +1,6 @@
 import os
 import json
-from sieve import PublishedSieve
+from sieve.base_sieve import PublishedSieve, json_dumps, json_loads
 from product_exceptions import ProductExceptionFailedValidation, ProductExceptionLookupFailed, ProductExceptionNoAllowed
 
 
@@ -13,43 +13,31 @@ class FilesetSieve(PublishedSieve):
         "$schema": "http://json-schema.org/draft-04/schema#",
         "type": "object",
         "properties": {
-            "type": {
-                "type": "string"
-            },
-            "uri": {
-                "type": "string"
-            },
             "name": {
+                "type": "string"
+            },
+            "slug": {
+                "type": "string"
+            },
+            "category": {
+                "type": "string"
+            },
+            "description": {
                 "type": "string"
             },
             "product": {
                 "type": "string"
             },
-            "history_hash": {
-                "type": "string"
-            },
-            "product_snapshot": {
-                "type": "string"
+            "version": {
+                "type": "array"
             },
             "files": {
                 "type": "array"
             },
-            "description": {
-                "type": "string"
-            },
-            "created": {
-                "type": "string"
-            },
-            "history": {
-                "type": "array"
-            },
-            "quantity": {
-                "type": "number"
-            },
             "options": {},
         },
         "additionalProperties": False,
-        "required": ["name", "product", "description"],
+        "required": ["name", "slug", "version", "product", "description", "files"],
     }
 
     @classmethod
@@ -57,7 +45,7 @@ class FilesetSieve(PublishedSieve):
         from product_sieve import ProductSieve
 
         #ensure product ref is a snapshot
-        fileset_json_dict = json.loads(fileset_json)
+        fileset_json_dict = json_loads(fileset_json)
         product_json = db.get(fileset_json_dict[u"product"])
         if product_json is None:
             raise ProductExceptionLookupFailed("Couldn't find product %s in publish_fileset referred to by %s" % (self.product, self.doc))
@@ -67,9 +55,11 @@ class FilesetSieve(PublishedSieve):
             product = product.take_snapshot(db)
             product.save(db)
 
-        fileset_json_dict[u"product"] = product.uri
-        fileset = FilesetSieve.from_doc(json.dumps(fileset_json_dict))
-        fileset.product = product.get_canonical_uri()
+        fileset_json_dict[u"product"] = product.get_canonical_uri()
+
+        fileset = FilesetSieve.from_doc(json_dumps(fileset_json_dict))
+
+        fileset.product = product.uri
 
         if not product.allows(fileset):
             raise ProductExceptionNoAllowed
@@ -84,12 +74,14 @@ class FilesetSieve(PublishedSieve):
         parts = base.split("/")[1:4]
         path = "/".join(parts)
 
-        base_uri = "%s/%s/%s" % (self.SIEVE_TYPE, path, self.name)
-        return "%s/%s" % (base_uri, filename)
+        base_uri = "products/%s/filesets" % path
+        result = "%s/%s" % (base_uri, filename)
+        print result
+        return result
 
 
     def get_canonical_uri(self):
-        return self.uri_for_file_named(self.name)
+        return self.uri_for_file_named(self.slug)
 
 
     def get_json(self):

@@ -1,0 +1,10 @@
+{
+    "name": "UK Production Context",
+    "slug": "uk_production_context",
+    "description": "things that are possible in the uk",
+    "options":{
+        "material": ["wisa"],
+        "sheet": ["18mm", "32mm"],
+        "color": ["green", "blue", "purple", "orange"]
+    }
+}

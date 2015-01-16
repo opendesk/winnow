@@ -1,0 +1,58 @@
+{
+    "description": "A nice cafe table with three legs", 
+    "design": "cafe-table",
+    "slug": "standard",
+    "name": "Standard",
+    "options": {
+        "material": {
+            "description": "Choose one of the materials", 
+            "name": "Material", 
+            "type": "option::string", 
+            "values": [
+                {
+                    "description": "Everything is made out of ply", 
+                    "image_uri": "http://something.com/khgfdkyg.png", 
+                    "name": "All ply", 
+                    "type": "option::string", 
+                    "value": "all-ply"
+                }, 
+                {
+                    "description": "The legs are ply and the top is wisa", 
+                    "image_uri": "http://something.com/khgfdkyg.png", 
+                    "name": "Wisa", 
+                    "type": "option::string", 
+                    "value": "wisa"
+                }
+            ]
+        }, 
+        "sheet": {
+            "description": "The nominal sheet thickness", 
+            "name": "Nominal sheet thickness", 
+            "type": "option::string", 
+            "values": [
+                {
+                    "description": "18mm ply wood", 
+                    "image_uri": "http://something.com/khgfdkyg.png", 
+                    "name": "18mm", 
+                    "type": "option::string", 
+                    "value": "18mm"
+                }, 
+                {
+                    "description": "25mm ply wood", 
+                    "image_uri": "http://something.com/khgfdkyg.png", 
+                    "name": "25mm", 
+                    "type": "option::string", 
+                    "value": "25mm"
+                }
+            ]
+        }
+    }, 
+    "public": true, 
+    "range": "lean", 
+    "standard": true, 
+    "version": [
+        0, 
+        0, 
+        1
+    ]
+}

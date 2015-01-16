@@ -1,0 +1,8 @@
+{
+    "name": "Ply 18.1mm thick",
+    "slug": "ply_18.1mm",
+    "description": "Ply wood of actual thickness 18.1mm",
+    "options":{
+        "thickness": 18.1
+    }
+}

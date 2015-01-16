@@ -129,6 +129,7 @@ class OptionsSet(collections.MutableMapping):
                     this = value_factory(self.store.get(key))
                     that = value_factory(other.store.get(key))
                     if not that.issubset(this):
+                        print this, that
                         return False
         return True
 

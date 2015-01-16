@@ -1,6 +1,7 @@
 import time
 import json
 
+from base_sieve import json_dumps
 from product_sieve import ProductSieve
 from fileset_sieve import FilesetSieve
 from context_sieve import ContextSieve
@@ -134,9 +135,8 @@ def get_contextualised_product(db, product_uri, context_uris, extractions=None):
 
 def get_configuration_json(db, product_uri, context_uris):
 
-    contextualised_product = get_contextualised_product(db, product_uri, context_uris, extractions=[u"configuration"])
-
-    return json.dumps(contextualised_product.doc, indent=2, sort_keys=True)
+    contextualised_product = get_contextualised_product(db, product_uri, context_uris, extractions=[u"color", u"material"])
+    return json_dumps(contextualised_product.doc)
 
 
 
