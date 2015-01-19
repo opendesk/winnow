@@ -6,49 +6,12 @@ import requests
 
 import uuid
 import decimal
-from product_exceptions import ProductExceptionFailedValidation, ProductExceptionEmptyOptionValues, ProductExceptionLookupFailed
-from options_set import OptionsSet
-
+from sieve.product_exceptions import ProductExceptionFailedValidation, ProductExceptionEmptyOptionValues, ProductExceptionLookupFailed
+from sieve.options_set import OptionsSet
+from sieve.utils import get_doc_hash, json_loads, json_dumps
 
 from copy import deepcopy
 
-
-def get_doc_hash(data):
-    """
-    This hash function replicates a git has for a blog
-    it is used to hash documents
-    """
-    s = hashlib.sha1()
-    s.update("blob %u\0" % len(data))
-    s.update(data)
-    return unicode(s.hexdigest())
-
-
-"""
- Json encoding and decoding conventions
-"""
-
-class DecimalEncoder(json.JSONEncoder):
-    """
-    Patching the builtin jason encode to do decimals the way we want
-    ie ints as nt ad floats as floats
-    internally all numbers are stored as Decimals
-    """
-    def default(self, o):
-        if isinstance(o, decimal.Decimal):
-            if o.to_integral_value() == o:
-                return int(o)
-            else:
-                return float(o)
-        return super(DecimalEncoder, self).default(o)
-
-
-def json_loads(as_json):
-    return json.loads(as_json, parse_float=decimal.Decimal, parse_int=decimal.Decimal)
-
-
-def json_dumps(an_obj):
-    return json.dumps(an_obj, indent=4, sort_keys=True, cls=DecimalEncoder)
 
 
 
@@ -82,13 +45,6 @@ class Sieve(object):
 
 
         self.doc = deepcopy(doc)
-
-
-        # try:
-        #     if self.doc.get(u"type") is None:
-        #         self.doc[u"type"] = self.SIEVE_TYPE
-        # except AttributeError, e:
-        #     raise ProductExceptionFailedValidation(e)
 
         try:
             validate(self.doc, Sieve.SIEVE_SCHEMA)
@@ -171,6 +127,9 @@ class Sieve(object):
 
 
 
+
+
+
 class PublishedSieve(Sieve):
 
     SIEVE_TYPE = u"base"
@@ -227,33 +186,39 @@ class PublishedSieve(Sieve):
         except ValidationError, e:
             raise ProductExceptionFailedValidation(e)
 
+
     def canonical(self, db):
+        print "canonical"
         return self.__class__.from_json(db.get(self.get_canonical_uri()))
 
 
     def duplicate(self):
-
+        print "duplicate"
         return self.__class__(self.doc, created=self.created, history=self.history)
+
+
+    def add_history_entry(self, action_name, uri):
+        self.history.append([action_name, uri])
 
 
     def merge(self, other):
         merged = super(PublishedSieve, self).merge(other)
         self._inherit(merged)
-        merged.history.append([u"merge", other.uri])
+        merged.add_history_entry(u"merge", other.uri)
         return merged
 
 
     def patch(self, other):
         patched = super(PublishedSieve, self).patch(other)
         self._inherit(patched)
-        patched.history.append([u"patch", other.uri])
+        patched.add_history_entry(u"patch", other.uri)
         return patched
 
 
     def extract(self, extractions):
         extracted = super(PublishedSieve, self).extract(extractions)
         self._inherit(extracted)
-        extracted.history.append([u"extract",  extractions])
+        extracted.add_history_entry(u"extract",  extractions)
         return extracted
 
 
