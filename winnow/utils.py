@@ -3,7 +3,6 @@ import json
 import decimal
 
 
-
 def get_doc_hash(data):
     """
     This hash function replicates a git has for a blog

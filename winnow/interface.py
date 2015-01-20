@@ -1,4 +1,3 @@
-
 from winnow.exceptions import OptionsExceptionMissingInterfaceMethod
 
 

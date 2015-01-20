@@ -1,4 +1,4 @@
-SIEVE_SCHEMA = {
+WINNOW_SCHEMA = {
         "$schema": "http://json-schema.org/draft-04/schema#",
         "type": "object",
         "properties": {

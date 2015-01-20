@@ -3,7 +3,7 @@ from jsonschema import validate, ValidationError
 
 from winnow.options import OptionsSet
 from winnow.utils import get_doc_hash, json_dumps
-from winnow.schemas import SIEVE_SCHEMA
+from winnow.schemas import WINNOW_SCHEMA
 from winnow.exceptions import OptionsExceptionFailedValidation
 from winnow.constants import *
 
@@ -54,15 +54,13 @@ def extract(target, doc, source, extractions):
     target.add_history_extractions(extractions)
 
 
-def filter_allows(filter, possible):
-
-    filter_options = OptionsSet(filter.get_options_dict())
+def filter_allows(filter_source, possible):
+    filter_options = OptionsSet(filter_source.get_options_dict())
     return [p for p in possible if filter_options.allows(OptionsSet(p.get_options_dict()))]
 
 
-def filter_allowed_by(filter, possible):
-
-    filter_options = OptionsSet(filter.get_options_dict())
+def filter_allowed_by(filter_source, possible):
+    filter_options = OptionsSet(filter_source.get_options_dict())
     return [p for p in possible if OptionsSet(p.get_options_dict()).allows(filter_options)]
 
 
@@ -72,11 +70,15 @@ def take_snapshot(source):
     return patched
 
 
-def _set_doc(target, doc):
+def validate_doc(doc):
     try:
-        validate(doc, SIEVE_SCHEMA)
+        validate(doc, WINNOW_SCHEMA)
     except ValidationError, e:
         raise OptionsExceptionFailedValidation(e)
+
+
+def _set_doc(target, doc):
+    validate_doc(doc)
     target.set_doc(doc)
     target.set_doc_hash(get_doc_hash(json_dumps(doc)))
 

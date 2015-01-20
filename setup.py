@@ -5,4 +5,5 @@ setup(name='winnow',
       author='Paul Harter',
       author_email='username: paul, domain: opendesk.cc',
       py_modules=['winnow'],
+      requires=['jsonschema']
       )

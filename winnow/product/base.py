@@ -1,9 +1,7 @@
 import winnow
 from winnow.interface import OptionsInterface
-
 from copy import deepcopy
 from winnow.constants import *
-
 
 
 class WinnowVersion(OptionsInterface):
