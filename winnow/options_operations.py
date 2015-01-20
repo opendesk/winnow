@@ -1,54 +1,24 @@
+from winnow.options_set import OptionsSet
 from copy import deepcopy
 from jsonschema import validate, ValidationError
-
-from sieve.utils import get_doc_hash, json_dumps
+from winnow.utils import get_doc_hash, json_dumps
 from schemas import SIEVE_SCHEMA
-from sieve.options_set import OptionsSet
-from sieve.product_exceptions import ProductExceptionFailedValidation
-
-OPTIONS_KEY = u"options"
-
-HISTORY_ACTION_START = u"start"
-HISTORY_ACTION_MERGE = u"merge"
-HISTORY_ACTION_PATCH = u"patch"
+from winnow.options_exceptions import OptionsExceptionFailedValidation
+from winnow.constants import *
 
 
-class OptionsDelegate(object):
-
-    def set_is_snapshot(self):
-        pass
-
-    def set_doc_hash(self, hash):
-        pass
-
-    def add_history_action(self, action_name, sieve_delegate):
-        pass
-
-    def get_options_dict(self):
-        pass
-
-    def set_doc(self, doc):
-        pass
-
-    def get_doc(self):
-        pass
-
-    def clone_history_from(self, sieve_delegate):
-        pass
-
-    def clone(self):
-        """return a clone"""
-        pass
-
-    def get_upstream(self):
-        """
-        returns the upstream delegate
-        """
 
 
-def start(delegate, doc):
+
+def create(delegate, doc):
     _set_doc(delegate, doc)
-    delegate.add_history_action(HISTORY_ACTION_START, delegate)
+    delegate.add_history_action(HISTORY_ACTION_CREATE, delegate)
+
+
+def allows(source_delegate, input_delegate):
+    source_options = OptionsSet(source_delegate.get_options_dict())
+    input_options = OptionsSet(input_delegate.get_options_dict())
+    return source_options.allows(input_options)
 
 
 def merge(delegate, doc, source_delegate, input_delegate):
@@ -87,7 +57,7 @@ def _set_doc(delegate, doc):
     try:
         validate(doc, SIEVE_SCHEMA)
     except ValidationError, e:
-        raise ProductExceptionFailedValidation(e)
+        raise OptionsExceptionFailedValidation(e)
     delegate.set_doc(deepcopy(doc))
     delegate.set_doc_hash(get_doc_hash(json_dumps(doc)))
 
@@ -100,7 +70,3 @@ def _patch_upstream(source_delegate):
     patch(patched_delegate, source_delegate.get_doc(), source_delegate, upstream_delegate)
     patched_delegate = _patch_upstream(patched_delegate)
     return patched_delegate
-
-
-
-

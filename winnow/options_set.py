@@ -1,9 +1,9 @@
 import collections
 from copy import deepcopy
 
-from sieve.values import value_factory
+from winnow.values import value_factory
 
-from product_exceptions import ProductExceptionFailedValidation, ProductExceptionEmptyOptionValues, ProductExceptionLookupFailed
+from options_exceptions import OptionsExceptionFailedValidation, OptionsExceptionEmptyOptionValues, OptionsExceptionLookupFailed
 
 """
 
@@ -53,7 +53,7 @@ class OptionsSet(collections.MutableMapping):
             that = value_factory(other_values)
             intersection = this.intersection(that)
             if intersection == None:
-                raise ProductExceptionEmptyOptionValues("The key %s has no possible values when %s is merged with %s" % (key, self.uri, other.uri))
+                raise OptionsExceptionEmptyOptionValues("The key %s has no possible values when %s is merged with %s" % (key, self.uri, other.uri))
             return intersection.as_json()
 
 

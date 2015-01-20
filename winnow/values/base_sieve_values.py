@@ -1,5 +1,5 @@
 
-from sieve.product_exceptions import ProductExceptionFailedValidation
+from sieve.options_exceptions import OptionsExceptionFailedValidation
 
 
 

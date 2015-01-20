@@ -1,6 +1,6 @@
 import time
 import unittest
-from sieve.base_sieve import PublishedSieve, get_doc_hash
+from sieve.product.base_sieve import PublishedSieve, get_doc_hash
 from db import MockKVStore
 
 

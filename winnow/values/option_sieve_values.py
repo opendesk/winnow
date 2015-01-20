@@ -1,7 +1,7 @@
 
 from base_sieve_values import BaseSieveValue
-from sieve.product_exceptions import ProductExceptionFailedValidation, ProductExceptionIncompatibleTypes, ProductExceptionNoAllowed
-from consts import *
+from sieve.options_exceptions import OptionsExceptionFailedValidation, OptionsExceptionIncompatibleTypes, OptionsExceptionNoAllowed
+from sieve.constants import *
 from copy import deepcopy
 
 class OptionSieveValue(BaseSieveValue):
@@ -52,11 +52,11 @@ class OptionSieveValue(BaseSieveValue):
             try:
                 string_list = [unicode(v) for v in value]
             except:
-                raise ProductExceptionFailedValidation("OptionStringSieveValue unrecognised value type")
+                raise OptionsExceptionFailedValidation("OptionStringSieveValue unrecognised value type")
             # numeric = NumericSetSieveValue.make(decimal_list)
             option = OptionStringSieveValue(string_list)
             if option is None:
-                raise ProductExceptionFailedValidation("OptionSieveValue: empty set")
+                raise OptionsExceptionFailedValidation("OptionSieveValue: empty set")
             return option
 
         elif isinstance(value, dict):
@@ -64,12 +64,12 @@ class OptionSieveValue(BaseSieveValue):
             if option_type == VALUE_TYPE_OPTION_STRING:
                 return OptionStringSieveValue(value)
             else:
-                raise ProductExceptionFailedValidation("OptionSieveValue unrecognised value type")
+                raise OptionsExceptionFailedValidation("OptionSieveValue unrecognised value type")
         else:
             try:
                 s = unicode(value)
             except:
-                raise ProductExceptionFailedValidation("OptionSieveValue unrecognised value type")
+                raise OptionsExceptionFailedValidation("OptionSieveValue unrecognised value type")
 
             return OptionStringSieveValue(s)
 
@@ -79,7 +79,7 @@ class OptionSieveValue(BaseSieveValue):
             for v in list_or_single:
                 if isinstance(v, dict):
                     if not v.get(u"type") == self.type:
-                        raise ProductExceptionFailedValidation("OptionSieveValue unrecognised value type")
+                        raise OptionsExceptionFailedValidation("OptionSieveValue unrecognised value type")
             self._set_value_list(list_or_single)
             if len(list_or_single) ==  0:
                 raise Exception("null string value")

@@ -8,7 +8,7 @@ from sieve.values.numeric_sieve_values import NumericNumberSieveValue, \
     NumericStepSieveValue
 from sieve.values.consts import *
 
-from sieve.product_exceptions import ProductExceptionFailedValidation, ProductExceptionIncompatibleTypes
+from sieve.options_exceptions import OptionsExceptionFailedValidation, OptionsExceptionIncompatibleTypes
 
 
 
@@ -67,7 +67,7 @@ class TestNumberSieveCreation(unittest.TestCase):
         self.assertTrue(isinstance(value[u"value"], list))
         self.assertEqual(value[u"value"], [Decimal("2"), Decimal(3.8), Decimal("5")])
 
-        self.assertRaises(ProductExceptionFailedValidation, value_factory, [2, 3.8, "poo"])
+        self.assertRaises(OptionsExceptionFailedValidation, value_factory, [2, 3.8, "poo"])
 
 
     #     TODO think about nan

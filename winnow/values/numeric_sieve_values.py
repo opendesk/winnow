@@ -59,9 +59,9 @@ VALUE_TYPE_NUMERIC_STEP = "numeric::step"
 
 from decimal import Decimal
 from base_sieve_values import BaseSieveValue
-from sieve.product_exceptions import ProductExceptionFailedValidation, ProductExceptionIncompatibleTypes, ProductExceptionNoAllowed
+from sieve.options_exceptions import OptionsExceptionFailedValidation, OptionsExceptionIncompatibleTypes, OptionsExceptionNoAllowed
 
-from consts import *
+from sieve.constants import *
 
 class NumericSieveValue(BaseSieveValue):
 
@@ -72,11 +72,11 @@ class NumericSieveValue(BaseSieveValue):
             try:
                 decimal_list = [Decimal(v) for v in value]
             except:
-                raise ProductExceptionFailedValidation("NumericSieveValue unrecognised value type")
+                raise OptionsExceptionFailedValidation("NumericSieveValue unrecognised value type")
             # numeric = NumericSetSieveValue.make(decimal_list)
             numeric = NumericSetSieveValue(decimal_list)
             if numeric is None:
-                raise ProductExceptionFailedValidation("NumericSieveValue: empty set")
+                raise OptionsExceptionFailedValidation("NumericSieveValue: empty set")
             return numeric
 
 
@@ -90,7 +90,7 @@ class NumericSieveValue(BaseSieveValue):
                 # numeric = NumericSetSieveValue.make(value[u"value"])
                 numeric = NumericSetSieveValue(value[u"value"])
                 if numeric is None:
-                    raise ProductExceptionFailedValidation("NumericSieveValue: empty set")
+                    raise OptionsExceptionFailedValidation("NumericSieveValue: empty set")
                 return numeric
             elif numeric_type == VALUE_TYPE_NUMERIC_RANGE:
                 return NumericRangeSieveValue(value[u"max"], value[u"min"])
@@ -98,7 +98,7 @@ class NumericSieveValue(BaseSieveValue):
                 step = NumericStepSieveValue(value[u"max"], value[u"min"], value[u"start"], value[u"step"])
                 possible = step.possible_values()
                 if len(possible) == 0:
-                    raise ProductExceptionFailedValidation("NumericSieveValue: empty set")
+                    raise OptionsExceptionFailedValidation("NumericSieveValue: empty set")
                 elif len(possible) == 1:
                     return NumericNumberSieveValue(list(possible)[0])
                 else:
@@ -107,14 +107,14 @@ class NumericSieveValue(BaseSieveValue):
             try:
                 d = Decimal(value)
             except:
-                raise ProductExceptionFailedValidation("NumericSieveValue unrecognised value type")
+                raise OptionsExceptionFailedValidation("NumericSieveValue unrecognised value type")
 
             return NumericNumberSieveValue(d)
 
 
     def check_class(self, other):
         if not issubclass(other.__class__, NumericSieveValue):
-            raise ProductExceptionIncompatibleTypes("sieve value types must match")
+            raise OptionsExceptionIncompatibleTypes("sieve value types must match")
 
 
     def issubset(self, other):
@@ -166,7 +166,7 @@ class NumericNumberSieveValue(NumericSieveValue):
     def __init__(self, number):
 
         if not isinstance(number, Decimal):
-            raise ProductExceptionFailedValidation("NumericNumberSieveValue must be a Decimal")
+            raise OptionsExceptionFailedValidation("NumericNumberSieveValue must be a Decimal")
 
         self.number = number
 
@@ -192,7 +192,7 @@ class NumericNumberSieveValue(NumericSieveValue):
             if self.number >= other.min and self.number <= other.max:
                 intersects = True
         else:
-            raise ProductExceptionFailedValidation("intersection of NumericNumberSieveValue failed")
+            raise OptionsExceptionFailedValidation("intersection of NumericNumberSieveValue failed")
 
         if intersects:
             return NumericNumberSieveValue(self.number)
@@ -209,7 +209,7 @@ class NumericSetSieveValue(NumericSieveValue):
 
     def __new__(cls, as_list):
         if len(as_list) > MAX_VALUE_SET_SIZE:
-            raise ProductExceptionNoAllowed("maximum value set size exceeded")
+            raise OptionsExceptionNoAllowed("maximum value set size exceeded")
         elif len(as_list) == 0:
             return None
         elif len(as_list) == 1:
@@ -223,13 +223,13 @@ class NumericSetSieveValue(NumericSieveValue):
 
         for v in as_list:
             if not isinstance(v, Decimal):
-                raise ProductExceptionFailedValidation("NumericSetSieveValue all values must be Decimals")
+                raise OptionsExceptionFailedValidation("NumericSetSieveValue all values must be Decimals")
 
         if len(self.as_list) == 0:
-            raise ProductExceptionFailedValidation("NumericSetSieveValue: empty set")
+            raise OptionsExceptionFailedValidation("NumericSetSieveValue: empty set")
 
         if len(self.as_list) == 1:
-            raise ProductExceptionFailedValidation("NumericSetSieveValue: set with one value should have been cast into NumericNumberSieveValue")
+            raise OptionsExceptionFailedValidation("NumericSetSieveValue: set with one value should have been cast into NumericNumberSieveValue")
 
 
     def possible_values(self):
@@ -269,7 +269,7 @@ class NumericRangeSieveValue(NumericSieveValue):
         self.max = max
         self.min = min
         if self.max < self.min:
-            raise ProductExceptionFailedValidation("NumericRangeSieveValue: max %s less than min %s" % (self.max, self.min))
+            raise OptionsExceptionFailedValidation("NumericRangeSieveValue: max %s less than min %s" % (self.max, self.min))
 
 
     def possible_values(self):
@@ -293,7 +293,7 @@ class NumericRangeSieveValue(NumericSieveValue):
                 return None
             try:
                 sieve = NumericStepSieveValue.make(new_max, new_min, other.start, other.step)
-            except ProductExceptionFailedValidation:
+            except OptionsExceptionFailedValidation:
                 return None
             return sieve
         else:
@@ -333,7 +333,7 @@ class NumericStepSieveValue(NumericRangeSieveValue):
 
         if len(self.possible_values()) == 0:
 
-            raise ProductExceptionFailedValidation("NumericStepSieveValue: empty set")
+            raise OptionsExceptionFailedValidation("NumericStepSieveValue: empty set")
 
 
     def intersection(self, other):
@@ -348,7 +348,7 @@ class NumericStepSieveValue(NumericRangeSieveValue):
                 return None
             try:
                 sieve = NumericStepSieveValue.make(new_max, new_min, self.start, self.step)
-            except ProductExceptionFailedValidation:
+            except OptionsExceptionFailedValidation:
                 return None
             return sieve
         else:

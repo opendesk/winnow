@@ -6,7 +6,7 @@ import requests
 
 import uuid
 import decimal
-from sieve.product_exceptions import ProductExceptionFailedValidation, ProductExceptionEmptyOptionValues, ProductExceptionLookupFailed
+from sieve.options_exceptions import OptionsExceptionFailedValidation, OptionsExceptionEmptyOptionValues, OptionsExceptionLookupFailed
 from sieve.options_set import OptionsSet
 from sieve.utils import get_doc_hash, json_loads, json_dumps
 
@@ -49,13 +49,13 @@ class Sieve(object):
         try:
             validate(self.doc, Sieve.SIEVE_SCHEMA)
         except ValidationError, e:
-            raise ProductExceptionFailedValidation(e)
+            raise OptionsExceptionFailedValidation(e)
         except AttributeError, e:
-            raise ProductExceptionFailedValidation(e)
+            raise OptionsExceptionFailedValidation(e)
 
         for key, options in self.doc[u"options"].iteritems():
             if isinstance(options, list) and len(options) == 0:
-                raise ProductExceptionEmptyOptionValues("The key %s has no possible values" % key)
+                raise OptionsExceptionEmptyOptionValues("The key %s has no possible values" % key)
 
         self.options = OptionsSet(self.doc[u"options"])
 
@@ -178,13 +178,13 @@ class PublishedSieve(Sieve):
             self.history = history if history else [[u"start", self.uri]]
 
         except AttributeError, e:
-            raise ProductExceptionFailedValidation(e)
+            raise OptionsExceptionFailedValidation(e)
 
         try:
             validate(self.doc, PublishedSieve.SIEVE_SCHEMA)
             validate(self.doc, self.SIEVE_SCHEMA)
         except ValidationError, e:
-            raise ProductExceptionFailedValidation(e)
+            raise OptionsExceptionFailedValidation(e)
 
 
     def canonical(self, db):
@@ -240,9 +240,9 @@ class PublishedSieve(Sieve):
                 if rsp.status_code < 300:
                     upstream_json = rsp.json()
                 else:
-                    raise ProductExceptionLookupFailed("Couldn't find the upstream model")
+                    raise OptionsExceptionLookupFailed("Couldn't find the upstream model")
             except Exception, e:
-                raise ProductExceptionLookupFailed(e)
+                raise OptionsExceptionLookupFailed(e)
 
         upstream_sieve = self.__class__.from_json(upstream_json)
         new_upstream_uri = upstream_sieve.doc.get(u"upstream")

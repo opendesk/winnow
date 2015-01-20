@@ -1,4 +1,5 @@
 import json
+from sieve.utils import json_loads, json_dumps
 
 def get_db():
     return MockKVStore()
@@ -12,21 +13,22 @@ class MockKVStore(object):
         self.db = {}
         self.index = {}
 
-
     def get(self, key):
-
         result = self.db.get(key)
         if result is None:
-            return self.index.get(key)
+            result =  self.index.get(key)
+        if result is None:
+            return None
+        return json_loads(result)
 
 
     def set(self, key, value, uri=None, index=None,):
-
-        self.db[key] = value
+        v = json_dumps(value)
+        self.db[key] = v
         if index is not None:
-            self.index[index] = value
+            self.index[index] = v
         if uri is not None:
-            self.index[uri] = value
+            self.index[uri] = v
 
 
     def query(self, rules):

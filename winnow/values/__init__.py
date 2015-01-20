@@ -1,7 +1,7 @@
 from decimal import Decimal
 from numeric_sieve_values import NumericNumberSieveValue, NumericSieveValue
 from option_sieve_values import OptionSieveValue
-from .consts import *
+from sieve.constants import *
 
 
 def value_factory(value):

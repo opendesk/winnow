@@ -6,7 +6,7 @@ from db import MockKVStore
 from sieve import product_flow
 from sieve.base_sieve import json_loads, json_dumps
 from sieve.product_sieve import ProductSieve
-from sieve.product_exceptions import ProductExceptionFailedValidation, ProductExceptionEmptyOptionValues
+from sieve.options_exceptions import OptionsExceptionFailedValidation, OptionsExceptionEmptyOptionValues
 from copy import deepcopy
 import time
 
@@ -36,22 +36,22 @@ class TestPublishingProduct(unittest.TestCase):
         broken_option = deepcopy(BASE_PRODUCT)
         del broken_option[u"design"]
 
-        self.assertRaises(ProductExceptionFailedValidation, ProductSieve, broken_option)
+        self.assertRaises(OptionsExceptionFailedValidation, ProductSieve, broken_option)
 
         broken_option = deepcopy(BASE_PRODUCT)
         del broken_option[u"range"]
 
-        self.assertRaises(ProductExceptionFailedValidation, ProductSieve, broken_option)
+        self.assertRaises(OptionsExceptionFailedValidation, ProductSieve, broken_option)
 
         broken_option = deepcopy(BASE_PRODUCT)
         del broken_option[u"version"]
 
-        self.assertRaises(ProductExceptionFailedValidation, ProductSieve, broken_option)
+        self.assertRaises(OptionsExceptionFailedValidation, ProductSieve, broken_option)
 
         broken_option = deepcopy(BASE_PRODUCT)
         broken_option[u"version"][2] = u"v"
 
-        self.assertRaises(ProductExceptionFailedValidation, ProductSieve, broken_option)
+        self.assertRaises(OptionsExceptionFailedValidation, ProductSieve, broken_option)
 
 
     def test_publish_product_sieve(self):
