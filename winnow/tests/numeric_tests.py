@@ -1,14 +1,14 @@
 import unittest
 from decimal import Decimal
 
-from sieve.values import value_factory
-from sieve.values.numeric_sieve_values import NumericNumberSieveValue, \
+from winnow.values import value_factory
+from winnow.values.numeric_values import NumericNumberSieveValue, \
     NumericSetSieveValue, \
     NumericRangeSieveValue, \
     NumericStepSieveValue
-from sieve.values.consts import *
+from winnow.constants import *
 
-from sieve.options_exceptions import OptionsExceptionFailedValidation, OptionsExceptionIncompatibleTypes
+from winnow.exceptions import OptionsExceptionFailedValidation, OptionsExceptionIncompatibleTypes
 
 
 

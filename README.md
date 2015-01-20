@@ -1,4 +1,4 @@
-schema
+winnow
 ======
 
-Experiments in JSON schema based document publishing.
+A library for publishing and manipulating families of products

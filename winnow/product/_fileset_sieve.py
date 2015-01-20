@@ -42,7 +42,7 @@ class FilesetSieve(PublishedSieve):
 
     @classmethod
     def publish(self, db, fileset_json):
-        from product_sieve import ProductSieve
+        from _product_sieve import ProductSieve
 
         #ensure product ref is a snapshot
         fileset_json_dict = json_loads(fileset_json)

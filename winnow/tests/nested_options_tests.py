@@ -1,11 +1,11 @@
 import unittest
 from decimal import Decimal
 
-from sieve.values import value_factory
-from sieve.values.option_sieve_values import OptionSieveValue, OptionStringSieveValue
-from sieve.values.consts import *
+from winnow.values import value_factory
+from winnow.values.option_values import OptionSieveValue, OptionStringSieveValue
+from winnow.constants import *
 
-from sieve.options_exceptions import OptionsExceptionFailedValidation, OptionsExceptionIncompatibleTypes
+from winnow.exceptions import OptionsExceptionFailedValidation, OptionsExceptionIncompatibleTypes
 
 NESTED_OPTIONS_STRING = {
             u"type": VALUE_TYPE_OPTION_STRING,

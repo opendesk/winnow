@@ -1,5 +1,5 @@
 
-from winnow.options_exceptions import OptionsExceptionMissingInterfaceMethod
+from winnow.exceptions import OptionsExceptionMissingInterfaceMethod
 
 
 
@@ -12,7 +12,7 @@ class OptionsInterface(object):
     def set_doc_hash(self, hash):
         raise OptionsExceptionMissingInterfaceMethod("set_doc_hash")
 
-    def add_history_action(self, action_name, sieve_delegate):
+    def add_history_action(self, action_name, options_interface):
         raise OptionsExceptionMissingInterfaceMethod("add_history_action")
 
     def get_options_dict(self):
@@ -24,7 +24,7 @@ class OptionsInterface(object):
     def get_doc(self):
         raise OptionsExceptionMissingInterfaceMethod("get_doc")
 
-    def clone_history_from(self, sieve_delegate):
+    def clone_history_from(self, options_interface):
         raise OptionsExceptionMissingInterfaceMethod("clone_history_from")
 
     def clone(self):

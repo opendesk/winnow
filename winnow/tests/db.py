@@ -1,5 +1,5 @@
 import json
-from sieve.utils import json_loads, json_dumps
+from winnow.utils import json_loads, json_dumps
 
 def get_db():
     return MockKVStore()

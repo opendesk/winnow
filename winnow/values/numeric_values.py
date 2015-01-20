@@ -58,10 +58,10 @@ VALUE_TYPE_NUMERIC_STEP = "numeric::step"
 """
 
 from decimal import Decimal
-from base_sieve_values import BaseSieveValue
-from sieve.options_exceptions import OptionsExceptionFailedValidation, OptionsExceptionIncompatibleTypes, OptionsExceptionNoAllowed
+from base_values import BaseSieveValue
+from winnow.exceptions import OptionsExceptionFailedValidation, OptionsExceptionIncompatibleTypes, OptionsExceptionNoAllowed
 
-from sieve.constants import *
+from winnow.constants import *
 
 class NumericSieveValue(BaseSieveValue):
 

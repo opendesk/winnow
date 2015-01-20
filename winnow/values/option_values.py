@@ -1,7 +1,7 @@
 
-from base_sieve_values import BaseSieveValue
-from sieve.options_exceptions import OptionsExceptionFailedValidation, OptionsExceptionIncompatibleTypes, OptionsExceptionNoAllowed
-from sieve.constants import *
+from base_values import BaseSieveValue
+from winnow.exceptions import OptionsExceptionFailedValidation, OptionsExceptionIncompatibleTypes, OptionsExceptionNoAllowed
+from winnow.constants import *
 from copy import deepcopy
 
 class OptionSieveValue(BaseSieveValue):
@@ -148,7 +148,7 @@ class OptionStringSieveValue(OptionSieveValue):
 
 
     def issubset(self, other):
-        from sieve.options_set import OptionsSet
+        from winnow.options import OptionsSet
         self.check_class(other)
         other_keys = set(other.values_lookup.keys())
         self_keys = set(self.values_lookup.keys())
@@ -168,7 +168,7 @@ class OptionStringSieveValue(OptionSieveValue):
 
 
     def intersection(self, other):
-        from sieve.options_set import OptionsSet
+        from winnow.options import OptionsSet
 
         self.check_class(other)
 
@@ -270,7 +270,7 @@ class OptionObjectSieveValue(OptionSieveValue):
         methodology this time:
         False if any or my values are not found in other
         """
-        from sieve.options_set import OptionsSet
+        from winnow.options import OptionsSet
         self.check_class(other)
 
         for this_v in self.value_list:

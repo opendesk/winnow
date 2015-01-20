@@ -3,8 +3,8 @@ import json
 import time
 from product_exceptions import ProductExceptionFailedValidation, ProductExceptionLookupFailed
 from sieve.base_sieve import PublishedSieve
-from context_sieve import ContextSieve
-from fileset_sieve import FilesetSieve
+from _context_sieve import ContextSieve
+from _fileset_sieve import FilesetSieve
 
 
 import requests

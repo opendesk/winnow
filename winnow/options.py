@@ -2,8 +2,7 @@ import collections
 from copy import deepcopy
 
 from winnow.values import value_factory
-
-from options_exceptions import OptionsExceptionFailedValidation, OptionsExceptionEmptyOptionValues, OptionsExceptionLookupFailed
+from winnow.exceptions import OptionsExceptionFailedValidation, OptionsExceptionEmptyOptionValues, OptionsExceptionLookupFailed
 
 """
 

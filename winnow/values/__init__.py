@@ -1,7 +1,7 @@
 from decimal import Decimal
-from numeric_sieve_values import NumericNumberSieveValue, NumericSieveValue
-from option_sieve_values import OptionSieveValue
-from sieve.constants import *
+from numeric_values import NumericNumberSieveValue, NumericSieveValue
+from option_values import OptionSieveValue
+from winnow.constants import *
 
 
 def value_factory(value):
