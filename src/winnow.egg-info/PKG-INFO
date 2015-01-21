@@ -1,0 +1,16 @@
+Metadata-Version: 1.1
+Name: winnow
+Version: 0.1
+Summary: Product family publishing and manipulation
+Home-page: UNKNOWN
+Author: Paul Harter
+Author-email: username: paul, domain: opendesk.cc
+License: UNKNOWN
+Description: UNKNOWN
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Natural Language :: English
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 2.7.6
+Classifier: Intended Audience :: Manufacturing
+Classifier: License :: Public Domain
