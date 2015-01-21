@@ -1,3 +1,5 @@
+from winnow.models.product import PRODUCT_SCHEMA
+
 BASE = {
         "$schema": "http://json-schema.org/draft-04/schema#",
         "type": "object",
@@ -19,4 +21,4 @@ BASE = {
         "required": ["name", "description", "options"],
     }
 
-from winnow.models.product import SCHEMA as product
+product = PRODUCT_SCHEMA

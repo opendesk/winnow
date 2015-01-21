@@ -94,15 +94,18 @@ def _add_start_if_needed(target, source):
         target.add_history_action(HISTORY_ACTION_START, source)
 
 
-def validate_doc(doc, type_name=None):
+def validate_doc(doc, schema_name=None):
     try:
         validate(doc, schemas.BASE)
     except ValidationError, e:
         raise OptionsExceptionFailedValidation(e)
-    if type_name is not None:
+    if schema_name is not None:
         try:
-
-            validate(doc, )
+            schema = getattr(schemas, schema_name)
+        except AttributeError, e:
+            raise OptionsExceptionFailedValidation("couldn't find schema called for validation" % schema_name)
+        try:
+            validate(doc, schema)
         except ValidationError, e:
             raise OptionsExceptionFailedValidation(e)
 
