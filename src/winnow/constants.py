@@ -1,6 +1,6 @@
 OPTIONS_KEY = u"options"
 
-HISTORY_ACTION_CREATE = u"create"
+HISTORY_ACTION_START = u"start"
 HISTORY_ACTION_MERGE = u"merge"
 HISTORY_ACTION_PATCH = u"patch"
 HISTORY_ACTION_EXTRACT = u"extract"

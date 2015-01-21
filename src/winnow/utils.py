@@ -1,6 +1,7 @@
 import hashlib
 import json
 import decimal
+import uuid
 
 
 def get_doc_hash(data):
@@ -9,10 +10,11 @@ def get_doc_hash(data):
     it is used to hash documents
     """
     s = hashlib.sha1()
-    s.update("blob %u\0" % len(data))
     s.update(data)
     return unicode(s.hexdigest())
 
+def get_uuid():
+    return unicode(uuid.uuid4())
 
 """
  Json encoding and decoding conventions
