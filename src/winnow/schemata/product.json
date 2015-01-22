@@ -1,0 +1,38 @@
+{
+    "id": "http://opendesk.cc/schemata/product.json",
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Winnow Product",
+    "type": "object",
+    "allOf": [
+        {
+            "$ref": "http://opendesk.cc/schemata/typed.json#"
+        },
+        {
+            "properties": {
+                "version": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                },
+                "is_default":{
+                    "type": "boolean"
+                },
+                "is_public":{
+                    "type": "boolean"
+                },
+                "upstream": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string",
+                    "pattern": ""
+                },
+            },
+            "required": ["version"],
+            "additional_properties": false
+        }
+    ]
+}
+
+

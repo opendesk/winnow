@@ -1,4 +1,9 @@
 {
+    "schema": "http://opendesk.cc/schemata/fileset.json",
+    "type": "fileset",
+    "path": "/ranges/lean/cafe-table/standard/test_fileset",
+    "source": "https://github.com/opendesk/collection",
+    "base": "https://raw.github.com/opendesk/collection/master",
     "category": "sheets", 
     "description": "Cad files for 18mm ply", 
     "files": [
@@ -6,13 +11,11 @@
         "files/test_2.txt"
     ], 
     "name": "Test Fileset",
-    "slug": "test_fileset",
     "version": [1, 0, 1],
     "options": {
         "material": "all-ply", 
         "sheet": "18mm", 
         "thickness": 17.9, 
         "tolerance": 0
-    }, 
-    "product": "products/lean/cafe-table/standard"
+    }
 }

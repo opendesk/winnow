@@ -2,14 +2,8 @@ import uuid
 import winnow
 from winnow.interface import OptionsInterface
 from copy import deepcopy
-from winnow.schemas import BASE
+
 from winnow.constants import *
-
-
-class WinnowParent(object):
-
-    def publish(self, db, doc):
-        pass
 
 
 

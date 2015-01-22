@@ -1,58 +1,57 @@
 {
-    "description": "A nice cafe table with three legs", 
-    "design": "cafe-table",
-    "slug": "standard",
-    "name": "Standard",
-    "options": {
+    "schema": "http://opendesk.cc/schemata/product.json",
+    "type": "product",
+    "path": "/ranges/lean/cafe-table/standard",
+    "source": "https://github.com/opendesk/collection",
+    "base": "https://raw.github.com/opendesk/collection/master",
+    "version": [0,0,1],
+    "name": "Standard Cafe Table",
+    "description": "A nice cafe table with three legs",
+    "is_default": true,
+    "is_public": true,
+    "upstream": "qwer",
+    "options":{
         "material": {
-            "description": "Choose one of the materials", 
-            "name": "Material", 
-            "type": "option::string", 
+            "type": "option::string",
+            "name": "Material",
+            "description": "Choose one of the materials",
             "values": [
                 {
-                    "description": "Everything is made out of ply", 
-                    "image_uri": "http://something.com/khgfdkyg.png", 
-                    "name": "All ply", 
-                    "type": "option::string", 
-                    "value": "all-ply"
-                }, 
+                    "type": "option::string",
+                    "name": "All ply",
+                    "description": "Everything is made out of ply",
+                    "image_uri": "http://something.com/khgfdkyg.png",
+                    "value": "all_ply"
+                },
                 {
-                    "description": "The legs are ply and the top is wisa", 
-                    "image_uri": "http://something.com/khgfdkyg.png", 
-                    "name": "Wisa", 
-                    "type": "option::string", 
+                    "type": "option::string",
+                    "name": "Wisa",
+                    "description": "The legs are ply and the top is wisa",
+                    "image_uri": "http://something.com/khgfdkyg.png",
                     "value": "wisa"
                 }
             ]
-        }, 
+        },
         "sheet": {
-            "description": "The nominal sheet thickness", 
-            "name": "Nominal sheet thickness", 
-            "type": "option::string", 
+            "type": "option::string",
+            "name": "Nominal sheet thickness",
+            "description": "The nominal sheet thickness",
             "values": [
                 {
-                    "description": "18mm ply wood", 
-                    "image_uri": "http://something.com/khgfdkyg.png", 
-                    "name": "18mm", 
-                    "type": "option::string", 
-                    "value": "18mm"
-                }, 
+                    "type": "option::string",
+                    "name": "18mm",
+                    "description": "18mm ply wood",
+                    "image_uri": "http://something.com/khgfdkyg.png",
+                    "value": "18"
+                },
                 {
-                    "description": "25mm ply wood", 
-                    "image_uri": "http://something.com/khgfdkyg.png", 
-                    "name": "25mm", 
-                    "type": "option::string", 
-                    "value": "25mm"
+                    "type": "option::string",
+                    "name": "25mm",
+                    "description": "25mm ply wood",
+                    "image_uri": "http://something.com/khgfdkyg.png",
+                    "value": "25"
                 }
             ]
         }
-    }, 
-    "public": true, 
-    "range": "lean", 
-    "standard": true, 
-    "version": [
-        0, 
-        0, 
-        1
-    ]
+    }
 }

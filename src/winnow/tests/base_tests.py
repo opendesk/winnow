@@ -154,8 +154,8 @@ class TestSieveExtract(unittest.TestCase):
         to_extract =  {u"name": u"extractions",
                     u"description": u"Only take these keys",
                     u"options":{
-                        u"color": [],
-                        u"size": []
+                        u"color": None,
+                        u"size": None
                     }
                 }
 

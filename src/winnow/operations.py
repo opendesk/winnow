@@ -3,9 +3,10 @@ from jsonschema import validate, ValidationError
 
 from winnow.options import OptionsSet
 from winnow import utils
-from winnow import schemas
+from winnow import validation
 from winnow.exceptions import OptionsExceptionFailedValidation
 from winnow.constants import *
+
 
 
 def add_doc(target, doc):
@@ -94,23 +95,14 @@ def _add_start_if_needed(target, source):
         target.add_history_action(HISTORY_ACTION_START, source)
 
 
-def validate_doc(doc, schema_name=None):
+def validate(doc):
     try:
-        validate(doc, schemas.BASE)
+        validation.validate(doc)
     except ValidationError, e:
         raise OptionsExceptionFailedValidation(e)
-    if schema_name is not None:
-        try:
-            schema = getattr(schemas, schema_name)
-        except AttributeError, e:
-            raise OptionsExceptionFailedValidation("couldn't find schema called for validation" % schema_name)
-        try:
-            validate(doc, schema)
-        except ValidationError, e:
-            raise OptionsExceptionFailedValidation(e)
 
 
 def _set_doc(target, doc):
-    validate_doc(doc)
+    validate(doc)
     target.set_doc(doc)
     target.set_doc_hash(utils.get_doc_hash(utils.json_dumps(doc)))

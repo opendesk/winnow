@@ -1,13 +1,13 @@
+class OptionsExceptionBase(Exception):pass
 
+class OptionsExceptionFailedValidation(OptionsExceptionBase):pass
 
-class OptionsExceptionFailedValidation(Exception):pass
+class OptionsExceptionIncompatibleTypes(OptionsExceptionBase):pass
 
-class OptionsExceptionIncompatibleTypes(Exception):pass
+class OptionsExceptionLookupFailed(OptionsExceptionBase):pass
 
-class OptionsExceptionLookupFailed(Exception):pass
+class OptionsExceptionNoAllowed(OptionsExceptionBase):pass
 
-class OptionsExceptionNoAllowed(Exception):pass
+class OptionsExceptionEmptyOptionValues(OptionsExceptionBase):pass
 
-class OptionsExceptionEmptyOptionValues(Exception):pass
-
-class OptionsExceptionMissingInterfaceMethod(Exception):pass
+class OptionsExceptionMissingInterfaceMethod(OptionsExceptionBase):pass
