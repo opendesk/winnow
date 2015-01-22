@@ -1,6 +1,6 @@
 
 from base_values import BaseSieveValue
-from winnow.exceptions import OptionsExceptionFailedValidation, OptionsExceptionIncompatibleTypes, OptionsExceptionNoAllowed
+from winnow.exceptions import OptionsExceptionFailedValidation
 from winnow.constants import *
 from copy import deepcopy
 

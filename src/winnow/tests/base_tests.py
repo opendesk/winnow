@@ -3,7 +3,7 @@ from winnow.utils import json_dumps, json_loads
 import winnow
 from winnow.models.base import WinnowVersion
 from copy import deepcopy
-from winnow.exceptions import OptionsExceptionFailedValidation, OptionsExceptionNoAllowed
+from winnow.exceptions import OptionsExceptionFailedValidation
 
 
 from decimal import Decimal

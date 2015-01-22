@@ -26,8 +26,8 @@
                 },
                 "type": {
                     "type": "string",
-                    "pattern": ""
-                },
+                    "pattern": "product"
+                }
             },
             "required": ["version"],
             "additional_properties": false

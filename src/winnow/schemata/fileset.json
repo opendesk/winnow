@@ -26,8 +26,11 @@
                     "items": {
                         "type": "string"
                     }
+                },
+                "type": {
+                    "type": "string",
+                    "pattern": "fileset"
                 }
-
             },
             "required": ["version", "files"],
             "additional_properties": false
