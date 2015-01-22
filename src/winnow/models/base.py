@@ -2,13 +2,11 @@ import uuid
 import winnow
 from winnow.interface import OptionsInterface
 from copy import deepcopy
-from winnow.schemas import WINNOW_SCHEMA
+from winnow.schemas import BASE
 from winnow.constants import *
 
 
 class WinnowParent(object):
-
-    schema = WINNOW_SCHEMA
 
     def publish(self, db, doc):
         pass
@@ -78,7 +76,6 @@ class WinnowVersion(OptionsInterface):
     ## OptionsInterface methods
 
     def set_is_expanded(self):
-        print "set_is_expanded"
         self.kwargs[u"is_expanded"] = True
 
     def set_doc_hash(self, hash):
@@ -109,7 +106,6 @@ class WinnowVersion(OptionsInterface):
         if upstream_id is None:
             return None
         else:
-            print upstream_id
             kwargs = self.db.get(upstream_id)
             return WinnowVersion(self.db, kwargs)
 
