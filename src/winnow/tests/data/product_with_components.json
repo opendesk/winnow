@@ -1,0 +1,71 @@
+{
+    "schema": "http://opendesk.cc/schemata/product.json",
+    "type": "product",
+    "path": "/ranges/lean/cafe-table/standard",
+    "source": "https://github.com/opendesk/collection",
+    "base": "https://raw.github.com/opendesk/collection/master",
+    "version": [0,0,1],
+    "name": "Standard Cafe Table",
+    "description": "A nice cafe table with three legs",
+    "is_default": true,
+    "is_public": true,
+    "options":{
+        "style": {
+            "type": "set::string",
+            "name": "Style",
+            "description": "Choose one of the styles",
+            "values": [
+                {
+                    "type": "value::string",
+                    "name": "All Ply",
+                    "description": "Everything is made out of ply",
+                    "value": "all_ply"
+                },
+                {
+                    "type": "value::string",
+                    "name": "Wisa Top",
+                    "description": "The top is made from wisa and the legs from ply",
+                    "value": "wisa_top"
+                }
+            ]
+        },
+        "components": {
+            "type": "set::string",
+            "name": "components",
+            "description": "the parts of the table",
+            "values": [
+                {
+                    "type": "value::string",
+                    "name": "Top",
+                    "description": "The top of the table",
+                    "value": "top",
+                    "options": {
+                        "finish": {
+                            "type": "set::finish",
+                            "name": "finish",
+                            "description": "the finish of the table top",
+                            "values": [
+                                {"$ref": "/finishes/opendesk/premium-birch-ply"},
+                                {"$ref": "/finishes/opendesk/premium-wisa" }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "type": "value::string",
+                    "name": "Legs",
+                    "description": "The legs of the table",
+                    "value": "legs",
+                    "options": {
+                        "finish": {
+                            "type": "set::finish",
+                            "values": [
+                                { "$ref": "/finishes/opendesk/premium-birch-ply" }
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}

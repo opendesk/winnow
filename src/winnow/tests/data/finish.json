@@ -1,0 +1,27 @@
+{
+    "schema": "http://opendesk.cc/schemata/finish.json",
+    "type": "finish",
+    "name": "Standard Plywood",
+    "path": "/finishes/opendesk/standard-plywood",
+    "description": "Standard Natural Plywood",
+    "image_uri": "http://something.com/khgfdkyg.png",
+    "value": "/finishes/opendesk/standard-plywood",
+    "options":{
+        "material": {
+            "wisa":{
+                "value": {"$ref": "sdfghjkl"},
+                "options":{
+                    "processes":
+                        [{"$ref": "sdfghjkl"}, {"$ref": "sdfgyhu"}]
+                }
+            },
+            "ply":{
+                "options":{
+
+                }
+            }
+        }
+    }
+}
+
+

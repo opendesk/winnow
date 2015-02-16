@@ -1,29 +1,21 @@
 {
-    "id": "http://opendesk.cc/schemata/product.json",
+    "id": "http://opendesk.cc/schemata/material.json",
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "title": "Winnow Product",
+    "title": "Winnow Material",
     "type": "object",
     "allOf": [
         {"$ref": "http://opendesk.cc/schemata/base/value.json#"},
         {"$ref": "http://opendesk.cc/schemata/base/options.json#"},
         {"$ref": "http://opendesk.cc/schemata/base/canonical.json#"},
-        {"$ref": "http://opendesk.cc/schemata/base/upstream.json#"},
         {
             "properties": {
-                "is_default":{
-                    "type": "boolean"
-                },
-                "is_public":{
-                    "type": "boolean"
-                },
                 "type": {
                     "type": "string",
-                    "pattern": "product"
+                    "pattern": "material"
                 }
             },
-            "additional_properties": false
+            "additional_properties": true,
+            "required": ["name", "description"]
         }
     ]
 }
-
-

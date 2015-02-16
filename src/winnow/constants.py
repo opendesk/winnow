@@ -11,15 +11,26 @@ VALUE_TYPE_NUMERIC_SET      = u"numeric::set"
 VALUE_TYPE_NUMERIC_RANGE    = u"numeric::range"
 VALUE_TYPE_NUMERIC_STEP     = u"numeric::step"
 
-# choices
-VALUE_TYPE_OPTION_STRING    = u"option::string"
-VALUE_TYPE_OPTION_OBJECT    = u"option::object"
-# really just objects but typed
-VALUE_TYPE_OPTION_SIZE      = u"option::size"
-VALUE_TYPE_OPTION_COLOUR    = u"option::colour"
+# choices & values
+VALUE_TYPE_SET_STRING    = u"set::string"
+VALUE_TYPE_VALUE_STRING    = u"value::string"
+
+
+# choices & values
+VALUE_TYPE_SET_OBJECT    = u"set::object"
+VALUE_TYPE_VALUE_OBJECT    = u"value::object"
 
 # choices with members of a taxonomy
-VALUE_TYPE_OPTION_MATERIAL  = u"option::material"
-VALUE_TYPE_OPTION_FINISH    = u"option::finish"
+VALUE_TYPE_SET_MATERIAL  = u"set::material"
+VALUE_TYPE_VALUE_MATERIAL  = u"value::material"
+
+VALUE_TYPE_SET_FINISH    = u"set::finish"
+VALUE_TYPE_VALUE_FINISH    = u"value::finish"
+
+VALUE_TYPE_SET_PROCESS    = u"set::process"
+VALUE_TYPE_VALUE_PROCESS    = u"value::process"
 
 MAX_VALUE_SET_SIZE = 1000000
+
+# key names
+VALUES_KEY_NAME = u"values"

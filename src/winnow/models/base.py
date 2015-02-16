@@ -6,10 +6,6 @@ from copy import deepcopy
 from winnow.constants import *
 
 
-
-
-
-
 class WinnowVersion(OptionsInterface):
 
     def __init__(self, db, kwargs):
@@ -25,6 +21,9 @@ class WinnowVersion(OptionsInterface):
         wv = cls(db, kwargs)
         winnow.add_doc(wv, doc)
         db.set(wv.kwargs[u"uuid"], wv.kwargs)
+        path = wv.kwargs[u"doc"].get(u"path")
+        if path is not None:
+            db.set(path, wv.kwargs)
         return wv
 
     @classmethod
@@ -51,9 +50,10 @@ class WinnowVersion(OptionsInterface):
     @classmethod
     def expanded(cls, db, kwargs, source):
         wv = cls(db, kwargs)
-        winnow.expand(wv, source.kwargs[u"doc"], source)
+        winnow.expand(wv, source)
         db.set(wv.kwargs[u"uuid"], wv.kwargs)
         return wv
+
 
     def allows(self, other):
         return winnow.allows(self, other)
@@ -89,6 +89,16 @@ class WinnowVersion(OptionsInterface):
 
     def set_doc(self, doc):
         self.kwargs[u"doc"] = doc
+
+    def get_doc(self):
+        return self.kwargs[u"doc"]
+
+    def get_ref(self, ref):
+        version = self.db.get(ref)
+        if version is None:
+            return None
+        return version[u"doc"]
+
 
     def clone_history_from(self, options_interface):
         history = options_interface.kwargs.get(u"history")

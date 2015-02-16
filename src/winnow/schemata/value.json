@@ -1,6 +1,0 @@
-{
-    "id": "http://opendesk.cc/schemata/value.json",
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "title": "Winnow Values",
-    "type": "object"
-}

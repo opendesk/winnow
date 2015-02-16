@@ -1,0 +1,13 @@
+{
+    "schema": "http://opendesk.cc/schemata/material.json",
+    "source": "https://github.com/opendesk/collection",
+    "type": "value::material",
+    "name": "Plywood",
+    "path": "/materials/opendesk/sheets/wood/composite/plywood",
+    "description": "All types of plywood",
+    "value": "plywood",
+    "options":{
+    }
+}
+
+

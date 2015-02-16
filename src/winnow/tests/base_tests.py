@@ -33,11 +33,6 @@ class TestValidSieve(unittest.TestCase):
 
         version = WinnowVersion.add_doc(self.db, BASE_PRODUCT, {})
 
-        broken_option = deepcopy(BASE_PRODUCT)
-        broken_option[u"options"] = u"text"
-
-        self.assertRaises(OptionsExceptionFailedValidation, WinnowVersion.add_doc, self.db, broken_option, {})
-
 
 
 class TestSieveAllows(unittest.TestCase):

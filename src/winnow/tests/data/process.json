@@ -1,0 +1,10 @@
+{
+    "schema": "http://opendesk.cc/schemata/process.json",
+    "type": "value::ref::process",
+    "name": "Sanded",
+    "path": "/processes/sanded",
+    "description": "Sand it!",
+    "image_uri": "http://something.com/khgfdkyg.png",
+    "value": {
+    }
+}

@@ -9,7 +9,7 @@
     "description": "A nice cafe table with three legs",
     "is_default": true,
     "is_public": true,
-    "upstream": "qwerty",
+    "upstream": "qwer",
     "options":{
         "material": {
             "type": "set::string",
@@ -17,16 +17,18 @@
             "description": "Choose one of the materials",
             "values": [
                 {
-                    "$ref" : "/materials/opendesk/sheets/wood/composite/plywood",
-                    "options": {
-                        "thickness": "18mm"
-                    }
+                    "type": "value::string",
+                    "name": "All ply",
+                    "description": "Everything is made out of ply",
+                    "image_uri": "http://something.com/khgfdkyg.png",
+                    "value": "all_ply"
                 },
                 {
-                    "$ref" : "/materials/opendesk/sheets/wood/composite/plywood/pre-laminated-plywood/wisa-multiwall",
-                    "options": {
-                        "thickness": "18mm"
-                    }
+                    "type": "value::string",
+                    "name": "Wisa",
+                    "description": "The legs are ply and the top is wisa",
+                    "image_uri": "http://something.com/khgfdkyg.png",
+                    "value": "wisa"
                 }
             ]
         },
@@ -40,9 +42,24 @@
                     "name": "18mm",
                     "description": "18mm ply wood",
                     "image_uri": "http://something.com/khgfdkyg.png",
-                    "value": "18mm"
+                    "value": "18"
+                },
+                {
+                    "type": "value::string",
+                    "name": "25mm",
+                    "description": "25mm ply wood",
+                    "image_uri": "http://something.com/khgfdkyg.png",
+                    "value": "25"
                 }
             ]
+        },
+        "thickness": {
+            "name": "actual sheet thickness",
+            "description": "The actual thickness of the sheet to the nearest 0.1 mm",
+            "max": 19,
+            "min": 17.5,
+            "start": 17.5,
+            "step": 0.1
         }
     }
 }

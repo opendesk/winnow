@@ -1,2 +1,0 @@
-add name and description to numeric options
-add localfilepaths in fileset use a githash ??

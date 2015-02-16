@@ -8,12 +8,12 @@ from winnow.constants import *
 from winnow.exceptions import OptionsExceptionFailedValidation, OptionsExceptionIncompatibleTypes
 
 NESTED_OPTIONS_STRING = {
-            u"type": VALUE_TYPE_OPTION_STRING,
+            u"type": VALUE_TYPE_SET_STRING,
             u"name": u"colour",
             u"description": u"please choose one of the colours",
-            u"values": [
+            VALUES_KEY_NAME: [
                 {
-                    u"type": VALUE_TYPE_OPTION_STRING,
+                    u"type": VALUE_TYPE_SET_STRING,
                     u"name": u"red",
                     u"description": u"the colour red",
                     u"image_uri": u"http://something.com/khgfdkyg.png",
@@ -29,7 +29,7 @@ NESTED_OPTIONS_STRING = {
                     }
                 },
                 {
-                    u"type": VALUE_TYPE_OPTION_STRING,
+                    u"type": VALUE_TYPE_SET_STRING,
                     u"name": u"blue",
                     u"description": u"the colour blue",
                     u"image_uri": u"http://something.com/khgfdkyg.png",
@@ -49,7 +49,7 @@ class TestNestedOptionSieveCreation(unittest.TestCase):
         d = option.as_json()
 
         self.assertTrue(isinstance(option, OptionStringSieveValue))
-        self.assertEqual(option.type, VALUE_TYPE_OPTION_STRING)
+        self.assertEqual(option.type, VALUE_TYPE_SET_STRING)
         self.assertTrue(isinstance(d, dict))
 
         self.assertEqual(len(option), 2)
@@ -62,12 +62,12 @@ class TestNestedOptionSieveCreation(unittest.TestCase):
         """
 
         NESTED_OPTIONS_STRING_2 = {
-            u"type": VALUE_TYPE_OPTION_STRING,
+            u"type": VALUE_TYPE_SET_STRING,
             u"name": u"colour",
             u"description": u"please choose one of the colours",
-            u"values": [
+            VALUES_KEY_NAME: [
                 {
-                    u"type": VALUE_TYPE_OPTION_STRING,
+                    u"type": VALUE_TYPE_SET_STRING,
                     u"name": u"red",
                     u"description": u"the colour red",
                     u"image_uri": u"http://something.com/khgfdkyg.png",
@@ -83,7 +83,7 @@ class TestNestedOptionSieveCreation(unittest.TestCase):
                     }
                 },
                 {
-                    u"type": VALUE_TYPE_OPTION_STRING,
+                    u"type": VALUE_TYPE_SET_STRING,
                     u"name": u"blue",
                     u"description": u"the colour blue",
                     u"image_uri": u"http://something.com/khgfdkyg.png",
@@ -100,12 +100,12 @@ class TestNestedOptionSieveCreation(unittest.TestCase):
 
 
         NESTED_OPTIONS_STRING_3 = {
-            u"type": VALUE_TYPE_OPTION_STRING,
+            u"type": VALUE_TYPE_SET_STRING,
             u"name": u"colour",
             u"description": u"please choose one of the colours",
-            u"values": [
+            VALUES_KEY_NAME: [
                 {
-                    u"type": VALUE_TYPE_OPTION_STRING,
+                    u"type": VALUE_TYPE_SET_STRING,
                     u"name": u"red",
                     u"description": u"the colour red",
                     u"image_uri": u"http://something.com/khgfdkyg.png",
@@ -121,7 +121,7 @@ class TestNestedOptionSieveCreation(unittest.TestCase):
                     }
                 },
                 {
-                    u"type": VALUE_TYPE_OPTION_STRING,
+                    u"type": VALUE_TYPE_SET_STRING,
                     u"name": u"blue",
                     u"description": u"the colour blue",
                     u"image_uri": u"http://something.com/khgfdkyg.png",
@@ -131,12 +131,12 @@ class TestNestedOptionSieveCreation(unittest.TestCase):
         }
 
         NESTED_OPTIONS_STRING_4 = {
-            u"type": VALUE_TYPE_OPTION_STRING,
+            u"type": VALUE_TYPE_SET_STRING,
             u"name": u"colour",
             u"description": u"please choose one of the colours",
-            u"values": [
+            VALUES_KEY_NAME: [
                 {
-                    u"type": VALUE_TYPE_OPTION_STRING,
+                    u"type": VALUE_TYPE_SET_STRING,
                     u"name": u"red",
                     u"description": u"the colour red",
                     u"image_uri": u"http://something.com/khgfdkyg.png",
@@ -152,7 +152,7 @@ class TestNestedOptionSieveCreation(unittest.TestCase):
                     }
                 },
                 {
-                    u"type": VALUE_TYPE_OPTION_STRING,
+                    u"type": VALUE_TYPE_SET_STRING,
                     u"name": u"blue",
                     u"description": u"the colour blue",
                     u"image_uri": u"http://something.com/khgfdkyg.png",
@@ -180,12 +180,12 @@ class TestNestedOptionSieveCreation(unittest.TestCase):
 
 
         NESTED_OPTIONS_STRING_2 = {
-            u"type": VALUE_TYPE_OPTION_STRING,
+            u"type": VALUE_TYPE_SET_STRING,
             u"name": u"colour",
             u"description": u"please choose one of the colours",
-            u"values": [
+            VALUES_KEY_NAME: [
                 {
-                    u"type": VALUE_TYPE_OPTION_STRING,
+                    u"type": VALUE_TYPE_SET_STRING,
                     u"name": u"red",
                     u"description": u"the colour red",
                     u"image_uri": u"http://something.com/khgfdkyg.png",
@@ -201,7 +201,7 @@ class TestNestedOptionSieveCreation(unittest.TestCase):
                     }
                 },
                 {
-                    u"type": VALUE_TYPE_OPTION_STRING,
+                    u"type": VALUE_TYPE_SET_STRING,
                     u"name": u"blue",
                     u"description": u"the colour blue",
                     u"image_uri": u"http://something.com/khgfdkyg.png",
@@ -218,31 +218,31 @@ class TestNestedOptionSieveCreation(unittest.TestCase):
 
         self.assertTrue(isinstance(intersection, OptionStringSieveValue))
         self.assertTrue(isinstance(d, dict))
-        self.assertTrue(d[u"values"][1][u"value"] == u"red")
-        self.assertTrue(set(d[u"values"][1][u"options"][u"paint_coats"][u"value"]) == {Decimal(4), Decimal(5), Decimal(6)})
+        self.assertTrue(d[VALUES_KEY_NAME][1][u"value"] == u"red")
+        self.assertTrue(set(d[VALUES_KEY_NAME][1][u"options"][u"paint_coats"][u"value"]) == {Decimal(4), Decimal(5), Decimal(6)})
 
         ## if they have different keys check merge ok
 
         NESTED_OPTIONS_STRING_3 = {
-            u"type": VALUE_TYPE_OPTION_STRING,
+            u"type": VALUE_TYPE_SET_STRING,
             u"name": u"colour",
             u"description": u"please choose one of the colours",
-            u"values": [
+            VALUES_KEY_NAME: [
                 {
-                    u"type": VALUE_TYPE_OPTION_STRING,
+                    u"type": VALUE_TYPE_SET_STRING,
                     u"name": u"red",
                     u"description": u"the colour red",
                     u"image_uri": u"http://something.com/khgfdkyg.png",
                     u"value": u"red",
                     u"options":{
                         u"apples":{
-                            u"type": VALUE_TYPE_OPTION_STRING,
+                            u"type": VALUE_TYPE_SET_STRING,
                             u"value": [u"cox", u"jazz", u"bramley"]
                         }
                     }
                 },
                 {
-                    u"type": VALUE_TYPE_OPTION_STRING,
+                    u"type": VALUE_TYPE_SET_STRING,
                     u"name": u"blue",
                     u"description": u"the colour blue",
                     u"image_uri": u"http://something.com/khgfdkyg.png",
@@ -259,27 +259,27 @@ class TestNestedOptionSieveCreation(unittest.TestCase):
 
         self.assertTrue(isinstance(intersection, OptionStringSieveValue))
         self.assertTrue(isinstance(d, dict))
-        self.assertTrue(d[u"values"][1][u"value"] == u"red")
-        self.assertTrue(d[u"values"][1][u"options"][u"paint_coats"][u"max"] == Decimal(6))
-        self.assertTrue(d[u"values"][1][u"options"][u"apples"][u"value"] == [u"cox", u"jazz", u"bramley"])
+        self.assertTrue(d[VALUES_KEY_NAME][1][u"value"] == u"red")
+        self.assertTrue(d[VALUES_KEY_NAME][1][u"options"][u"paint_coats"][u"max"] == Decimal(6))
+        self.assertTrue(d[VALUES_KEY_NAME][1][u"options"][u"apples"][u"value"] == [u"cox", u"jazz", u"bramley"])
 
     def test_intersection_2(self):
         ## if have no options just copies
 
         NESTED_OPTIONS_STRING_4 = {
-            u"type": VALUE_TYPE_OPTION_STRING,
+            u"type": VALUE_TYPE_SET_STRING,
             u"name": u"colour",
             u"description": u"please choose one of the colours",
-            u"values": [
+            VALUES_KEY_NAME: [
                 {
-                    u"type": VALUE_TYPE_OPTION_STRING,
+                    u"type": VALUE_TYPE_SET_STRING,
                     u"name": u"red",
                     u"description": u"the colour red",
                     u"image_uri": u"http://something.com/khgfdkyg.png",
                     u"value": u"red",
                 },
                 {
-                    u"type": VALUE_TYPE_OPTION_STRING,
+                    u"type": VALUE_TYPE_SET_STRING,
                     u"name": u"blue",
                     u"description": u"the colour blue",
                     u"image_uri": u"http://something.com/khgfdkyg.png",
@@ -296,8 +296,8 @@ class TestNestedOptionSieveCreation(unittest.TestCase):
 
         self.assertTrue(isinstance(intersection, OptionStringSieveValue))
         self.assertTrue(isinstance(d, dict))
-        self.assertTrue(d[u"values"][1][u"value"] == u"red")
-        self.assertTrue(d[u"values"][1][u"options"][u"paint_coats"][u"max"] == Decimal(6))
+        self.assertTrue(d[VALUES_KEY_NAME][1][u"value"] == u"red")
+        self.assertTrue(d[VALUES_KEY_NAME][1][u"options"][u"paint_coats"][u"max"] == Decimal(6))
 
         ## the other way round
         intersection = option4.intersection(option1)
@@ -305,8 +305,8 @@ class TestNestedOptionSieveCreation(unittest.TestCase):
 
         self.assertTrue(isinstance(intersection, OptionStringSieveValue))
         self.assertTrue(isinstance(d, dict))
-        self.assertTrue(d[u"values"][1][u"value"] == u"red")
-        self.assertTrue(d[u"values"][1][u"options"][u"paint_coats"][u"max"] == Decimal(6))
+        self.assertTrue(d[VALUES_KEY_NAME][1][u"value"] == u"red")
+        self.assertTrue(d[VALUES_KEY_NAME][1][u"options"][u"paint_coats"][u"max"] == Decimal(6))
 
 
     def test_isdisjoint(self):

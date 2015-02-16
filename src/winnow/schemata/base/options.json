@@ -1,15 +1,9 @@
 {
-    "id": "http://opendesk.cc/schemata/options.json",
+    "id": "http://opendesk.cc/schemata/base/options.json",
     "$schema": "http://json-schema.org/draft-04/schema#",
     "title": "Winnow Options",
     "type": "object",
     "properties": {
-        "name": {
-            "type": "string"
-        },
-        "description": {
-            "type": "string"
-        },
         "options": {
             "type": "object",
             "patternProperties": {
@@ -27,13 +21,13 @@
                         }
                     },
                     {"type": "string"},
-                    {"$ref": "http://opendesk.cc/schemata/value.json#"},
+                    {"$ref": "http://opendesk.cc/schemata/base/set.json#"},
+                    {"$ref": "http://opendesk.cc/schemata/base/numeric.json#"},
                     {"type": "number"},
                     {"type": "null"}
                 ]}
             },
             "additionalProperties": false
         }
-    },
-    "required": ["name", "description", "options"]
+    }
 }

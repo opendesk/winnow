@@ -16,7 +16,7 @@ class OptionSieveValue(BaseSieveValue):
             self.image_url = value.get("image_url")
             if not value.get(u"type") == self.type:
                 raise Exception("wring dict for OptionSieveValue %s" % value)
-            self.set_my_values(value.get(u"values"))
+            self.set_my_values(value.get(VALUES_KEY_NAME))
 
         else:
             self.uri = None
@@ -61,7 +61,8 @@ class OptionSieveValue(BaseSieveValue):
 
         elif isinstance(value, dict):
             option_type = value[u"type"]
-            if option_type == VALUE_TYPE_OPTION_STRING:
+            if option_type == VALUE_TYPE_SET_STRING:
+
                 return OptionStringSieveValue(value)
             else:
                 raise OptionsExceptionFailedValidation("OptionSieveValue unrecognised value type")
@@ -75,11 +76,13 @@ class OptionSieveValue(BaseSieveValue):
 
 
     def set_my_values(self, list_or_single):
+
         if isinstance(list_or_single, list):
-            for v in list_or_single:
-                if isinstance(v, dict):
-                    if not v.get(u"type") == self.type:
-                        raise OptionsExceptionFailedValidation("OptionSieveValue unrecognised value type")
+            # for v in list_or_single:
+            #     if isinstance(v, dict):
+            #         if not v.get(u"type") == self.type:
+            #             print "type", v.get(u"type"), self.type
+            #             raise OptionsExceptionFailedValidation("OptionSieveValue unrecognised value type")
             self._set_value_list(list_or_single)
             if len(list_or_single) ==  0:
                 raise Exception("null string value")
@@ -103,7 +106,7 @@ class OptionSieveValue(BaseSieveValue):
         ## otherwise wrap it in a dict
         value =  {
             u"type": self.type,
-            u"values": values,
+            VALUES_KEY_NAME: values,
         }
 
         if self.name is not None:
@@ -121,7 +124,7 @@ class OptionSieveValue(BaseSieveValue):
 
 class OptionStringSieveValue(OptionSieveValue):
 
-    type = VALUE_TYPE_OPTION_STRING
+    type = VALUE_TYPE_SET_STRING
 
     def validate_single_value(self, value):
         if not isinstance(value, unicode):
@@ -222,20 +225,21 @@ class OptionStringSieveValue(OptionSieveValue):
 
         ## uses the optional metadata from self but the individual metadata from other. Is this right??
         intersection_as_dict = {
-            u"type": VALUE_TYPE_OPTION_STRING,
+            u"type": VALUE_TYPE_SET_STRING,
             u"name": self.name if self.name is not None else other.name,
             u"description": self.description if self.description is not None else other.description,
-            u"values": values,
+            VALUES_KEY_NAME: values,
         }
 
         return self.__class__(intersection_as_dict)
+    
 
 class OptionObjectSieveValue(OptionSieveValue):
     """
     an object value
 
     """
-    type = VALUE_TYPE_OPTION_OBJECT
+    type = VALUE_TYPE_SET_OBJECT
 
 
     def validate_single_value(self, value):

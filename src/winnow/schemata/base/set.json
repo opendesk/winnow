@@ -1,0 +1,84 @@
+{
+    "id": "http://opendesk.cc/schemata/base/set.json",
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Winnow Set",
+    "type": "object",
+    "allOf": [
+        {"$ref": "http://opendesk.cc/schemata/base/option.json#"},
+        {
+            "properties": {
+                "default": {
+                    "type": "string"
+                },
+                "values": {
+                    "type": "array",
+                    "items": {
+                        "allOf": [
+                            {"$ref": "http://opendesk.cc/schemata/base/options.json#"},
+                            {
+                                "oneOf": [
+                                    {"$ref": "http://opendesk.cc/schemata/base/option.json#"},
+                                    {
+                                        "type": "object",
+                                        "properties": {
+                                            "$ref": {
+                                                "type": "string"
+                                            },
+                                            "ref_options": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "required": ["$ref"]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            },
+            "required": ["values"],
+            "oneOf": [
+                {
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "pattern": "set::string"
+                        }
+                    }
+                },
+                {
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "pattern": "set::object"
+                        }
+                    }
+                },
+                {
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "pattern": "set::finish"
+                        }
+                    }
+                },
+                {
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "pattern": "set::material"
+                        }
+                    }
+                },
+                {
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "pattern": "set::process"
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

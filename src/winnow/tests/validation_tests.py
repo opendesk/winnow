@@ -13,12 +13,25 @@ class TestValidSieve(unittest.TestCase):
 
         with open(os.path.join(DATA_DIR, "product.json"), "r") as f:
             product_dict = json.loads(f.read())
-
         winnow.validate(product_dict)
 
 
-    def test_validate_fileset(self):
+    def test_validate_product_with_numeric(self):
 
+        with open(os.path.join(DATA_DIR, "product_with_thickness.json"), "r") as f:
+            product_dict = json.loads(f.read())
+        winnow.validate(product_dict)
+
+
+    def test_validate_product_with_numeric_fail(self):
+
+        with open(os.path.join(DATA_DIR, "product_with_thickness_broken.json"), "r") as f:
+            product_dict = json.loads(f.read())
+        self.assertRaises(Exception, winnow.validate, product_dict)
+
+
+
+    def test_validate_fileset(self):
         with open(os.path.join(DATA_DIR, "fileset.json"), "r") as f:
             fileset_dict = json.loads(f.read())
 

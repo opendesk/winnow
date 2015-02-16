@@ -74,20 +74,20 @@ class TestPublishingProduct(unittest.TestCase):
                     u"material": {
                         u"description": u"Choose one of the materials",
                         u"name": u"Material",
-                        u"type": u"option::string",
+                        u"type": u"set::string",
                         u"values": [
                             {
                                 u"description": u"Everything is made out of ply",
                                 u"image_uri": u"http://something.com/khgfdkyg.png",
                                 u"name": u"All ply",
-                                u"type": u"option::string",
+                                u"type": u"set::string",
                                 u"value": u"all-ply"
                             },
                             {
                                 u"description": u"The legs are ply and the top is wisa",
                                 u"image_uri": u"http://something.com/khgfdkyg.png",
                                 u"name": u"Wisa",
-                                u"type": u"option::string",
+                                u"type": u"set::string",
                                 u"value": u"wisa"
                             }
                         ]
@@ -95,20 +95,20 @@ class TestPublishingProduct(unittest.TestCase):
                     u"sheet": {
                         u"description": u"The nominal sheet thickness",
                         u"name": u"Nominal sheet thickness",
-                        u"type": u"option::string",
+                        u"type": u"set::string",
                         u"values": [
                             {
                                 u"description": u"18mm ply wood",
                                 u"image_uri": u"http://something.com/khgfdkyg.png",
                                 u"name": u"18mm",
-                                u"type": u"option::string",
+                                u"type": u"set::string",
                                 u"value": u"18mm"
                             },
                             {
                                 u"description": u"25mm ply wood",
                                 u"image_uri": u"http://something.com/khgfdkyg.png",
                                 u"name": u"25mm",
-                                u"type": u"option::string",
+                                u"type": u"set::string",
                                 u"value": u"25mm"
                             }
                         ]
@@ -205,24 +205,24 @@ class TestContexts(unittest.TestCase):
                             u"material": {
                                 u"description": u"Choose one of the materials",
                                 u"name": u"Material",
-                                u"type": u"option::string",
+                                u"type": u"set::string",
                                 u"values": {
                                         u"description": u"The legs are ply and the top is wisa",
                                         u"image_uri": u"http://something.com/khgfdkyg.png",
                                         u"name": u"Wisa",
-                                        u"type": u"option::string",
+                                        u"type": u"set::string",
                                         u"value": u"wisa"
                                     }
                             },
                             u"sheet": {
                                 u"description": u"The nominal sheet thickness",
                                 u"name": u"Nominal sheet thickness",
-                                u"type": u"option::string",
+                                u"type": u"set::string",
                                 u"values": {
                                         u"description": u"18mm ply wood",
                                         u"image_uri": u"http://something.com/khgfdkyg.png",
                                         u"name": u"18mm",
-                                        u"type": u"option::string",
+                                        u"type": u"set::string",
                                         u"value": u"18mm"
                                 },
                             }
@@ -265,12 +265,12 @@ class TestContexts(unittest.TestCase):
                             u"material": {
                                 u"description": u"Choose one of the materials",
                                 u"name": u"Material",
-                                u"type": u"option::string",
+                                u"type": u"set::string",
                                 u"values": {
                                         u"description": u"The legs are ply and the top is wisa",
                                         u"image_uri": u"http://something.com/khgfdkyg.png",
                                         u"name": u"Wisa",
-                                        u"type": u"option::string",
+                                        u"type": u"set::string",
                                         u"value": u"wisa"
                                     }
                             },
@@ -305,12 +305,12 @@ class TestContexts(unittest.TestCase):
                             u"material": {
                                 u"description": u"Choose one of the materials",
                                 u"name": u"Material",
-                                u"type": u"option::string",
+                                u"type": u"set::string",
                                 u"values": {
                                         u"description": u"The legs are ply and the top is wisa",
                                         u"image_uri": u"http://something.com/khgfdkyg.png",
                                         u"name": u"Wisa",
-                                        u"type": u"option::string",
+                                        u"type": u"set::string",
                                         u"value": u"wisa"
                                     }
                             },
@@ -354,24 +354,24 @@ class TestContexts(unittest.TestCase):
                             u"material": {
                                 u"description": u"Choose one of the materials",
                                 u"name": u"Material",
-                                u"type": u"option::string",
+                                u"type": u"set::string",
                                 u"values": {
                                         u"description": u"The legs are ply and the top is wisa",
                                         u"image_uri": u"http://something.com/khgfdkyg.png",
                                         u"name": u"Wisa",
-                                        u"type": u"option::string",
+                                        u"type": u"set::string",
                                         u"value": u"wisa"
                                     }
                             },
                             u"sheet": {
                                 u"description": u"The nominal sheet thickness",
                                 u"name": u"Nominal sheet thickness",
-                                u"type": u"option::string",
+                                u"type": u"set::string",
                                 u"values": {
                                         u"description": u"18mm ply wood",
                                         u"image_uri": u"http://something.com/khgfdkyg.png",
                                         u"name": u"18mm",
-                                        u"type": u"option::string",
+                                        u"type": u"set::string",
                                         u"value": u"18mm"
                                 },
                             },
@@ -433,24 +433,24 @@ class TestContexts(unittest.TestCase):
                             u"sheet": {
                                 u"description": u"The nominal sheet thickness",
                                 u"name": u"Nominal sheet thickness",
-                                u"type": u"option::string",
+                                u"type": u"set::string",
                                 u"values": {
                                         u"description": u"18mm ply wood",
                                         u"image_uri": u"http://something.com/khgfdkyg.png",
                                         u"name": u"18mm",
-                                        u"type": u"option::string",
+                                        u"type": u"set::string",
                                         u"value": u"18mm"
                                 },
                             },
                             u"material": {
                                 u"description": u"Choose one of the materials",
                                 u"name": u"Material",
-                                u"type": u"option::string",
+                                u"type": u"set::string",
                                 u"values": {
                                         u"description": u"The legs are ply and the top is wisa",
                                         u"image_uri": u"http://something.com/khgfdkyg.png",
                                         u"name": u"Wisa",
-                                        u"type": u"option::string",
+                                        u"type": u"set::string",
                                         u"value": u"wisa"
                                     }
                             },

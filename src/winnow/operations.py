@@ -68,13 +68,37 @@ def filter_allowed_by(filter_source, possible):
     return [p for p in possible if OptionsSet(p.get_options_dict()).allows(filter_options)]
 
 
-def expand(target, doc, source):
+def expand(target, source):
+
     options = OptionsSet(source.get_options_dict())
-    new_doc = deepcopy(doc)
+    new_doc = deepcopy(source.get_doc())
     target.clone_history_from(source)
+    ## expand upstream inheritance
     new_doc[OPTIONS_KEY] = _patch_upstream(target, source, options).store
+    ## also expand references
+    options_dict = new_doc[OPTIONS_KEY]
+    _inline_option_refs(options_dict, source)
+
     _set_doc(target, new_doc)
     target.set_is_expanded()
+
+
+def _inline_option_refs(node, source):
+
+    # walks list and dicts looking for dicts with ref key
+    #
+    if isinstance(node, dict):
+        if u"$ref" in node.keys():
+            referenced_doc = source.get_ref(node[u"$ref"])
+            if referenced_doc is not None:
+                del node[u"$ref"]
+                node.update(referenced_doc)
+        else:
+            for k, v in node.iteritems():
+                _inline_option_refs(v, source)
+    if isinstance(node, list):
+        for v in node:
+            _inline_option_refs(v, source)
 
 
 def _patch_upstream(target, source, options_set):

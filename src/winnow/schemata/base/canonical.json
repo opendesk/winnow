@@ -1,0 +1,20 @@
+{
+    "id": "http://opendesk.cc/schemata/base/canonical.json",
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Winnow Canonical",
+    "type": "object",
+    "properties": {
+        "source": {
+            "type": "string"
+        },
+        "path": {
+            "type": "string"
+        },
+        "base": {
+            "type": "string"
+        }
+    },
+    "required": ["schema", "source", "path"],
+    "additional_properties": false
+}
+

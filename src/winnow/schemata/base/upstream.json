@@ -1,0 +1,20 @@
+{
+    "id": "http://opendesk.cc/schemata/base/upstream.json",
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Winnow Upstream",
+    "type": "object",
+    "properties": {
+        "version": {
+            "type": "array",
+            "items": {
+                "type": "number"
+            }
+        },
+        "upstream": {
+            "type": "string"
+        }
+    },
+    "required": ["version"],
+    "additional_properties": false
+}
+
