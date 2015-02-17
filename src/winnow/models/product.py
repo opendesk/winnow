@@ -1,43 +1,15 @@
+import winnow
+from winnow.models.base import WinnowVersion
+from winnow.exceptions import OptionsExceptionFailedValidation
 
-PRODUCT_SCHEMA = {
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "type": "object",
-    "properties": {
-        "range": {
-            "type": "string"
-        },
-        "design": {
-            "type": "string"
-        },
-        "name": {
-            "type": "string"
-        },
-        "slug": {
-            "type": "string"
-        },
-        "description": {
-            "type": "string"
-        },
-        "version": {
-            "type": "array",
-            "items": {
-                "type": "number"
-            },
-        },
-        "src_url": {
-            "type": "string"
-        },
-        "upstream": {
-            "type": "string"
-        },
-        "public": {
-            "type": "boolean"
-        },
-        "standard": {
-            "type": "boolean"
-        },
-        "options": {},
-    },
-    "additionalProperties": False,
-    "required": ["name", "slug", "description", "range", "design", "version"],
-}
+
+class WinnowProduct(WinnowVersion):
+
+    @classmethod
+    def publish(cls, db, product_json):
+        product = cls.add_doc(db, product_json)
+        expanded = product.expanded()
+        expanded.validate()
+        return product
+
+

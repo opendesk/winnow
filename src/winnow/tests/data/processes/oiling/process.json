@@ -1,11 +1,12 @@
 {
     "schema": "http://opendesk.cc/schemata/process.json",
     "source": "https://github.com/opendesk/collection",
-    "type": "value::process",
+    "type": "process",
     "name": "Oiling",
     "path": "/processes/oiling",
     "description": "oiling wood",
     "value": "oiling",
+    "version": [0,0,1],
     "instructions": "instructions.txt"
 
 }

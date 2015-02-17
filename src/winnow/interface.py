@@ -8,6 +8,9 @@ class OptionsInterface(object):
     def set_doc_hash(self, hash):
         raise OptionsExceptionMissingInterfaceMethod("set_doc_hash")
 
+    def get_doc_hash(self):
+        raise OptionsExceptionMissingInterfaceMethod("get_doc_hash")
+
     def get_uuid(self):
         raise OptionsExceptionMissingInterfaceMethod("get_uuid")
 

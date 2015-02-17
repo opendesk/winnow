@@ -27,6 +27,7 @@ class TestValidSieve(unittest.TestCase):
 
         with open(os.path.join(DATA_DIR, "product_with_thickness_broken.json"), "r") as f:
             product_dict = json.loads(f.read())
+
         self.assertRaises(Exception, winnow.validate, product_dict)
 
 

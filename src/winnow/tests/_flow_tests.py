@@ -3,7 +3,7 @@ import unittest
 import json
 from decimal import Decimal
 from db import MockKVStore
-from sieve import product_flow
+from winnow import product_flow
 from sieve.base_sieve import json_loads, json_dumps
 from sieve.product_sieve import ProductSieve
 from sieve.options_exceptions import OptionsExceptionFailedValidation, OptionsExceptionEmptyOptionValues
@@ -29,29 +29,6 @@ class TestPublishingProduct(unittest.TestCase):
         self.db = MockKVStore()
 
 
-    def test_validates_product_sieve(self):
-
-        ProductSieve(BASE_PRODUCT)
-
-        broken_option = deepcopy(BASE_PRODUCT)
-        del broken_option[u"design"]
-
-        self.assertRaises(OptionsExceptionFailedValidation, ProductSieve, broken_option)
-
-        broken_option = deepcopy(BASE_PRODUCT)
-        del broken_option[u"range"]
-
-        self.assertRaises(OptionsExceptionFailedValidation, ProductSieve, broken_option)
-
-        broken_option = deepcopy(BASE_PRODUCT)
-        del broken_option[u"version"]
-
-        self.assertRaises(OptionsExceptionFailedValidation, ProductSieve, broken_option)
-
-        broken_option = deepcopy(BASE_PRODUCT)
-        broken_option[u"version"][2] = u"v"
-
-        self.assertRaises(OptionsExceptionFailedValidation, ProductSieve, broken_option)
 
 
     def test_publish_product_sieve(self):

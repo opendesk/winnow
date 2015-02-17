@@ -9,3 +9,5 @@ class OptionsExceptionNoAllowed(OptionsExceptionBase):pass
 class OptionsExceptionEmptyOptionValues(OptionsExceptionBase):pass
 
 class OptionsExceptionMissingInterfaceMethod(OptionsExceptionBase):pass
+
+class OptionsExceptionReferenceError(OptionsExceptionBase):pass

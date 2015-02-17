@@ -5,7 +5,6 @@ from copy import deepcopy
 
 from winnow.constants import *
 
-
 class WinnowVersion(OptionsInterface):
 
     def __init__(self, db, kwargs):
@@ -14,10 +13,24 @@ class WinnowVersion(OptionsInterface):
         if self.kwargs.get("uuid") is None:
             self.kwargs["uuid"] = unicode(uuid.uuid4())
 
-    ##  oo wrappers around winnow operations
 
     @classmethod
-    def add_doc(cls, db, doc, kwargs):
+    def get_from_path(cls, db, path):
+        kwargs = db.get(path)
+        return None if kwargs is None else cls(db, kwargs)
+
+    ##  oo wrappers around winnow operations
+
+    def validate(self):
+        winnow.validate(self.get_doc())
+
+    @classmethod
+    def publish(cls, db, as_json):
+        winnow.validate(as_json)
+        return cls.add_doc(db, as_json)
+
+    @classmethod
+    def add_doc(cls, db, doc, kwargs={}):
         wv = cls(db, kwargs)
         winnow.add_doc(wv, doc)
         db.set(wv.kwargs[u"uuid"], wv.kwargs)
@@ -47,11 +60,10 @@ class WinnowVersion(OptionsInterface):
         db.set(wv.kwargs[u"uuid"], wv.kwargs)
         return wv
 
-    @classmethod
-    def expanded(cls, db, kwargs, source):
-        wv = cls(db, kwargs)
-        winnow.expand(wv, source)
-        db.set(wv.kwargs[u"uuid"], wv.kwargs)
+    def expanded(self, kwargs={}):
+        wv = self.__class__(self.db, kwargs)
+        winnow.expand(wv, self)
+        self.db.set(wv.kwargs[u"uuid"], wv.kwargs)
         return wv
 
 
@@ -74,6 +86,9 @@ class WinnowVersion(OptionsInterface):
 
     def set_doc_hash(self, hash):
         self.kwargs[u"doc_hash"] = hash
+
+    def get_doc_hash(self):
+        return self.kwargs[u"doc_hash"]
 
     def get_uuid(self):
         return self.kwargs[u"uuid"]

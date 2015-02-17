@@ -1,13 +1,14 @@
 {
     "schema": "http://opendesk.cc/schemata/material.json",
     "source": "https://github.com/opendesk/collection",
-    "type": "value::material",
+    "type": "material",
     "name": "WISA-Multiwall",
     "path": "/materials/opendesk/sheets/wood/composite/plywood/pre-laminated-plywood/wisa-multiwall",
     "description": "Pre laminated plywood with polypropylene coating with lacquered surface.",
     "image_uri": "http://something.com/khgfdkyg.png",
     "value": "wisa-multiwall",
     "manufacturer_name": "UPM Plywood",
+    "version": [0,0,1],
     "manufacturer_url": "http://www.wisaplywood.com/Products/product-catalogue/wisa-multiwall/Pages/default.aspx",
     "description_long": "WISA-Multiwall is a high quality and elastic lining panel for end uses where a good looking surface material with high resistance is needed. WISA-Multiwall has been developed for sidewalls of vehicles such as horse trailers and linings of vans but also shop fittings and interior linings. WISA-Multiwall is an ideal decorative material for the varied needs of the transport and construction industries.",
     "options":{

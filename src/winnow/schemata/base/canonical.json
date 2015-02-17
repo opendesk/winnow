@@ -12,9 +12,18 @@
         },
         "base": {
             "type": "string"
+        },
+        "version": {
+            "type": "array",
+            "items": {
+                "type": "number"
+            }
+        },
+        "upstream": {
+            "type": "string"
         }
     },
-    "required": ["schema", "source", "path"],
+    "required": ["schema", "source", "path", "version"],
     "additional_properties": false
 }
 

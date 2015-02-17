@@ -207,7 +207,8 @@ class TestSieveFreeze(unittest.TestCase):
 
         WinnowVersion.add_doc(self.db, parent_dict, {u'uuid': u"987654321"})
 
-        expanded = WinnowVersion.expanded(self.db, {}, self.base_version)
+        expanded = self.base_version.expanded()
+
         expanded.kwargs[u"uuid"] = u"123456789"
 
         self.maxDiff = None
@@ -263,7 +264,8 @@ class TestSieveFreeze(unittest.TestCase):
         WinnowVersion.add_doc(self.db, parent_dict, {u'uuid': u"987654321"})
         WinnowVersion.add_doc(self.db, grand_parent_dict, {u'uuid': u"4321"})
 
-        expanded = WinnowVersion.expanded(self.db, {}, self.base_version)
+        expanded = self.base_version.expanded()
+
         expanded.kwargs[u"uuid"] = u"123456789"
 
         self.maxDiff = None

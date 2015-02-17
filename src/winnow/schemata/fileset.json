@@ -7,7 +7,6 @@
         {"$ref": "http://opendesk.cc/schemata/base/value.json#"},
         {"$ref": "http://opendesk.cc/schemata/base/options.json#"},
         {"$ref": "http://opendesk.cc/schemata/base/canonical.json#"},
-        {"$ref": "http://opendesk.cc/schemata/base/upstream.json#"},
         {
             "properties": {
                 "category":{

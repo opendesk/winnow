@@ -6,6 +6,7 @@
     "path": "/finishes/opendesk/premium-wisa",
     "description": "Wisa-Multiwall with its edges sanded nicely",
     "value": "premium-wisa",
+    "version": [0,0,1],
     "options":{
         "material": {
             "type": "set::material",

@@ -44,7 +44,7 @@ class TestExpandReferences(unittest.TestCase):
         processes = premium_birch_ply.get_doc()[u"options"][u"processes"]
         self.assertEqual(processes[u"type"], u'set::process')
         self.assertEqual(processes[u"values"], [{u'$ref': u'/processes/fine-sanding'}, {u'$ref': u'/processes/oiling'}])
-        expanded = WinnowVersion.expanded(self.db, {}, premium_birch_ply)
+        expanded = premium_birch_ply.expanded()
         expanded_sanding_value =  expanded.get_doc()[u"options"][u"processes"][u"values"][0]
         self.assertEqual(expanded_sanding_value, fine_sanding_process.get_doc())
 
@@ -60,5 +60,5 @@ class TestExpandReferences(unittest.TestCase):
         premium_wisa = self.add_doc_at_data_path("finishes/premium-wisa/finish.json")
         product_with_components = self.add_doc_at_data_path("product_with_components.json")
 
-        expanded = WinnowVersion.expanded(self.db, {}, product_with_components)
+        expanded = product_with_components.expanded()
 

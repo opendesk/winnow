@@ -1,11 +1,12 @@
 {
     "schema": "http://opendesk.cc/schemata/process.json",
     "source": "https://github.com/opendesk/collection",
-    "type": "value::process",
+    "type": "process",
     "name": "Fine Sanding",
     "path": "/processes/fine-sanding",
     "description": "fine sanding wood",
     "value": "fine_sanding",
+    "version": [0,0,1],
     "instructions": "instructions.txt"
 
 }

@@ -5,7 +5,7 @@
     "source": "https://github.com/opendesk/collection",
     "base": "https://raw.github.com/opendesk/collection/master",
     "category": "sheets", 
-    "description": "Cad files for 18mm ply", 
+    "description": "Cad files for 18mm ply",
     "files": [
         "files/test_1.txt",
         "files/test_2.txt"

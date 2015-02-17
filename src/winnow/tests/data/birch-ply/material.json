@@ -1,15 +1,16 @@
 {
     "schema": "http://opendesk.cc/schemata/material.json",
     "source": "https://github.com/opendesk/collection",
-    "type": "value::material",
+    "type": "material",
     "name": "Birch Ply",
     "path": "/materials/sheets/wood/composite/plywood/birch-faced-plywood",
     "description": "Birch faced plywood",
     "image_uri": "http://something.com/khgfdkyg.png",
+    "version": [0,0,1],
     "value": "birch-faced-plywood",
     "options":{
         "thickness":{
-            "type": "set::object",
+            "type": "set::string",
             "name": "Thickness",
             "description": "Available sheet thickness",
             "values": [
