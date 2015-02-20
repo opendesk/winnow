@@ -6,9 +6,8 @@
     "base": "https://raw.github.com/opendesk/collection/master",
     "category": "sheets", 
     "description": "Cad files for 18mm ply",
-    "files": [
-        "files/test_1.txt",
-        "files/test_2.txt"
+    "files": [{"asset": "files/test_1.txt"},
+        {"asset": "files/test_2.txt"}
     ], 
     "name": "Test Fileset",
     "version": [1, 0, 1],
