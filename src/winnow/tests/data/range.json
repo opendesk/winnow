@@ -1,0 +1,8 @@
+{
+  "schema": "https://opendesk.cc/schemata/range.json",
+  "path": "/ranges/lean",
+  "type": "range",
+  "name": "Lean",
+  "image_uri": {"asset": "../assets/publish/lean_logo.png"},
+  "description": "[00](http://project00.net) designed the Lean range through a series of fit out commissions in London. It has a stripped back, warehouse aesthetic, with the designs simplified to the bare essentials.\n\nDesk, the first OpenDesk, was designed with and for leading product development agency [Mint Digital](/case_studies/mint-digital). The Meeting and Cafe tables were developed through the major fit out of the [Hub Westminster](/case_studies/hub-westminster), a 12,000 sqft shared workspace in central London."
+}

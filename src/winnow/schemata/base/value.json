@@ -23,7 +23,14 @@
             "type": "string"
         },
         "image_uri": {
-            "type": "string"
+            "type": "object",
+            "properties": {
+                "asset": {
+                    "type": "string"
+                }
+            },
+            "required": ["asset"],
+            "additional_properties": false
         }
     },
     "required": ["type"],
