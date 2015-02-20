@@ -1,7 +1,7 @@
 {
 
 
-    "schema": "http://opendesk.cc/schemata/material.json",
+    "schema": "https://opendesk.cc/schemata/material.json",
     "source": "https://github.com/opendesk/collection",
     "type": "value::material",
     "name": "Birch Faced Plywood",

@@ -1,5 +1,5 @@
 {
-    "schema": "http://opendesk.cc/schemata/process.json",
+    "schema": "https://opendesk.cc/schemata/process.json",
     "type": "value::ref::process",
     "name": "Sanded",
     "path": "/processes/sanded",

@@ -13,22 +13,12 @@ VALUE_TYPE_NUMERIC_STEP     = u"numeric::step"
 
 # choices & values
 VALUE_TYPE_SET_STRING    = u"set::string"
-VALUE_TYPE_VALUE_STRING    = u"value::string"
-
-
-# choices & values
-VALUE_TYPE_SET_OBJECT    = u"set::object"
-VALUE_TYPE_VALUE_OBJECT    = u"value::object"
+VALUE_TYPE_VALUE_STRING    = u"string"
 
 # choices with members of a taxonomy
-VALUE_TYPE_SET_MATERIAL  = u"set::material"
-VALUE_TYPE_VALUE_MATERIAL  = u"value::material"
+VALUE_TYPE_SET_RESOURCE  = u"set::resource"
 
-VALUE_TYPE_SET_FINISH    = u"set::finish"
-VALUE_TYPE_VALUE_FINISH    = u"value::finish"
 
-VALUE_TYPE_SET_PROCESS    = u"set::process"
-VALUE_TYPE_VALUE_PROCESS    = u"value::process"
 
 MAX_VALUE_SET_SIZE = 1000000
 

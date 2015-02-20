@@ -1,5 +1,5 @@
 {
-    "id": "http://opendesk.cc/schemata/base/option.json",
+    "id": "https://opendesk.cc/schemata/base/option.json",
     "$schema": "http://json-schema.org/draft-04/schema#",
     "title": "Winnow Value",
     "type": "object",
@@ -11,7 +11,13 @@
             "type": "string"
         },
         "type": {
-            "type": "string"
+            "type": "string",
+            "oneOf": [
+                {"pattern": "string"},
+                {"pattern": "material"},
+                {"pattern": "process"},
+                {"pattern": "finish"}
+            ]
         },
         "image_uri": {
             "type": "string"

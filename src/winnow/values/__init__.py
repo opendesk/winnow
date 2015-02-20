@@ -26,12 +26,11 @@ def value_factory(value):
     return None
 
 
-
 VALUE_TYPES = {
     VALUE_TYPE_NUMERIC_RANGE: NumericSieveValue,
     VALUE_TYPE_NUMERIC_NUMBER: NumericSieveValue,
     VALUE_TYPE_NUMERIC_SET: NumericSieveValue,
     VALUE_TYPE_NUMERIC_STEP: NumericSieveValue,
     VALUE_TYPE_SET_STRING: OptionSieveValue,
-
+    VALUE_TYPE_SET_RESOURCE: OptionSieveValue
 }

@@ -14,8 +14,6 @@ class OptionSieveValue(BaseSieveValue):
             self.name = value.get("name")
             self.description = value.get("description")
             self.image_url = value.get("image_url")
-            if not value.get(u"type") == self.type:
-                raise Exception("wring dict for OptionSieveValue %s" % value)
             self.set_my_values(value.get(VALUES_KEY_NAME))
 
         else:
@@ -61,7 +59,7 @@ class OptionSieveValue(BaseSieveValue):
 
         elif isinstance(value, dict):
             option_type = value[u"type"]
-            if option_type == VALUE_TYPE_SET_STRING:
+            if option_type in (VALUE_TYPE_SET_STRING, VALUE_TYPE_SET_RESOURCE):
 
                 return OptionStringSieveValue(value)
             else:
@@ -138,7 +136,11 @@ class OptionStringSieveValue(OptionSieveValue):
     def _set_value_list(self, value_list):
         self.values_lookup = {}
         for v in value_list:
-            single_value = v if isinstance(v, unicode) else v[u"value"]
+            try:
+                single_value = v if isinstance(v, unicode) else v[u"value"]
+            except KeyError:
+                single_value = v if isinstance(v, unicode) else v[u"path"]
+
             self.validate_single_value(single_value)
             self.values_lookup[single_value] = v
 
@@ -190,7 +192,6 @@ class OptionStringSieveValue(OptionSieveValue):
         ## when putting together the intersecting values perform a merge on their nested options
         for value_id in other_keys:
 
-
             this_value = self.values_lookup.get(value_id)
             if this_value is None:
                 continue
@@ -199,14 +200,15 @@ class OptionStringSieveValue(OptionSieveValue):
             ## if they are both unicode just add the value
             if isinstance(other_value, unicode) and isinstance(this_value, unicode):
                 values.append(this_value)
-
-            ## otherwise use a dict and check options
-            else:
-                if isinstance(other_value, dict):
-                    new_value = deepcopy(other_value)
-                else:
-                    new_value = deepcopy(this_value)
-
+            elif isinstance(other_value, unicode) and isinstance(this_value, dict):
+                values.append(deepcopy(this_value))
+            elif isinstance(other_value, dict) and isinstance(this_value, unicode):
+                values.append(deepcopy(other_value))
+            elif isinstance(other_value, dict) and isinstance(this_value, dict):
+                ##prefer this's values over that's
+                new_value = deepcopy(other_value)
+                new_value.update(deepcopy(this_value))
+                ## and then merge their options
                 this_options = self._get_value_options(value_id)
                 that_options = other._get_value_options(value_id)
 
@@ -218,6 +220,8 @@ class OptionStringSieveValue(OptionSieveValue):
                     pass
 
                 values.append(new_value)
+            else:
+                raise Exception("this should never happen")
 
         ## if there is no intersection return None
         if len(values) == 0:
@@ -234,64 +238,64 @@ class OptionStringSieveValue(OptionSieveValue):
         return self.__class__(intersection_as_dict)
     
 
-class OptionObjectSieveValue(OptionSieveValue):
-    """
-    an object value
-
-    """
-    type = VALUE_TYPE_SET_OBJECT
-
-
-    def validate_single_value(self, value):
-        if not isinstance(value, dict):
-            raise Exception("should be dict %s" % value)
-
-
-    def _set_value_list(self, value_list):
-        self.value_list = value_list
-        for v in value_list:
-            self.validate_single_value(v)
-
-    def __str__(self):
-        return [v[u"value"] for v in self.value_list]
-
-
-    def isdisjoint(self, other):
-        """
-        This is an inefficient way to do this check as it has to iterate over both value lists and compare the results
-        possibly this could be improved
-        """
-        self.check_class(other)
-        for this_v in self.value_list:
-            for that_v in other.value_list:
-                if this_v[u"value"] == that_v[u"value"]:
-                    return False
-        return True
-
-
-    def issubset(self, other):
-        """
-        methodology this time:
-        False if any or my values are not found in other
-        """
-        from winnow.options import OptionsSet
-        self.check_class(other)
-
-        for this_v in self.value_list:
-            found_v = False
-            for that_v in other.value_list:
-                this_value_dict = this_v[u"value"]
-                that_value_dict = that_v[u"value"]
-                if this_value_dict == that_value_dict:
-                    this_options = this_value_dict.get(u"options")
-                    that_options = that_value_dict.get(u"options")
-                    if this_options is not None and that_options is not None:
-                        if not OptionsSet(that_options).allows(OptionsSet(this_options)):
-                            return False
-                    found_v = True
-            if not found_v:
-                return False
-        return True
+# class OptionObjectSieveValue(OptionSieveValue):
+#     """
+#     an object value
+#
+#     """
+#     type = VALUE_TYPE_SET_OBJECT
+#
+#
+#     def validate_single_value(self, value):
+#         if not isinstance(value, dict):
+#             raise Exception("should be dict %s" % value)
+#
+#
+#     def _set_value_list(self, value_list):
+#         self.value_list = value_list
+#         for v in value_list:
+#             self.validate_single_value(v)
+#
+#     def __str__(self):
+#         return [v[u"value"] for v in self.value_list]
+#
+#
+#     def isdisjoint(self, other):
+#         """
+#         This is an inefficient way to do this check as it has to iterate over both value lists and compare the results
+#         possibly this could be improved
+#         """
+#         self.check_class(other)
+#         for this_v in self.value_list:
+#             for that_v in other.value_list:
+#                 if this_v[u"value"] == that_v[u"value"]:
+#                     return False
+#         return True
+#
+#
+#     def issubset(self, other):
+#         """
+#         methodology this time:
+#         False if any or my values are not found in other
+#         """
+#         from winnow.options import OptionsSet
+#         self.check_class(other)
+#
+#         for this_v in self.value_list:
+#             found_v = False
+#             for that_v in other.value_list:
+#                 this_value_dict = this_v[u"value"]
+#                 that_value_dict = that_v[u"value"]
+#                 if this_value_dict == that_value_dict:
+#                     this_options = this_value_dict.get(u"options")
+#                     that_options = that_value_dict.get(u"options")
+#                     if this_options is not None and that_options is not None:
+#                         if not OptionsSet(that_options).allows(OptionsSet(this_options)):
+#                             return False
+#                     found_v = True
+#             if not found_v:
+#                 return False
+#         return True
 
 
 # class OptionFinishSieveValue(OptionSieveValue):

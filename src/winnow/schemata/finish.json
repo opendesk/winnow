@@ -1,12 +1,12 @@
 {
-    "id": "http://opendesk.cc/schemata/finish.json",
+    "id": "https://opendesk.cc/schemata/finish.json",
     "$schema": "http://json-schema.org/draft-04/schema#",
     "title": "Winnow Finish",
     "type": "object",
     "allOf": [
-        {"$ref": "http://opendesk.cc/schemata/base/value.json#"},
-        {"$ref": "http://opendesk.cc/schemata/base/options.json#"},
-        {"$ref": "http://opendesk.cc/schemata/base/canonical.json#"},
+        {"$ref": "https://opendesk.cc/schemata/base/value.json#"},
+        {"$ref": "https://opendesk.cc/schemata/base/options.json#"},
+        {"$ref": "https://opendesk.cc/schemata/base/canonical.json#"},
         {
             "properties": {
                 "instructions": {

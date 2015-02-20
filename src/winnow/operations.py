@@ -76,29 +76,28 @@ def expand(target, source):
     ## expand upstream inheritance
     new_doc[OPTIONS_KEY] = _patch_upstream(target, source, options).store
     ## also expand references
-    options_dict = new_doc[OPTIONS_KEY]
-    _inline_option_refs(options_dict, source)
-
+    # options_dict = new_doc[OPTIONS_KEY]
+    # _inline_option_refs(options_dict, source)
     _set_doc(target, new_doc)
     target.set_is_expanded()
 
 
-def _inline_option_refs(node, source):
-
-    # walks list and dicts looking for dicts with ref key
-    #
-    if isinstance(node, dict):
-        if u"$ref" in node.keys():
-            referenced_doc = source.get_ref(node[u"$ref"])
-            if referenced_doc is not None:
-                del node[u"$ref"]
-                node.update(referenced_doc)
-        else:
-            for k, v in node.iteritems():
-                _inline_option_refs(v, source)
-    if isinstance(node, list):
-        for v in node:
-            _inline_option_refs(v, source)
+# def _inline_option_refs(node, source):
+#
+#     # walks list and dicts looking for dicts with ref key
+#     #
+#     if isinstance(node, dict):
+#         if u"$ref" in node.keys():
+#             referenced_doc = source.get_ref(node[u"$ref"])
+#             if referenced_doc is not None:
+#                 del node[u"$ref"]
+#                 node.update(referenced_doc)
+#         else:
+#             for k, v in node.iteritems():
+#                 _inline_option_refs(v, source)
+#     if isinstance(node, list):
+#         for v in node:
+#             _inline_option_refs(v, source)
 
 
 def _patch_upstream(target, source, options_set):
@@ -117,6 +116,29 @@ def _patch_upstream(target, source, options_set):
 def _add_start_if_needed(target, source):
     if target.history_is_empty():
         target.add_history_action(HISTORY_ACTION_START, source)
+
+
+def asset_paths(doc):
+    path = doc.get("path")
+    if path is None:
+        return []
+    found = []
+    _walk_dict_for_assets(doc, found)
+    return ["%s/%s" % (path, f) for f in found]
+
+
+def _walk_dict_for_assets(node, found):
+
+    if isinstance(node, dict):
+        if u"asset" in node.keys():
+            found.append(node[u"asset"])
+        else:
+            for k, v in node.iteritems():
+                _walk_dict_for_assets(v, found)
+    if isinstance(node, list):
+        for v in node:
+            _walk_dict_for_assets(v, found)
+
 
 
 def validate(doc):

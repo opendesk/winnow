@@ -37,3 +37,10 @@ class TestValidSieve(unittest.TestCase):
             fileset_dict = json.loads(f.read())
 
         winnow.validate(fileset_dict)
+
+
+    def test_validate_ref_product(self):
+        with open(os.path.join(DATA_DIR, "reference", "product.json"), "r") as f:
+            as_dict = json.loads(f.read())
+
+        winnow.validate(as_dict)

@@ -1,7 +1,7 @@
 {
     "schema": "https://opendesk.cc/schemata/product.json",
     "type": "product",
-    "path": "/ranges/lean/cafe-table/standard",
+    "path": "/ranges/lean/cafe-table/custom",
     "source": "https://github.com/opendesk/collection",
     "base": "https://raw.github.com/opendesk/collection/master",
     "version": [0,0,1],
@@ -9,9 +9,10 @@
     "description": "A nice cafe table with three legs",
     "is_default": true,
     "is_public": true,
+    "upstream": "/ranges/lean/cafe-table/standard",
     "components": {
         "top": {
-            "finish": "#top_finish"
+            "finish": "$top_finish"
         },
         "legs":{
             "finish": "/finishes/opendesk/premium-birch-ply"
@@ -28,7 +29,7 @@
                     "name": "All Ply",
                     "description": "Everything is made out of ply",
                     "value": "all_ply",
-                    "#top_finish": "/finishes/opendesk/premium-birch-ply"
+                    "$top_finish": "/finishes/opendesk/premium-birch-ply"
 
                 },
                 {
@@ -36,10 +37,15 @@
                     "name": "Wisa Top",
                     "description": "The top is made from wisa and the legs from ply",
                     "value": "wisa_top",
-                    "#top_finish": "/finishes/opendesk/premium-wisa"
-
+                    "$top_finish": "/finishes/opendesk/premium-wisa"
                 }
             ]
+        },
+        "cable_hole": {
+            "type": "set::string",
+            "name": "Cable Hole",
+            "description": "With or without hole for a cable",
+            "values": [ "yes", "no"]
         }
     }
 }

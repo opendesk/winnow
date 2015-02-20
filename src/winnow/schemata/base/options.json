@@ -1,5 +1,5 @@
 {
-    "id": "http://opendesk.cc/schemata/base/options.json",
+    "id": "https://opendesk.cc/schemata/base/options.json",
     "$schema": "http://json-schema.org/draft-04/schema#",
     "title": "Winnow Options",
     "type": "object",
@@ -21,8 +21,8 @@
                         }
                     },
                     {"type": "string"},
-                    {"$ref": "http://opendesk.cc/schemata/base/set.json#"},
-                    {"$ref": "http://opendesk.cc/schemata/base/numeric.json#"},
+                    {"$ref": "https://opendesk.cc/schemata/base/set.json#"},
+                    {"$ref": "https://opendesk.cc/schemata/base/numeric.json#"},
                     {"type": "number"},
                     {"type": "null"}
                 ]}

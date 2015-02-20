@@ -15,49 +15,49 @@
             "description": "Available sheet thickness",
             "values": [
                 {
-                    "type": "value::string",
+                    "type": "string",
                     "name": "6.5mm",
                     "description": "Nominal thickness 6.5mm",
                     "value": "6.5mm"
                 },
                 {
-                    "type": "value::string",
+                    "type": "string",
                     "name": "9mm",
                     "description": "Nominal thickness 9mm",
                     "value": "9mm"
                 },
                 {
-                    "type": "value::string",
+                    "type": "string",
                     "name": "12mm",
                     "description": "Nominal thickness 12mm",
                     "value": "12mm"
                 },
                 {
-                    "type": "value::string",
+                    "type": "string",
                     "name": "15mm",
                     "description": "Nominal thickness 15mm",
                     "value": "15mm"
                 },
                 {
-                    "type": "value::string",
+                    "type": "string",
                     "name": "18mm",
                     "description": "Nominal thickness 18mm",
                     "value": "18mm"
                 },
                 {
-                    "type": "value::string",
+                    "type": "string",
                     "name": "21mm",
                     "description": "Nominal thickness 21mm",
                     "value": "21mm"
                 },
                 {
-                    "type": "value::string",
+                    "type": "string",
                     "name": "24mm",
                     "description": "Nominal thickness 24mm",
                     "value": "24mm"
                 },
                 {
-                    "type": "value::string",
+                    "type": "string",
                     "name": "27mm",
                     "description": "Nominal thickness 27mm",
                     "value": "27mm"
@@ -65,12 +65,12 @@
             ]
         },
         "size":{
-            "type": "set::object",
+            "type": "set::string",
             "name": "sizes",
             "description": "available sheet sizes",
             "values": [
                 {
-                    "type": "value::object",
+                    "type": "string",
                     "name": "1200x2400",
                     "description": "1200mm x 2400mm",
                     "value": "1200x2400",
@@ -81,7 +81,7 @@
                     }
                 },
                       {
-                    "type": "value::object",
+                    "type": "string",
                     "name": "1220x2440",
                     "description": "1220mm x 2440mm",
                     "value": "1220x2440",
@@ -92,7 +92,7 @@
                     }
                 },
                 {
-                    "type": "value::object",
+                    "type": "string",
                     "name": "1250x2500",
                     "description": "1250mm x 2500mm",
                     "value": "1250x2500",
@@ -103,7 +103,7 @@
                     }
                 },
                 {
-                    "type": "value::object",
+                    "type": "string",
                     "name": "1500x3000",
                     "description": "1500mm x 3000mm",
                     "value": "1500x3000",
@@ -114,7 +114,7 @@
                     }
                 },
                 {
-                    "type": "value::object",
+                    "type": "string",
                     "name": "1525x3050",
                     "description": "1525mm x 3050mm",
                     "value": "1525x3050",

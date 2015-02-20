@@ -1,5 +1,5 @@
 {
-    "id": "http://opendesk.cc/schemata/base/canonical.json",
+    "id": "https://opendesk.cc/schemata/base/canonical.json",
     "$schema": "http://json-schema.org/draft-04/schema#",
     "title": "Winnow Canonical",
     "type": "object",
@@ -20,6 +20,9 @@
             }
         },
         "upstream": {
+            "type": "string"
+        },
+        "shortcode": {
             "type": "string"
         }
     },

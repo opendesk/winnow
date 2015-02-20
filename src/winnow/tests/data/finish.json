@@ -1,5 +1,5 @@
 {
-    "schema": "http://opendesk.cc/schemata/finish.json",
+    "schema": "https://opendesk.cc/schemata/finish.json",
     "type": "finish",
     "name": "Standard Plywood",
     "path": "/finishes/opendesk/standard-plywood",

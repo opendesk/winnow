@@ -1,0 +1,14 @@
+{
+    "schema": "https://opendesk.cc/schemata/range.json",
+    "type": "range",
+    "path": "/ranges/lean",
+    "source": "https://github.com/opendesk/collection",
+    "base": "https://raw.github.com/opendesk/collection/master",
+    "version": [0,0,1],
+    "name": "Lean",
+    "description": "A nice cafe table with three legs",
+    "image_url": {"asset": "path/to/an/image.png"},
+    "files": [
+        "path/to/an/image.png"
+    ]
+}

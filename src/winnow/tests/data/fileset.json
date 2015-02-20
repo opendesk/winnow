@@ -1,5 +1,5 @@
 {
-    "schema": "http://opendesk.cc/schemata/fileset.json",
+    "schema": "https://opendesk.cc/schemata/fileset.json",
     "type": "fileset",
     "path": "/ranges/lean/cafe-table/standard/test_fileset",
     "source": "https://github.com/opendesk/collection",

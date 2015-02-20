@@ -1,11 +1,11 @@
 {
-    "id": "http://opendesk.cc/schemata/base/numeric.json",
+    "id": "https://opendesk.cc/schemata/base/numeric.json",
     "$schema": "http://json-schema.org/draft-04/schema#",
     "title": "Winnow Numeric",
     "type": "object",
     "allOf": [
         {
-            "$ref": "http://opendesk.cc/schemata/base/value.json#"
+            "$ref": "https://opendesk.cc/schemata/base/value.json#"
         },
         {"oneOf": [
                 {

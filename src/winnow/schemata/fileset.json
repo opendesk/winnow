@@ -1,12 +1,12 @@
 {
-    "id": "http://opendesk.cc/schemata/fileset.json",
+    "id": "https://opendesk.cc/schemata/fileset.json",
     "$schema": "http://json-schema.org/draft-04/schema#",
     "title": "Winnow Fileset",
     "type": "object",
     "allOf": [
-        {"$ref": "http://opendesk.cc/schemata/base/value.json#"},
-        {"$ref": "http://opendesk.cc/schemata/base/options.json#"},
-        {"$ref": "http://opendesk.cc/schemata/base/canonical.json#"},
+        {"$ref": "https://opendesk.cc/schemata/base/value.json#"},
+        {"$ref": "https://opendesk.cc/schemata/base/options.json#"},
+        {"$ref": "https://opendesk.cc/schemata/base/canonical.json#"},
         {
             "properties": {
                 "category":{
@@ -15,7 +15,14 @@
                 "files":{
                     "type": "array",
                     "items": {
-                        "type": "string"
+                        "type": "object",
+                        "properties":{
+                            "asset" : {
+                                "type": "string"
+                            }
+                        },
+                        "required": ["asset"],
+                         "additional_properties": false
                     }
                 },
                 "type": {

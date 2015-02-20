@@ -1,5 +1,5 @@
 {
-    "schema": "http://opendesk.cc/schemata/product.json",
+    "schema": "https://opendesk.cc/schemata/product.json",
     "type": "product",
     "path": "/ranges/lean/cafe-table/standard",
     "source": "https://github.com/opendesk/collection",
@@ -17,14 +17,14 @@
             "description": "Choose one of the materials",
             "values": [
                 {
-                    "type": "value::string",
+                    "type": "string",
                     "name": "All ply",
                     "description": "Everything is made out of ply",
                     "image_uri": "http://something.com/khgfdkyg.png",
                     "value": "all_ply"
                 },
                 {
-                    "type": "value::string",
+                    "type": "string",
                     "name": "Wisa",
                     "description": "The legs are ply and the top is wisa",
                     "image_uri": "http://something.com/khgfdkyg.png",
@@ -38,14 +38,14 @@
             "description": "The nominal sheet thickness",
             "values": [
                 {
-                    "type": "value::string",
+                    "type": "string",
                     "name": "18mm",
                     "description": "18mm ply wood",
                     "image_uri": "http://something.com/khgfdkyg.png",
                     "value": "18"
                 },
                 {
-                    "type": "value::string",
+                    "type": "string",
                     "name": "25mm",
                     "description": "25mm ply wood",
                     "image_uri": "http://something.com/khgfdkyg.png",

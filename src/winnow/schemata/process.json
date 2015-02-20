@@ -1,12 +1,12 @@
 {
-    "id": "http://opendesk.cc/schemata/process.json",
+    "id": "https://opendesk.cc/schemata/process.json",
     "$schema": "http://json-schema.org/draft-04/schema#",
     "title": "Winnow Process",
     "type": "object",
     "allOf": [
-        {"$ref": "http://opendesk.cc/schemata/base/value.json#"},
-        {"$ref": "http://opendesk.cc/schemata/base/options.json#"},
-        {"$ref": "http://opendesk.cc/schemata/base/canonical.json#"},
+        {"$ref": "https://opendesk.cc/schemata/base/value.json#"},
+        {"$ref": "https://opendesk.cc/schemata/base/options.json#"},
+        {"$ref": "https://opendesk.cc/schemata/base/canonical.json#"},
         {
             "properties": {
                 "instructions": {

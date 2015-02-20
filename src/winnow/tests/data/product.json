@@ -1,5 +1,5 @@
 {
-    "schema": "http://opendesk.cc/schemata/product.json",
+    "schema": "https://opendesk.cc/schemata/product.json",
     "type": "product",
     "path": "/ranges/lean/cafe-table/standard",
     "source": "https://github.com/opendesk/collection",
@@ -16,18 +16,8 @@
             "name": "Material",
             "description": "Choose one of the materials",
             "values": [
-                {
-                    "$ref" : "/materials/opendesk/sheets/wood/composite/plywood",
-                    "options": {
-                        "thickness": "18mm"
-                    }
-                },
-                {
-                    "$ref" : "/materials/opendesk/sheets/wood/composite/plywood/pre-laminated-plywood/wisa-multiwall",
-                    "options": {
-                        "thickness": "18mm"
-                    }
-                }
+                "/materials/opendesk/sheets/wood/composite/plywood",
+                "/materials/opendesk/sheets/wood/composite/plywood/pre-laminated-plywood/wisa-multiwall"
             ]
         },
         "sheet": {
@@ -36,7 +26,7 @@
             "description": "The nominal sheet thickness",
             "values": [
                 {
-                    "type": "value::string",
+                    "type": "string",
                     "name": "18mm",
                     "description": "18mm ply wood",
                     "image_uri": "http://something.com/khgfdkyg.png",

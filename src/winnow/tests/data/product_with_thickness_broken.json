@@ -1,5 +1,5 @@
 {
-    "schema": "http://opendesk.cc/schemata/product.json",
+    "schema": "https://opendesk.cc/schemata/product.json",
     "type": "product",
     "path": "/ranges/lean/cafe-table/standard",
     "source": "https://github.com/opendesk/collection",
