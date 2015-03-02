@@ -23,7 +23,6 @@ class WinnowFileset(WinnowVersion):
             raise OptionsExceptionReferenceError("Reference Error: couldn't find %s" % product_path)
 
         expanded_version = product.expanded()
-
         kwargs = {"product_version_hash": expanded_version.get_doc_hash()}
 
         fileset = WinnowFileset.add_doc(db, fileset_json, kwargs=kwargs)
