@@ -42,27 +42,27 @@ class WinnowVersion(OptionsInterface):
     @classmethod
     def merged(cls, db, doc, kwargs, source_a, source_b):
         wv = cls(db, kwargs)
-        winnow.merge(wv, doc, source_a, source_b)
+        winnow.merge(source_a, source_b, wv, doc)
         db.set(wv.kwargs[u"uuid"], wv.kwargs)
         return wv
 
     @classmethod
     def patched(cls, db, doc, kwargs, source_a, source_b):
         wv = cls(db, kwargs)
-        winnow.patch(wv, doc, source_a, source_b)
+        winnow.patch(source_a, source_b, wv, doc)
         db.set(wv.kwargs[u"uuid"], wv.kwargs)
         return wv
 
     @classmethod
     def extracted(cls, db, doc, kwargs, source, extractions):
         wv = cls(db, kwargs)
-        winnow.extract(wv, doc, source, extractions)
+        winnow.extract(source, extractions, wv, doc)
         db.set(wv.kwargs[u"uuid"], wv.kwargs)
         return wv
 
     def expanded(self, kwargs={}):
         wv = self.__class__(self.db, kwargs)
-        winnow.expand(wv, self)
+        winnow.expand(self, wv)
         self.db.set(wv.kwargs[u"uuid"], wv.kwargs)
         return wv
 

@@ -25,35 +25,35 @@ def intersects(source_a, source_b):
     return options_a.intersects(options_b)
 
 
-def merge(target, doc, source_a, source_b):
+def merge(source_a, source_b, target, doc):
     options_a = OptionsSet(source_a.get_options_dict())
     options_b = OptionsSet(source_b.get_options_dict())
     new_doc = deepcopy(doc)
     new_doc[OPTIONS_KEY] = options_a.merge(options_b).store
     target.clone_history_from(source_a)
-    _add_start_if_needed(target, source_a)
+    _add_start_if_needed(source_a, target)
     _set_doc(target, new_doc)
     target.add_history_action(HISTORY_ACTION_MERGE, source_b)
 
 
-def patch(target, doc, source_a, source_b):
+def patch(source_a, source_b, target, doc):
     options_a = OptionsSet(source_a.get_options_dict())
     options_b = OptionsSet(source_b.get_options_dict())
     new_doc = deepcopy(doc)
     new_doc[OPTIONS_KEY] = options_a.patch(options_b).store
     target.clone_history_from(source_a)
-    _add_start_if_needed(target, source_a)
+    _add_start_if_needed(source_a, target)
     _set_doc(target, new_doc)
     target.add_history_action(HISTORY_ACTION_PATCH, source_b)
 
 
-def extract(target, doc, source, extractions):
+def extract(source, extractions, target, doc):
     options = OptionsSet(source.get_options_dict())
     new_doc = deepcopy(doc)
     keys_to_extract = extractions.get_options_dict().keys()
     new_doc[OPTIONS_KEY] = options.extract(keys_to_extract).store
     target.clone_history_from(source)
-    _add_start_if_needed(target, source)
+    _add_start_if_needed(source, target)
     _set_doc(target, new_doc)
     target.add_history_action(HISTORY_ACTION_EXTRACT, extractions)
 
@@ -68,13 +68,13 @@ def filter_allowed_by(filter_source, possible):
     return [p for p in possible if OptionsSet(p.get_options_dict()).allows(filter_options)]
 
 
-def expand(target, source):
+def expand(source, target):
 
     options = OptionsSet(source.get_options_dict())
     new_doc = deepcopy(source.get_doc())
     target.clone_history_from(source)
     ## expand upstream inheritance
-    new_doc[OPTIONS_KEY] = _patch_upstream(target, source, options).store
+    new_doc[OPTIONS_KEY] = _patch_upstream(source, target, options).store
     ## also expand references
     # options_dict = new_doc[OPTIONS_KEY]
     # _inline_option_refs(options_dict, source)
@@ -100,7 +100,7 @@ def expand(target, source):
 #             _inline_option_refs(v, source)
 
 
-def _patch_upstream(target, source, options_set):
+def _patch_upstream(source, target, options_set):
 
     upstream_delegate = source.get_upstream()
     if not upstream_delegate:
@@ -108,12 +108,12 @@ def _patch_upstream(target, source, options_set):
 
     upstream_options = OptionsSet(upstream_delegate.get_options_dict())
     patched_options_set = options_set.patch(upstream_options)
-    _add_start_if_needed(target, source)
+    _add_start_if_needed(source, target)
     target.add_history_action(HISTORY_ACTION_PATCH, upstream_delegate)
-    return _patch_upstream(target, upstream_delegate, patched_options_set)
+    return _patch_upstream(upstream_delegate, target, patched_options_set)
 
 
-def _add_start_if_needed(target, source):
+def _add_start_if_needed(source, target):
     if target.history_is_empty():
         target.add_history_action(HISTORY_ACTION_START, source)
 
