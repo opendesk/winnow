@@ -24,8 +24,7 @@ class WinnowFileset(WinnowVersion):
 
         expanded_version = product.expanded()
 
-        kwargs = {"product_version_hash": expanded_version.get_doc_hash(),
-                  "product_semantic_versions": []}
+        kwargs = {"product_version_hash": expanded_version.get_doc_hash()}
 
         fileset = WinnowFileset.add_doc(db, fileset_json, kwargs=kwargs)
         if not product.allows(fileset):

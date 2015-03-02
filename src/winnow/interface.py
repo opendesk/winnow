@@ -2,6 +2,7 @@ from winnow.exceptions import OptionsExceptionMissingInterfaceMethod
 
 class OptionsInterface(object):
 
+
     def set_is_expanded(self):
         raise OptionsExceptionMissingInterfaceMethod("set_is_expanded")
 
@@ -26,7 +27,7 @@ class OptionsInterface(object):
     def get_doc(self):
         raise OptionsExceptionMissingInterfaceMethod("get_doc")
 
-    def get_ref(self):
+    def get_ref(self, ref):
         raise OptionsExceptionMissingInterfaceMethod("get_ref")
 
     def clone_history_from(self, options_delegate):
