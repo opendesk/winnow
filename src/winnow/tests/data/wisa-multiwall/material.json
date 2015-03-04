@@ -1,11 +1,11 @@
 {
-    "schema": "http://opendesk.cc/schemata/material.json",
+    "schema": "https://opendesk.cc/schemata/material.json",
     "source": "https://github.com/opendesk/collection",
     "type": "material",
     "name": "WISA-Multiwall",
     "path": "/materials/opendesk/sheets/wood/composite/plywood/pre-laminated-plywood/wisa-multiwall",
     "description": "Pre laminated plywood with polypropylene coating with lacquered surface.",
-    "image_uri": "http://something.com/khgfdkyg.png",
+    "image_uri": {"asset": "http://something.com/khgfdkyg.png"},
     "value": "wisa-multiwall",
     "manufacturer_name": "UPM Plywood",
     "version": [0,0,1],

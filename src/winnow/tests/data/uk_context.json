@@ -1,0 +1,21 @@
+{
+    "schema": "https://opendesk.cc/schemata/context.json",
+    "type": "context",
+    "name": "UK production context",
+    "path": "/contexts/uk/production",
+    "source": "https://github.com/opendesk/collection",
+    "base": "https://raw.github.com/opendesk/collection/master",
+    "version": [0,0,1],
+    "options":{
+        "material": "all_ply",
+        "thickness": {
+            "type": "numeric::step",
+            "name": "actual sheet thickness",
+            "description": "The actual thickness of the sheet to the nearest 0.1 mm",
+            "max": 18,
+            "min": 16.5,
+            "start": 16.5,
+            "step": 0.1
+        }
+    }
+}

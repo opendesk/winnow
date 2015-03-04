@@ -1,7 +1,7 @@
 {
-    "schema": "http://opendesk.cc/schemata/finish.json",
+    "schema": "https://opendesk.cc/schemata/finish.json",
     "source": "https://github.com/opendesk/collection",
-    "type": "value::finish",
+    "type": "finish",
     "name": "Premium Wisa",
     "path": "/finishes/opendesk/premium-wisa",
     "description": "Wisa-Multiwall with its edges sanded nicely",
@@ -9,16 +9,12 @@
     "version": [0,0,1],
     "options":{
         "material": {
-            "type": "set::material",
-            "values": [
-                {"$ref": "/materials/opendesk/sheets/wood/composite/plywood/pre-laminated-plywood/wisa-multiwall"}
-            ]
+            "type": "set::resource",
+            "values": "/materials/opendesk/sheets/wood/composite/plywood/pre-laminated-plywood/wisa-multiwall"
         },
         "processes": {
-            "type": "set::process",
-            "values": [
-                {"$ref": "/processes/light-sanding"}
-            ]
+            "type": "set::resource",
+            "values": "/processes/light-sanding"
         }
     }
 }

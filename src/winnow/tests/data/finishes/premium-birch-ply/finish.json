@@ -1,5 +1,5 @@
 {
-    "schema": "http://opendesk.cc/schemata/finish.json",
+    "schema": "https://opendesk.cc/schemata/finish.json",
     "source": "https://github.com/opendesk/collection",
     "type": "finish",
     "name": "Premium Birch Ply",
@@ -8,11 +8,11 @@
     "version": [0,0,1],
     "options":{
         "material": {
-            "type": "set::material",
+            "type": "set::resource",
             "values": "/materials/sheets/wood/composite/plywood/birch-faced-plywood"
         },
         "processes": {
-            "type": "set::process",
+            "type": "set::resource",
             "values": [
                 "/processes/fine-sanding",
                 "/processes/oiling"

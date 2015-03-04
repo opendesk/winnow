@@ -30,11 +30,10 @@
                 }
             },
             "required": ["asset"],
-            "additional_properties": false
+            "additionalProperties": false
         }
     },
-    "required": ["type"],
-    "additional_properties": false
+    "required": ["type"]
 }
 
 

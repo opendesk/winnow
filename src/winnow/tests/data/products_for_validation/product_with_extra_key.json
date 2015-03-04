@@ -9,6 +9,7 @@
     "description": "A nice cafe table with three legs",
     "is_default": true,
     "is_public": true,
+    "i_shouldnt_be_here": "poo",
     "options":{
         "material": {
             "type": "set::string",
@@ -34,7 +35,7 @@
         "sheet": {
             "rubbish": "junk",
             "scopes": ["client"],
-            "type": "set::string",
+            "type": "set::stringzzz",
             "name": "Nominal sheet thickness",
             "description": "The nominal sheet thickness",
             "values": [

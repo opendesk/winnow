@@ -1,0 +1,19 @@
+{
+    "schema": "https://opendesk.cc/schemata/context.json",
+    "type": "context",
+    "name": "Default Quantity",
+    "path": "/contexts/default_quantity",
+    "source": "https://github.com/opendesk/collection",
+    "base": "https://raw.github.com/opendesk/collection/master",
+    "version": [0,0,1],
+    "options":{
+        "quantity": {
+            "type": "numeric::step",
+            "name": "Quantity",
+            "max": 10000,
+            "min": 1,
+            "start": 1,
+            "step": 1
+        }
+    }
+}

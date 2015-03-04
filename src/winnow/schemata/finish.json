@@ -17,7 +17,6 @@
                     "pattern": "finish"
                 }
             },
-            "additional_properties": false,
             "required": ["name", "description", "options"]
         }
     ]

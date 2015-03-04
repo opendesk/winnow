@@ -118,6 +118,7 @@ def publish_fileset(db, fileset_json):
   -> inputs: context filters, products
   => outputs: configuration options[, merged document?]
 """
+
 def publish_context(db, context_json):
 
     return ContextSieve.publish(db, context_json)

@@ -52,7 +52,7 @@ class OptionsSet(collections.MutableMapping):
             that = value_factory(other_values)
             intersection = this.intersection(that)
             if intersection == None:
-                raise OptionsExceptionEmptyOptionValues("The key %s has no possible values when %s is merged with %s" % (key, self.uri, other.uri))
+                raise OptionsExceptionEmptyOptionValues("The key %s has no possible values when %s is merged with %s" % (key, this, that))
             return intersection.as_json()
 
 
@@ -130,6 +130,21 @@ class OptionsSet(collections.MutableMapping):
                     if not that.issubset(this):
                         return False
         return True
+
+
+    def scope(self, scope_names):
+        """
+        extracts a subset of options by scope
+        """
+        options = {}
+        for k, v in self.store.iteritems():
+            if isinstance(v, dict) and u"scopes" in v.keys():
+                scopes = set(v[u"scopes"])
+                if not scopes.isdisjoint(set(scope_names)):
+                    options[k] = deepcopy(v)
+            else:
+                options[k] = deepcopy(v)
+        return OptionsSet(options)
 
 
     def extract(self, key_names):

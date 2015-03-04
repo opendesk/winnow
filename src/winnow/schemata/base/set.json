@@ -10,21 +10,34 @@
                 "default": {
                     "type": "string"
                 },
-                "values": {
-                    "type": "array",
-                    "items": {
-                        "oneOf":[
-                            {
-                                "allOf": [
-                                    {"$ref": "https://opendesk.cc/schemata/base/options.json#"},
-                                    {"$ref": "https://opendesk.cc/schemata/base/option.json#"}
+                "values": {"oneOf":
+                    [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "allOf": [
+                                {"$ref": "https://opendesk.cc/schemata/base/options.json#"},
+                                {"$ref": "https://opendesk.cc/schemata/base/value.json#"}
+                            ]
+                        },
+                        {
+                            "type": "array",
+                            "items": {
+                                "oneOf":[
+                                    {
+                                        "allOf": [
+                                            {"$ref": "https://opendesk.cc/schemata/base/options.json#"},
+                                            {"$ref": "https://opendesk.cc/schemata/base/value.json#"}
+                                        ]
+                                    },
+                                    {
+                                        "type": "string"
+                                    }
                                 ]
-                            },
-                            {
-                                "type": "string"
                             }
-                        ]
-                    }
+                        }
+                    ]
                 }
             },
             "required": ["values"],

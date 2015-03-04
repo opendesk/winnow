@@ -5,7 +5,7 @@
     "type": "object",
     "allOf": [
         {
-            "$ref": "https://opendesk.cc/schemata/base/value.json#"
+            "$ref": "https://opendesk.cc/schemata/base/option.json#"
         },
         {"oneOf": [
                 {
@@ -18,8 +18,7 @@
                             "type": "number"
                         }
                     },
-                    "required": ["value"],
-                    "additional_properties": false
+                    "required": ["value"]
                 },
                 {
                     "properties": {
@@ -34,8 +33,7 @@
                             }
                         }
                     },
-                    "required": ["value"],
-                    "additional_properties": false
+                    "required": ["value"]
                 },
                 {
                     "properties": {
@@ -50,8 +48,7 @@
                             "type": "number"
                         }
                     },
-                    "required": ["max", "min"],
-                    "additional_properties": false
+                    "required": ["max", "min"]
                 },
                 {
                     "properties": {
@@ -72,8 +69,7 @@
                             "type": "number"
                         }
                     },
-                    "required": ["max", "min", "start", "step"],
-                    "additional_properties": false
+                    "required": ["max", "min", "start", "step"]
                 }
 
             ]

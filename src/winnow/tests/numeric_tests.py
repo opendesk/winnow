@@ -351,3 +351,36 @@ class TestNumberSieveCreation(unittest.TestCase):
         })
 
         self.assertTrue(number6.isdisjoint(number8))
+
+
+class TestSpecificCases(unittest.TestCase):
+
+    def test_two_ranges(self):
+
+        number1 = value_factory({
+            "type": "numeric::step",
+            "name": "actual sheet thickness",
+            "description": "The actual thickness of the sheet to the nearest 0.1 mm",
+            "max": Decimal("18"),
+            "min": Decimal("16.5"),
+            "start": Decimal("16.5"),
+            "step": Decimal("0.1")
+        })
+
+
+        number2 = value_factory({
+            "scopes": ["making"],
+            "type": "numeric::step",
+            "name": "actual sheet thickness",
+            "description": "The actual thickness of the sheet to the nearest 0.1 mm",
+            "max": Decimal("19"),
+            "min": Decimal("17.5"),
+            "start": Decimal("17.5"),
+            "step": Decimal("0.1")
+        })
+
+        number3 = number2.intersection(number1)
+
+        print number3
+
+        self.assertTrue(number3 != None)

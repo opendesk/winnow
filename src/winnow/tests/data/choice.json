@@ -1,0 +1,10 @@
+{
+    "schema": "https://opendesk.cc/schemata/options.json",
+    "type": "choice",
+    "name": "paul's choices",
+    "options":{
+        "material": "all_ply",
+        "sheet": "18",
+        "quantity": 2
+    }
+}

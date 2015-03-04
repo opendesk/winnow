@@ -9,19 +9,25 @@
         {"$ref": "https://opendesk.cc/schemata/base/canonical.json#"},
         {
             "properties": {
-                "is_default":{
-                    "type": "boolean"
-                },
-                "is_public":{
-                    "type": "boolean"
-                },
-                "type": {
-                    "type": "string",
-                    "pattern": "product"
-                },
+                "name":{},
+                "description":{},
+                "long_description":{},
+                "type": {},
+                "value": {},
+                "schema": {},
+                "image_uri": {},
+                "source": {},
+                "path": {},
+                "base": {},
+                "version": {},
+                "upstream": {},
+                "shortcode": {},
+                "options": {},
+                "is_default":{},
+                "is_public":{},
                 "components": {}
             },
-            "additional_properties": false
+            "additionalProperties": false
         }
     ]
 }

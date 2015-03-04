@@ -14,7 +14,7 @@
                     "pattern": "material"
                 }
             },
-            "additional_properties": true,
+            "additionalProperties": true,
             "required": ["name", "description"]
         }
     ]

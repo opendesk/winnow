@@ -15,7 +15,7 @@ class OptionsInterface(object):
     def get_uuid(self):
         raise OptionsExceptionMissingInterfaceMethod("get_uuid")
 
-    def add_history_action(self, action_name, options_delegate):
+    def add_history_action(self, action_name, options_delegate, **kwargs):
         raise OptionsExceptionMissingInterfaceMethod("add_history_action")
 
     def get_options_dict(self):

@@ -1,27 +1,30 @@
 
-from base_values import BaseSieveValue
+from base_values import BaseWinnowValue
 from winnow.exceptions import OptionsExceptionFailedValidation
 from winnow.constants import *
 from copy import deepcopy
 
-class OptionSieveValue(BaseSieveValue):
+class OptionWinnowValue(BaseWinnowValue):
 
 
     def __init__(self, value):
 
         if isinstance(value, dict):
-            self.uri = value.get("uri")
+
             self.name = value.get("name")
             self.description = value.get("description")
             self.image_url = value.get("image_url")
+            self.scopes = value.get("scopes")
             self.set_my_values(value.get(VALUES_KEY_NAME))
 
         else:
-            self.uri = None
             self.name = None
             self.description = None
             self.image_url = None
+            self.scopes = None
+
             self.set_my_values(value)
+
 
     def __len__(self):
         return len(self.values_lookup)
@@ -98,7 +101,7 @@ class OptionSieveValue(BaseSieveValue):
         values = self.values
 
         ## return the value without metadata is there is none
-        if self.name is None and self.uri is None and self.description is None and self.image_url is None:
+        if self.name is None and self.scopes is None and self.description is None and self.image_url is None:
             return values
 
         ## otherwise wrap it in a dict
@@ -109,18 +112,18 @@ class OptionSieveValue(BaseSieveValue):
 
         if self.name is not None:
             value[u"name"] = self.name
-        if self.uri is not None:
-            value[u"uri"] = self.uri
         if self.description is not None:
             value[u"description"] = self.description
         if self.image_url is not None:
             value[u"image_url"] = self.image_url
+        if self.scopes is not None:
+            value[u"scopes"] = self.scopes
 
         return value
 
 
 
-class OptionStringSieveValue(OptionSieveValue):
+class OptionStringSieveValue(OptionWinnowValue):
 
     type = VALUE_TYPE_SET_STRING
 
@@ -230,6 +233,8 @@ class OptionStringSieveValue(OptionSieveValue):
         ## uses the optional metadata from self but the individual metadata from other. Is this right??
         intersection_as_dict = {
             u"type": VALUE_TYPE_SET_STRING,
+            u"scopes": self.scopes if self.scopes is not None else other.scopes,
+            u"image_url": self.image_url if self.image_url is not None else other.image_url,
             u"name": self.name if self.name is not None else other.name,
             u"description": self.description if self.description is not None else other.description,
             VALUES_KEY_NAME: values,
@@ -237,72 +242,3 @@ class OptionStringSieveValue(OptionSieveValue):
 
         return self.__class__(intersection_as_dict)
     
-
-# class OptionObjectSieveValue(OptionSieveValue):
-#     """
-#     an object value
-#
-#     """
-#     type = VALUE_TYPE_SET_OBJECT
-#
-#
-#     def validate_single_value(self, value):
-#         if not isinstance(value, dict):
-#             raise Exception("should be dict %s" % value)
-#
-#
-#     def _set_value_list(self, value_list):
-#         self.value_list = value_list
-#         for v in value_list:
-#             self.validate_single_value(v)
-#
-#     def __str__(self):
-#         return [v[u"value"] for v in self.value_list]
-#
-#
-#     def isdisjoint(self, other):
-#         """
-#         This is an inefficient way to do this check as it has to iterate over both value lists and compare the results
-#         possibly this could be improved
-#         """
-#         self.check_class(other)
-#         for this_v in self.value_list:
-#             for that_v in other.value_list:
-#                 if this_v[u"value"] == that_v[u"value"]:
-#                     return False
-#         return True
-#
-#
-#     def issubset(self, other):
-#         """
-#         methodology this time:
-#         False if any or my values are not found in other
-#         """
-#         from winnow.options import OptionsSet
-#         self.check_class(other)
-#
-#         for this_v in self.value_list:
-#             found_v = False
-#             for that_v in other.value_list:
-#                 this_value_dict = this_v[u"value"]
-#                 that_value_dict = that_v[u"value"]
-#                 if this_value_dict == that_value_dict:
-#                     this_options = this_value_dict.get(u"options")
-#                     that_options = that_value_dict.get(u"options")
-#                     if this_options is not None and that_options is not None:
-#                         if not OptionsSet(that_options).allows(OptionsSet(this_options)):
-#                             return False
-#                     found_v = True
-#             if not found_v:
-#                 return False
-#         return True
-
-
-# class OptionFinishSieveValue(OptionSieveValue):
-#
-#     pass
-#
-#
-# class OptionMaterialSieveValue(OptionSieveValue):
-#
-#     pass

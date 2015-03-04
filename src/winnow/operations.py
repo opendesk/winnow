@@ -26,6 +26,7 @@ def intersects(source_a, source_b):
 
 
 def merge(source_a, source_b, target, doc):
+    doc_b = source_b.get_doc()
     options_a = OptionsSet(source_a.get_options_dict())
     options_b = OptionsSet(source_b.get_options_dict())
     new_doc = deepcopy(doc)
@@ -33,10 +34,20 @@ def merge(source_a, source_b, target, doc):
     target.clone_history_from(source_a)
     _add_start_if_needed(source_a, target)
     _set_doc(target, new_doc)
-    target.add_history_action(HISTORY_ACTION_MERGE, source_b)
+
+    kwargs = {
+        "action": HISTORY_ACTION_MERGE,
+        "input_id": source_b.get_uuid(),
+        "input_name": doc_b.get("name"),
+        "input_path": doc_b.get("path"),
+        "output_type": doc.get("type")
+    }
+
+    target.add_history_action(kwargs)
 
 
 def patch(source_a, source_b, target, doc):
+    doc_b = source_b.get_doc()
     options_a = OptionsSet(source_a.get_options_dict())
     options_b = OptionsSet(source_b.get_options_dict())
     new_doc = deepcopy(doc)
@@ -44,18 +55,44 @@ def patch(source_a, source_b, target, doc):
     target.clone_history_from(source_a)
     _add_start_if_needed(source_a, target)
     _set_doc(target, new_doc)
-    target.add_history_action(HISTORY_ACTION_PATCH, source_b)
+
+    kwargs = {
+        "action": HISTORY_ACTION_PATCH,
+        "input_id": source_b.get_uuid(),
+        "input_name": doc_b.get("name"),
+        "input_path": doc_b.get("path"),
+        "output_type": doc.get("type")
+    }
+
+    target.add_history_action(kwargs)
 
 
-def extract(source, extractions, target, doc):
+def scope(source, scopes, target, doc):
     options = OptionsSet(source.get_options_dict())
     new_doc = deepcopy(doc)
-    keys_to_extract = extractions.get_options_dict().keys()
-    new_doc[OPTIONS_KEY] = options.extract(keys_to_extract).store
+    new_doc[OPTIONS_KEY] = options.scope(scopes).store
     target.clone_history_from(source)
     _add_start_if_needed(source, target)
     _set_doc(target, new_doc)
-    target.add_history_action(HISTORY_ACTION_EXTRACT, extractions)
+
+    kwargs = {
+        "action": HISTORY_ACTION_SCOPE,
+        "scopes": scopes,
+        "output_type": doc.get("type")
+    }
+
+    target.add_history_action(kwargs)
+
+
+# def extract(source, extractions, target, doc):
+#     options = OptionsSet(source.get_options_dict())
+#     new_doc = deepcopy(doc)
+#     keys_to_extract = extractions.get_options_dict().keys()
+#     new_doc[OPTIONS_KEY] = options.extract(keys_to_extract).store
+#     target.clone_history_from(source)
+#     _add_start_if_needed(source, target)
+#     _set_doc(target, new_doc)
+#     target.add_history_action(HISTORY_ACTION_EXTRACT, extractions)
 
 
 def filter_allows(filter_source, possible):
@@ -115,7 +152,17 @@ def _patch_upstream(source, target, options_set):
 
 def _add_start_if_needed(source, target):
     if target.history_is_empty():
-        target.add_history_action(HISTORY_ACTION_START, source)
+        doc = source.get_doc()
+
+        kwargs = {
+            "action": HISTORY_ACTION_START,
+            "input_id": source.get_uuid(),
+            "input_name": doc.get("name"),
+            "input_path": doc.get("path"),
+            "output_type": doc.get("type")
+        }
+
+        target.add_history_action(kwargs)
 
 
 def asset_paths(doc):
@@ -138,7 +185,6 @@ def _walk_dict_for_assets(node, found):
     if isinstance(node, list):
         for v in node:
             _walk_dict_for_assets(v, found)
-
 
 
 def validate(doc):

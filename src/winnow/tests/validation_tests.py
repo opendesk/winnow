@@ -30,6 +30,21 @@ class TestValidSieve(unittest.TestCase):
 
         self.assertRaises(Exception, winnow.validate, product_dict)
 
+    def test_validate_product_with_wrong_type_fail(self):
+
+        with open(os.path.join(DATA_DIR, "products_for_validation/product_with_wrong_type.json"), "r") as f:
+            product_dict = json.loads(f.read())
+
+        self.assertRaises(Exception, winnow.validate, product_dict)
+
+
+    def test_validate_product_with_extra_key(self):
+
+        with open(os.path.join(DATA_DIR, "products_for_validation/product_with_extra_key.json"), "r") as f:
+            product_dict = json.loads(f.read())
+
+
+        self.assertRaises(Exception, winnow.validate, product_dict)
 
 
     def test_validate_fileset(self):

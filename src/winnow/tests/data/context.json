@@ -4,7 +4,7 @@
     "description": "things that are possible in the uk",
     "options":{
         "material": ["wisa"],
-        "sheet": ["18mm", "32mm"],
+        "sheet": ["18", "32"],
         "color": ["green", "blue", "purple", "orange"]
     }
 }

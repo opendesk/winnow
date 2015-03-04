@@ -22,7 +22,7 @@
                             }
                         },
                         "required": ["asset"],
-                         "additional_properties": false
+                         "additionalProperties": false
                     }
                 },
                 "type": {
@@ -30,8 +30,7 @@
                     "pattern": "fileset"
                 }
             },
-            "required": ["category", "files"],
-            "additional_properties": false
+            "required": ["category", "files"]
         }
     ]
 }

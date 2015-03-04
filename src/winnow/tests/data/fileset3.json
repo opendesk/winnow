@@ -1,20 +1,19 @@
 {
     "schema": "https://opendesk.cc/schemata/fileset.json",
     "type": "fileset",
-    "path": "/ranges/lean/cafe-table/standard/test_fileset_1",
+    "path": "/ranges/lean/cafe-table/standard/test_fileset_2",
     "source": "https://github.com/opendesk/collection",
     "base": "https://raw.github.com/opendesk/collection/master",
     "category": "sheets", 
     "description": "Cad files for 18mm ply",
-    "files": [{"asset": "files/test_1.txt"},
-        {"asset": "files/test_2.txt"}
+    "files": [{"asset": "files/test_5.txt"},
+        {"asset": "files/test_6.txt"}
     ], 
     "name": "Test Fileset",
     "version": [1, 0, 1],
     "options": {
-        "material": "wisa",
         "sheet": "18",
-        "thickness": 17.9,
+        "thickness": 17.9, 
         "tolerance": 0
     }
 }

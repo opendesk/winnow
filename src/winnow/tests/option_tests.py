@@ -2,7 +2,7 @@ import unittest
 from decimal import Decimal
 
 from winnow.values import value_factory
-from winnow.values.option_values import OptionSieveValue, OptionStringSieveValue
+from winnow.values.option_values import OptionWinnowValue, OptionStringSieveValue
 from winnow.constants import *
 
 
@@ -225,6 +225,7 @@ class TestOptionSieveCreation(unittest.TestCase):
             u"type": VALUE_TYPE_SET_STRING,
             u"name": u"colour",
             u"description": u"please choose one of the colours",
+            u"image_url": u"http://something.com/kurtjyrd.png",
             VALUES_KEY_NAME: [
                 {
                     u"type": VALUE_TYPE_SET_STRING,
@@ -247,6 +248,7 @@ class TestOptionSieveCreation(unittest.TestCase):
             u"type": VALUE_TYPE_SET_STRING,
             u"name": u"colour",
             u"description": u"please choose one of the colours",
+            u"scopes": [u"client"],
             VALUES_KEY_NAME: [
                 {
                     u"type": VALUE_TYPE_SET_STRING,
@@ -267,6 +269,8 @@ class TestOptionSieveCreation(unittest.TestCase):
 
         option3 = option1.intersection(option2)
 
+
+
         d = option3.as_json()
 
         self.assertTrue(isinstance(option3, OptionStringSieveValue))
@@ -277,7 +281,37 @@ class TestOptionSieveCreation(unittest.TestCase):
         self.assertEqual(d[VALUES_KEY_NAME]["value"], u"blue")
         self.assertEqual(d[VALUES_KEY_NAME]["name"], u"blue")
         self.assertEqual(d[VALUES_KEY_NAME]["description"], u"the colour blue")
+        self.assertEqual(d[u"scopes"], [u"client"])
+        self.assertEqual(d[u"image_url"], u"http://something.com/kurtjyrd.png")
 
+
+        option8 = value_factory([u"green", u"blue"])
+        option9 = option1.intersection(option8)
+        d = option9.as_json()
+
+        self.assertTrue(isinstance(option3, OptionStringSieveValue))
+        self.assertEqual(option3.type, VALUE_TYPE_SET_STRING)
+        self.assertTrue(isinstance(d, dict))
+
+        self.assertTrue(isinstance(d[VALUES_KEY_NAME], dict))
+        self.assertEqual(d[VALUES_KEY_NAME]["value"], u"blue")
+        self.assertEqual(d[VALUES_KEY_NAME]["name"], u"blue")
+        self.assertEqual(d[VALUES_KEY_NAME]["description"], u"the colour blue")
+        self.assertEqual(d[u"image_url"], u"http://something.com/kurtjyrd.png")
+
+
+        option10 = option8.intersection(option1)
+        d = option10.as_json()
+
+        self.assertTrue(isinstance(option3, OptionStringSieveValue))
+        self.assertEqual(option3.type, VALUE_TYPE_SET_STRING)
+        self.assertTrue(isinstance(d, dict))
+
+        self.assertTrue(isinstance(d[VALUES_KEY_NAME], dict))
+        self.assertEqual(d[VALUES_KEY_NAME]["value"], u"blue")
+        self.assertEqual(d[VALUES_KEY_NAME]["name"], u"blue")
+        self.assertEqual(d[VALUES_KEY_NAME]["description"], u"the colour blue")
+        self.assertEqual(d[u"image_url"], u"http://something.com/kurtjyrd.png")
 
 
         option4 = value_factory({

@@ -29,7 +29,7 @@
                     "type": "string",
                     "name": "18mm",
                     "description": "18mm ply wood",
-                    "image_uri": "http://something.com/khgfdkyg.png",
+                    "image_uri": {"asset": "http://something.com/khgfdkyg.png"},
                     "value": "18mm"
                 }
             ]

@@ -2,7 +2,7 @@ import unittest
 from decimal import Decimal
 
 from winnow.values import value_factory
-from winnow.values.option_values import OptionSieveValue, OptionStringSieveValue
+from winnow.values.option_values import OptionWinnowValue, OptionStringSieveValue
 from winnow.constants import *
 
 from winnow.exceptions import OptionsExceptionFailedValidation, OptionsExceptionIncompatibleTypes

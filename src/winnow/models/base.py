@@ -1,6 +1,7 @@
 import uuid
 import winnow
 from winnow.interface import OptionsInterface
+from winnow.utils import json_dumps
 from copy import deepcopy
 
 from winnow.constants import *
@@ -13,10 +14,23 @@ class WinnowVersion(OptionsInterface):
         if self.kwargs.get("uuid") is None:
             self.kwargs["uuid"] = unicode(uuid.uuid4())
 
+    def __str__(self):
+        return json_dumps(self.kwargs)
+
 
     @classmethod
     def get_from_path(cls, db, path):
         kwargs = db.get(path)
+        return None if kwargs is None else cls(db, kwargs)
+
+    @classmethod
+    def get_from_id(cls, db, id):
+        kwargs = db.get(id)
+        return None if kwargs is None else cls(db, kwargs)
+
+    @classmethod
+    def get_from_id(cls, db, id):
+        kwargs = db.get(id)
         return None if kwargs is None else cls(db, kwargs)
 
     ##  oo wrappers around winnow operations
@@ -46,6 +60,7 @@ class WinnowVersion(OptionsInterface):
         db.set(wv.kwargs[u"uuid"], wv.kwargs)
         return wv
 
+
     @classmethod
     def patched(cls, db, doc, kwargs, source_a, source_b):
         wv = cls(db, kwargs)
@@ -53,10 +68,10 @@ class WinnowVersion(OptionsInterface):
         db.set(wv.kwargs[u"uuid"], wv.kwargs)
         return wv
 
-    @classmethod
-    def extracted(cls, db, doc, kwargs, source, extractions):
-        wv = cls(db, kwargs)
-        winnow.extract(source, extractions, wv, doc)
+
+    def scoped(self, db, doc, scopes, kwargs={}):
+        wv = self.__class__(self.db, kwargs)
+        winnow.scope(self, scopes, wv, doc)
         db.set(wv.kwargs[u"uuid"], wv.kwargs)
         return wv
 
@@ -93,11 +108,12 @@ class WinnowVersion(OptionsInterface):
     def get_uuid(self):
         return self.kwargs[u"uuid"]
 
-    def add_history_action(self, action_name, options_interface):
+    def add_history_action(self, kwargs):
         history = self.kwargs.get(u"history")
         if history is None:
             history = self.kwargs[u"history"] = []
-        history.append([action_name, options_interface.kwargs.get(u"doc_hash")])
+
+        history.append(kwargs)
 
     def get_options_dict(self):
         return self.kwargs[u"doc"][u"options"]

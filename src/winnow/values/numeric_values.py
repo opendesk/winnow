@@ -56,14 +56,27 @@ VALUE_TYPE_NUMERIC_STEP = "numeric::step"
 
 
 """
-
+from copy import deepcopy
 from decimal import Decimal
-from base_values import BaseSieveValue
+from base_values import BaseWinnowValue
 from winnow.exceptions import OptionsExceptionFailedValidation, OptionsExceptionIncompatibleTypes, OptionsExceptionNoAllowed
 
 from winnow.constants import *
 
-class NumericSieveValue(BaseSieveValue):
+class NumericWinnowValue(BaseWinnowValue):
+
+    def __init__(self, value):
+
+        if isinstance(value, dict):
+            self.name = value.get("name")
+            self.description = value.get("description")
+            self.image_url = value.get("image_url")
+            self.scopes = value.get("scopes")
+        else:
+            self.name = None
+            self.description = None
+            self.image_url = None
+            self.scopes = None
 
     @classmethod
     def from_value(cls, value):
@@ -84,18 +97,19 @@ class NumericSieveValue(BaseSieveValue):
 
 
             numeric_type = value[u"type"]
+
             if numeric_type == VALUE_TYPE_NUMERIC_NUMBER:
-                return NumericNumberSieveValue(value[u"value"])
+                return NumericNumberSieveValue(value)
             elif numeric_type == VALUE_TYPE_NUMERIC_SET:
                 # numeric = NumericSetSieveValue.make(value[u"value"])
-                numeric = NumericSetSieveValue(value[u"value"])
+                numeric = NumericSetSieveValue(value)
                 if numeric is None:
                     raise OptionsExceptionFailedValidation("NumericSieveValue: empty set")
                 return numeric
             elif numeric_type == VALUE_TYPE_NUMERIC_RANGE:
-                return NumericRangeSieveValue(value[u"max"], value[u"min"])
+                return NumericRangeSieveValue(value)
             elif numeric_type == VALUE_TYPE_NUMERIC_STEP:
-                step = NumericStepSieveValue(value[u"max"], value[u"min"], value[u"start"], value[u"step"])
+                step = NumericStepSieveValue(value)
                 possible = step.possible_values()
                 if len(possible) == 0:
                     raise OptionsExceptionFailedValidation("NumericSieveValue: empty set")
@@ -113,7 +127,7 @@ class NumericSieveValue(BaseSieveValue):
 
 
     def check_class(self, other):
-        if not issubclass(other.__class__, NumericSieveValue):
+        if not issubclass(other.__class__, NumericWinnowValue):
             raise OptionsExceptionIncompatibleTypes("sieve value types must match")
 
 
@@ -148,37 +162,67 @@ class NumericSieveValue(BaseSieveValue):
             if self.max > max(that_possible_values):
                 return False
 
-
-
         return True
+
+
+    def get_merged_info(self, other):
+
+        return {
+            u"scopes": self.scopes if self.scopes is not None else other.scopes,
+            u"image_url": self.image_url if self.image_url is not None else other.image_url,
+            u"name": self.name if self.name is not None else other.name,
+            u"description": self.description if self.description is not None else other.description,
+        }
+
+    def update_with_info(self, as_json):
+
+        if self.name is not None:
+            as_json[u"name"] = self.name
+        if self.description is not None:
+            as_json[u"description"] = self.description
+        if self.image_url is not None:
+            as_json[u"image_url"] = self.image_url
+        if self.scopes is not None:
+            as_json[u"scopes"] = self.scopes
+
+        return as_json
 
 
     def isdisjoint(self, other):
         return self.intersection(other) is None
 
 
-class NumericNumberSieveValue(NumericSieveValue):
+class NumericNumberSieveValue(NumericWinnowValue):
 
     type = VALUE_TYPE_NUMERIC_NUMBER
     is_determined = True
     has_value_set = True
 
-    def __init__(self, number):
+    def __init__(self, value):
 
-        if not isinstance(number, Decimal):
-            raise OptionsExceptionFailedValidation("NumericNumberSieveValue must be a Decimal")
+        super(NumericNumberSieveValue, self).__init__(value)
 
-        self.number = number
+        if isinstance(value, Decimal):
+            self.number = value
+        else:
+            number = value[u"value"]
+            if not isinstance(number, Decimal):
+                raise OptionsExceptionFailedValidation("NumericNumberSieveValue must be a Decimal")
+            self.number = number
+
 
     def possible_values(self):
         return {self.number}
 
 
     def as_json(self):
-        return {
+
+        as_json =  {
             "type": self.type,
             "value": self.number
         }
+
+        return self.update_with_info(as_json)
 
     def intersection(self, other):
 
@@ -195,33 +239,63 @@ class NumericNumberSieveValue(NumericSieveValue):
             raise OptionsExceptionFailedValidation("intersection of NumericNumberSieveValue failed")
 
         if intersects:
-            return NumericNumberSieveValue(self.number)
+            info = self.get_merged_info(other)
+            info[u"value"] = self.number
+            return NumericNumberSieveValue(info)
         else:
             return None
 
 
-class NumericSetSieveValue(NumericSieveValue):
+class NumericSetSieveValue(NumericWinnowValue):
 
     type = VALUE_TYPE_NUMERIC_SET
     is_determined = False
     has_value_set = True
 
 
-    def __new__(cls, as_list):
-        if len(as_list) > MAX_VALUE_SET_SIZE:
-            raise OptionsExceptionNoAllowed("maximum value set size exceeded")
-        elif len(as_list) == 0:
-            return None
-        elif len(as_list) == 1:
-            return NumericNumberSieveValue(list(as_list)[0])
+    def __new__(cls, value):
+
+        if isinstance(value, list) or isinstance(value, set):
+            as_list = value
+            if len(as_list) > MAX_VALUE_SET_SIZE:
+                raise OptionsExceptionNoAllowed("maximum value set size exceeded")
+            elif len(as_list) == 0:
+                print "should be this"
+                return None
+            elif len(as_list) == 1:
+                return NumericNumberSieveValue(list(as_list)[0])
+            else:
+                return NumericWinnowValue.__new__(cls)
         else:
-            return NumericSieveValue.__new__(cls)
+            as_list = value[u"value"]
+            if not (isinstance(as_list, list) or isinstance(as_list, set)):
+                raise OptionsExceptionFailedValidation("NumericNumberSieveValue must be a Decimal")
+            if len(as_list) > MAX_VALUE_SET_SIZE:
+                raise OptionsExceptionNoAllowed("maximum value set size exceeded")
+            elif len(as_list) == 0:
+                return None
+            elif len(as_list) == 1:
+                v = deepcopy(value)
+                v[u"value"] = list(as_list)[0]
+                return NumericNumberSieveValue(v)
+            else:
+                return NumericWinnowValue.__new__(cls)
 
 
-    def __init__(self, as_list):
-        self.as_list = as_list
+    def __init__(self, value):
 
-        for v in as_list:
+        super(NumericSetSieveValue, self).__init__(value)
+
+        if isinstance(value, list) or isinstance(value, set):
+            self.as_list = value
+        else:
+            as_list = value[u"value"]
+            if not (isinstance(as_list, list) or isinstance(as_list, set)):
+                raise OptionsExceptionFailedValidation("NumericNumberSieveValue must be a Decimal")
+            self.as_list = as_list
+
+
+        for v in self.as_list:
             if not isinstance(v, Decimal):
                 raise OptionsExceptionFailedValidation("NumericSetSieveValue all values must be Decimals")
 
@@ -243,31 +317,36 @@ class NumericSetSieveValue(NumericSieveValue):
             values = [v for v in self.possible_values() if v >= other.min and v <= other.max]
         else:
             values = self.possible_values().intersection(other.possible_values())
-        # return NumericSetSieveValue.make(values)
-        return NumericSetSieveValue(values)
+        info = self.get_merged_info(other)
+        info[u"value"] = values
+        return NumericSetSieveValue(info)
 
 
     def as_json(self):
-        return {
+        as_json = {
             "type": self.type,
-            "value": self.as_list
+            "value": list(self.as_list)
         }
+
+        return self.update_with_info(as_json)
 
 
 """
 a range defined by inclusive maximum and minimum
 """
 
-class NumericRangeSieveValue(NumericSieveValue):
+class NumericRangeSieveValue(NumericWinnowValue):
 
     type = VALUE_TYPE_NUMERIC_RANGE
     is_determined = False
     has_value_set = False
 
-    def __init__(self, max, min):
+    def __init__(self, value):
 
-        self.max = max
-        self.min = min
+        super(NumericRangeSieveValue, self).__init__(value)
+
+        self.max = value[u"max"]
+        self.min = value[u"min"]
         if self.max < self.min:
             raise OptionsExceptionFailedValidation("NumericRangeSieveValue: max %s less than min %s" % (self.max, self.min))
 
@@ -284,7 +363,10 @@ class NumericRangeSieveValue(NumericSieveValue):
             new_min = max(self.min, other.min)
             if new_max < new_min:
                 return None
-            return NumericRangeSieveValue(new_max, new_min)
+            info = self.get_merged_info(other)
+            info[u"max"] = new_max
+            info[u"min"] = new_min
+            return NumericRangeSieveValue(info)
 
         if type(other) == NumericStepSieveValue:
             new_max = min(self.max, other.max)
@@ -292,7 +374,12 @@ class NumericRangeSieveValue(NumericSieveValue):
             if new_max < new_min:
                 return None
             try:
-                sieve = NumericStepSieveValue.make(new_max, new_min, other.start, other.step)
+                info = self.get_merged_info(other)
+                info[u"max"] = new_max
+                info[u"min"] = new_min
+                info[u"step"] = other.step
+                info[u"start"] = other.start
+                sieve = NumericStepSieveValue.make(info)
             except OptionsExceptionFailedValidation:
                 return None
             return sieve
@@ -302,11 +389,13 @@ class NumericRangeSieveValue(NumericSieveValue):
 
 
     def as_json(self):
-        return {
+        as_json =  {
             "type": self.type,
             "max": self.max,
             "min":self.min,
         }
+
+        return self.update_with_info(as_json)
 
 
 class NumericStepSieveValue(NumericRangeSieveValue):
@@ -317,19 +406,31 @@ class NumericStepSieveValue(NumericRangeSieveValue):
 
 
     @classmethod
-    def make(cls, max, min, start, step):
-        step = cls( max, min, start, step)
+    def make(cls, value):
+
+        step = cls(value)
         poss = step.possible_values()
         if len(poss) == 1:
-            return NumericNumberSieveValue(poss[0])
+            kwargs = {
+                u"value": poss[0]
+            }
+            if value.get(u"name") != None:
+                kwargs[u"name"] = value.get(u"name")
+            if value.get(u"description") != None:
+                kwargs[u"description"] = value.get(u"description")
+            if value.get(u"image_url") != None:
+                kwargs[u"image_url"] = value.get(u"image_url")
+            if value.get(u"scopes") != None:
+                kwargs[u"scopes"] = value.get(u"scopes")
+
+            return NumericNumberSieveValue(kwargs)
         return step
 
-    def __init__(self, max, min, start, step):
+    def __init__(self, value):
 
-        super(NumericStepSieveValue, self).__init__(max, min)
-
-        self.start = start
-        self.step = step
+        super(NumericStepSieveValue, self).__init__(value)
+        self.start = value[u"start"]
+        self.step = value[u"step"]
 
         if len(self.possible_values()) == 0:
 
@@ -347,14 +448,20 @@ class NumericStepSieveValue(NumericRangeSieveValue):
             if new_max < new_min:
                 return None
             try:
-                sieve = NumericStepSieveValue.make(new_max, new_min, self.start, self.step)
+                info = self.get_merged_info(other)
+                info[u"max"] = new_max
+                info[u"min"] = new_min
+                info[u"step"] = self.step
+                info[u"start"] = self.start
+                sieve = NumericStepSieveValue.make(info)
             except OptionsExceptionFailedValidation:
                 return None
             return sieve
         else:
             values = self.possible_values().intersection(other.possible_values())
-
-            return NumericSetSieveValue(values)
+            info = self.get_merged_info(other)
+            info[u"value"] = values
+            return NumericSetSieveValue(info)
 
 
     def possible_values(self):
@@ -368,10 +475,12 @@ class NumericStepSieveValue(NumericRangeSieveValue):
 
 
     def as_json(self):
-        return {
+        as_json = {
             "type": self.type,
             "max": self.max,
             "min":self.min,
             "start": self.start,
             "step": self.step
         }
+
+        return self.update_with_info(as_json)

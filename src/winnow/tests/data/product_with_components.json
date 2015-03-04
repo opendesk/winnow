@@ -24,7 +24,7 @@
             "description": "Choose one of the styles",
             "values": [
                 {
-                    "type": "value::string",
+                    "type": "string",
                     "name": "All Ply",
                     "description": "Everything is made out of ply",
                     "value": "all_ply",
@@ -32,7 +32,7 @@
 
                 },
                 {
-                    "type": "value::string",
+                    "type": "string",
                     "name": "Wisa Top",
                     "description": "The top is made from wisa and the legs from ply",
                     "value": "wisa_top",

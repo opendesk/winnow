@@ -20,6 +20,8 @@ def validate(doc):
     type = doc.get("schema")
     if type is None:
         return
+
+
     schema = reference_store[type]
     resolver = jsonschema.RefResolver(type, schema, store=reference_store)
     validator = jsonschema.Draft4Validator(schema, resolver=resolver)

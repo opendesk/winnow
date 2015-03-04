@@ -26,7 +26,6 @@
             "type": "string"
         }
     },
-    "required": ["schema", "source", "path", "version"],
-    "additional_properties": false
+    "required": ["schema", "source", "path", "version"]
 }
 

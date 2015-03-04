@@ -29,5 +29,7 @@ class WinnowFileset(WinnowVersion):
         if not product.allows(fileset):
             raise OptionsExceptionNoAllowed
 
+        db.index_fileset(product_path, fileset.kwargs[u"uuid"])
+
         return fileset
 

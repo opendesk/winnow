@@ -1,6 +1,6 @@
 {
     "schema": "https://opendesk.cc/schemata/product.json",
-    "type": "product",
+    "type": "wrong",
     "path": "/ranges/lean/cafe-table/standard",
     "source": "https://github.com/opendesk/collection",
     "base": "https://raw.github.com/opendesk/collection/master",
@@ -34,7 +34,7 @@
         "sheet": {
             "rubbish": "junk",
             "scopes": ["client"],
-            "type": "set::string",
+            "type": "set::stringzzz",
             "name": "Nominal sheet thickness",
             "description": "The nominal sheet thickness",
             "values": [

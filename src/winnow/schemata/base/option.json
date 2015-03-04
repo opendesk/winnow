@@ -10,21 +10,17 @@
         "description":{
             "type": "string"
         },
-        "type": {
-            "type": "string",
-            "oneOf": [
-                {"pattern": "string"},
-                {"pattern": "material"},
-                {"pattern": "process"},
-                {"pattern": "finish"}
-            ]
-        },
         "image_uri": {
             "type": "string"
+        },
+        "scopes": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
         }
     },
-    "required": ["type"],
-    "additional_properties": false
+    "required": ["type"]
 }
 
 

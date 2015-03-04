@@ -1,5 +1,5 @@
 {
-    "schema": "http://opendesk.cc/schemata/process.json",
+    "schema": "https://opendesk.cc/schemata/process.json",
     "source": "https://github.com/opendesk/collection",
     "type": "process",
     "name": "Oiling",
