@@ -142,6 +142,8 @@ class WinnowVersion(OptionsInterface):
             return None
         else:
             kwargs = self.db.get(upstream_id)
+            if kwargs is None:
+                return None
             return WinnowVersion(self.db, kwargs)
 
     def history_is_empty(self):

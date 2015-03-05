@@ -2,7 +2,7 @@ import unittest
 from decimal import Decimal
 
 from winnow.values import value_factory
-from winnow.values.option_values import OptionWinnowValue, OptionStringSieveValue
+from winnow.values.option_values import OptionWinnowValue, OptionStringWinnowValue
 from winnow.constants import *
 
 
@@ -41,7 +41,7 @@ class TestOptionSieveCreation(unittest.TestCase):
         option = value_factory(u"red")
         d = option.as_json()
 
-        self.assertTrue(isinstance(option, OptionStringSieveValue))
+        self.assertTrue(isinstance(option, OptionStringWinnowValue))
         self.assertEqual(option.type, VALUE_TYPE_SET_STRING)
         self.assertEqual(d, u"red")
 
@@ -51,7 +51,7 @@ class TestOptionSieveCreation(unittest.TestCase):
         option = value_factory([u"red", u"blue"])
         d = option.as_json()
 
-        self.assertTrue(isinstance(option, OptionStringSieveValue))
+        self.assertTrue(isinstance(option, OptionStringWinnowValue))
         self.assertEqual(d, [u"red", u"blue"])
 
         values = option.values
@@ -63,7 +63,7 @@ class TestOptionSieveCreation(unittest.TestCase):
         option = value_factory([u"red"])
         d = option.as_json()
 
-        self.assertTrue(isinstance(option, OptionStringSieveValue))
+        self.assertTrue(isinstance(option, OptionStringWinnowValue))
         self.assertEqual(d, u"red")
 
 
@@ -78,7 +78,7 @@ class TestOptionSieveCreation(unittest.TestCase):
 
         d = option.as_json()
 
-        self.assertTrue(isinstance(option, OptionStringSieveValue))
+        self.assertTrue(isinstance(option, OptionStringWinnowValue))
         self.assertEqual(option.type, VALUE_TYPE_SET_STRING)
         self.assertTrue(isinstance(d, dict))
         self.assertEqual(d[VALUES_KEY_NAME], u"red")
@@ -97,7 +97,7 @@ class TestOptionSieveCreation(unittest.TestCase):
 
         d = option.as_json()
 
-        self.assertTrue(isinstance(option, OptionStringSieveValue))
+        self.assertTrue(isinstance(option, OptionStringWinnowValue))
         self.assertEqual(option.type, VALUE_TYPE_SET_STRING)
         self.assertTrue(isinstance(d, dict))
         self.assertEqual(d[VALUES_KEY_NAME], [u"red", u"blue"])
@@ -109,7 +109,7 @@ class TestOptionSieveCreation(unittest.TestCase):
 
         d = option.as_json()
 
-        self.assertTrue(isinstance(option, OptionStringSieveValue))
+        self.assertTrue(isinstance(option, OptionStringWinnowValue))
         self.assertEqual(option.type, VALUE_TYPE_SET_STRING)
         self.assertTrue(isinstance(d, dict))
         self.assertTrue(isinstance(d[VALUES_KEY_NAME], list))
@@ -273,7 +273,7 @@ class TestOptionSieveCreation(unittest.TestCase):
 
         d = option3.as_json()
 
-        self.assertTrue(isinstance(option3, OptionStringSieveValue))
+        self.assertTrue(isinstance(option3, OptionStringWinnowValue))
         self.assertEqual(option3.type, VALUE_TYPE_SET_STRING)
         self.assertTrue(isinstance(d, dict))
 
@@ -289,7 +289,7 @@ class TestOptionSieveCreation(unittest.TestCase):
         option9 = option1.intersection(option8)
         d = option9.as_json()
 
-        self.assertTrue(isinstance(option3, OptionStringSieveValue))
+        self.assertTrue(isinstance(option3, OptionStringWinnowValue))
         self.assertEqual(option3.type, VALUE_TYPE_SET_STRING)
         self.assertTrue(isinstance(d, dict))
 
@@ -303,7 +303,7 @@ class TestOptionSieveCreation(unittest.TestCase):
         option10 = option8.intersection(option1)
         d = option10.as_json()
 
-        self.assertTrue(isinstance(option3, OptionStringSieveValue))
+        self.assertTrue(isinstance(option3, OptionStringWinnowValue))
         self.assertEqual(option3.type, VALUE_TYPE_SET_STRING)
         self.assertTrue(isinstance(d, dict))
 
@@ -347,7 +347,7 @@ class TestOptionSieveCreation(unittest.TestCase):
 
         d = option5.as_json()
 
-        self.assertTrue(isinstance(option5, OptionStringSieveValue))
+        self.assertTrue(isinstance(option5, OptionStringWinnowValue))
         self.assertEqual(option5.type, VALUE_TYPE_SET_STRING)
         self.assertEqual(len(option5), 2)
         self.assertTrue(isinstance(d, dict))

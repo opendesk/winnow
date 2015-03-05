@@ -5,6 +5,7 @@ import time
 from decimal import Decimal
 from db import MockKVStore
 import winnow.utils as utils
+from winnow.exceptions import OptionsExceptionReferenceError
 import winnow.pipeline.flow as flow
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
@@ -64,10 +65,30 @@ class TestPublishingProduct(unittest.TestCase):
         self.db = MockKVStore()
 
 
+    def test_publish_product_fail_upstream(self):
+        as_dict = dict_at_data_path("product_with_thickness.json")
+        self.assertRaises(OptionsExceptionReferenceError, flow.publish, self.db, as_dict)
+
+
     def test_publish_product(self):
-        as_dict = dict_at_data_path("product_with_components.json")
+        as_dict = dict_at_data_path("product_with_thickness_parent.json")
+        flow.publish(self.db, as_dict)
+
+        as_dict = dict_at_data_path("product_with_thickness.json")
         product = flow.publish(self.db, as_dict)
+
+
+    def test_publish_product_expanded(self):
+
+        as_dict = dict_at_data_path("product_with_thickness_parent.json")
+        flow.publish(self.db, as_dict)
+
+        as_dict = dict_at_data_path("product_with_thickness.json")
+        product = flow.publish(self.db, as_dict)
+
         expanded = product.expanded()
+
+        print expanded
 
 class TestPublishingFileset(unittest.TestCase):
 
@@ -97,6 +118,9 @@ class TestMakeQuantifiedConfiguration(unittest.TestCase):
 
     def test_make_quantified_configuration(self):
 
+        as_dict = dict_at_data_path("product_with_thickness_parent.json")
+        flow.publish(self.db, as_dict)
+
         context = self._publish("uk_context.json")
         quantity = self._publish("default_quantity.json")
         as_dict = dict_at_data_path("product_with_thickness.json")
@@ -106,6 +130,9 @@ class TestMakeQuantifiedConfiguration(unittest.TestCase):
 
 
     def test_update_quantified_configuration(self):
+
+        as_dict = dict_at_data_path("product_with_thickness_parent.json")
+        flow.publish(self.db, as_dict)
 
         context = self._publish("uk_context.json")
         quantity = self._publish("default_quantity.json")
@@ -121,6 +148,9 @@ class TestMakeQuantifiedConfiguration(unittest.TestCase):
 
 
     def test_get_filesets(self):
+
+        as_dict = dict_at_data_path("product_with_thickness_parent.json")
+        flow.publish(self.db, as_dict)
 
         self._publish("uk_context.json")
         self._publish("default_quantity.json")

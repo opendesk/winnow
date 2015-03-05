@@ -1,5 +1,5 @@
 from decimal import Decimal
-from numeric_values import NumericNumberSieveValue, NumericWinnowValue
+from numeric_values import NumericNumberWinnowValue, NumericWinnowValue
 from option_values import OptionWinnowValue
 from winnow.constants import *
 

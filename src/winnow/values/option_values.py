@@ -55,7 +55,7 @@ class OptionWinnowValue(BaseWinnowValue):
             except:
                 raise OptionsExceptionFailedValidation("OptionStringSieveValue unrecognised value type")
             # numeric = NumericSetSieveValue.make(decimal_list)
-            option = OptionStringSieveValue(string_list)
+            option = OptionStringWinnowValue(string_list)
             if option is None:
                 raise OptionsExceptionFailedValidation("OptionSieveValue: empty set")
             return option
@@ -64,7 +64,7 @@ class OptionWinnowValue(BaseWinnowValue):
             option_type = value[u"type"]
             if option_type in (VALUE_TYPE_SET_STRING, VALUE_TYPE_SET_RESOURCE):
 
-                return OptionStringSieveValue(value)
+                return OptionStringWinnowValue(value)
             else:
                 raise OptionsExceptionFailedValidation("OptionSieveValue unrecognised value type")
         else:
@@ -73,7 +73,7 @@ class OptionWinnowValue(BaseWinnowValue):
             except:
                 raise OptionsExceptionFailedValidation("OptionSieveValue unrecognised value type")
 
-            return OptionStringSieveValue(s)
+            return OptionStringWinnowValue(s)
 
 
     def set_my_values(self, list_or_single):
@@ -123,7 +123,7 @@ class OptionWinnowValue(BaseWinnowValue):
 
 
 
-class OptionStringSieveValue(OptionWinnowValue):
+class OptionStringWinnowValue(OptionWinnowValue):
 
     type = VALUE_TYPE_SET_STRING
 

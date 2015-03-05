@@ -2,10 +2,10 @@ import unittest
 from decimal import Decimal
 
 from winnow.values import value_factory
-from winnow.values.numeric_values import NumericNumberSieveValue, \
-    NumericSetSieveValue, \
-    NumericRangeSieveValue, \
-    NumericStepSieveValue
+from winnow.values.numeric_values import NumericNumberWinnowValue, \
+    NumericSetWinnowValue, \
+    NumericRangeWinnowValue, \
+    NumericStepWinnowValue
 from winnow.constants import *
 
 from winnow.exceptions import OptionsExceptionFailedValidation, OptionsExceptionIncompatibleTypes
@@ -19,7 +19,7 @@ class TestNumberSieveCreation(unittest.TestCase):
         number = value_factory(2)
         value = number.as_json()
 
-        self.assertTrue(isinstance(number, NumericNumberSieveValue))
+        self.assertTrue(isinstance(number, NumericNumberWinnowValue))
         self.assertEqual(value[u"type"], VALUE_TYPE_NUMERIC_NUMBER)
         self.assertTrue(isinstance(value[u"value"], Decimal))
         self.assertEqual(value[u"value"], Decimal(2))
@@ -27,7 +27,7 @@ class TestNumberSieveCreation(unittest.TestCase):
         number = value_factory(2.5)
         value = number.as_json()
 
-        self.assertTrue(isinstance(number, NumericNumberSieveValue))
+        self.assertTrue(isinstance(number, NumericNumberWinnowValue))
         self.assertEqual(value[u"type"], VALUE_TYPE_NUMERIC_NUMBER)
         self.assertTrue(isinstance(value[u"value"], Decimal))
         self.assertEqual(value[u"value"], Decimal(2.5))
@@ -35,7 +35,7 @@ class TestNumberSieveCreation(unittest.TestCase):
         number = value_factory(Decimal(2.5))
         value = number.as_json()
 
-        self.assertTrue(isinstance(number, NumericNumberSieveValue))
+        self.assertTrue(isinstance(number, NumericNumberWinnowValue))
         self.assertEqual(value[u"type"], VALUE_TYPE_NUMERIC_NUMBER)
         self.assertTrue(isinstance(value[u"value"], Decimal))
         self.assertEqual(value[u"value"], Decimal(2.5))
@@ -46,7 +46,7 @@ class TestNumberSieveCreation(unittest.TestCase):
         number = value_factory([2])
         value = number.as_json()
 
-        self.assertTrue(isinstance(number, NumericNumberSieveValue))
+        self.assertTrue(isinstance(number, NumericNumberWinnowValue))
         self.assertEqual(value[u"type"], VALUE_TYPE_NUMERIC_NUMBER)
         self.assertTrue(isinstance(value[u"value"], Decimal))
         self.assertEqual(value[u"value"], Decimal("2"))
@@ -54,7 +54,7 @@ class TestNumberSieveCreation(unittest.TestCase):
         number = value_factory([2, 3.8])
         value = number.as_json()
 
-        self.assertTrue(isinstance(number, NumericSetSieveValue))
+        self.assertTrue(isinstance(number, NumericSetWinnowValue))
         self.assertEqual(value[u"type"], VALUE_TYPE_NUMERIC_SET)
         self.assertTrue(isinstance(value[u"value"], list))
         self.assertEqual(value[u"value"], [Decimal("2"), Decimal(3.8)])
@@ -62,7 +62,7 @@ class TestNumberSieveCreation(unittest.TestCase):
         number = value_factory([2, 3.8, "5"])
         value = number.as_json()
 
-        self.assertTrue(isinstance(number, NumericSetSieveValue))
+        self.assertTrue(isinstance(number, NumericSetWinnowValue))
         self.assertEqual(value[u"type"], VALUE_TYPE_NUMERIC_SET)
         self.assertTrue(isinstance(value[u"value"], list))
         self.assertEqual(value[u"value"], [Decimal("2"), Decimal(3.8), Decimal("5")])
@@ -82,7 +82,7 @@ class TestNumberSieveCreation(unittest.TestCase):
 
         value = number.as_json()
 
-        self.assertTrue(isinstance(number, NumericNumberSieveValue))
+        self.assertTrue(isinstance(number, NumericNumberWinnowValue))
         self.assertEqual(value[u"type"], VALUE_TYPE_NUMERIC_NUMBER)
         self.assertTrue(isinstance(value[u"value"], Decimal))
         self.assertEqual(value[u"value"], Decimal(2))
@@ -97,7 +97,7 @@ class TestNumberSieveCreation(unittest.TestCase):
 
         value = number.as_json()
 
-        self.assertTrue(isinstance(number, NumericSetSieveValue))
+        self.assertTrue(isinstance(number, NumericSetWinnowValue))
         self.assertEqual(value[u"type"], VALUE_TYPE_NUMERIC_SET)
         self.assertTrue(isinstance(value[u"value"], list))
         self.assertEqual(value[u"value"],  [Decimal("2"), Decimal("17.4")])
@@ -110,7 +110,7 @@ class TestNumberSieveCreation(unittest.TestCase):
 
         value = number.as_json()
 
-        self.assertTrue(isinstance(number, NumericNumberSieveValue))
+        self.assertTrue(isinstance(number, NumericNumberWinnowValue))
         self.assertEqual(value[u"type"], VALUE_TYPE_NUMERIC_NUMBER)
         self.assertTrue(isinstance(value[u"value"], Decimal))
         self.assertEqual(value[u"value"], Decimal("2"))
@@ -125,7 +125,7 @@ class TestNumberSieveCreation(unittest.TestCase):
         })
 
         value = number.as_json()
-        self.assertTrue(isinstance(number, NumericRangeSieveValue))
+        self.assertTrue(isinstance(number, NumericRangeWinnowValue))
 
         self.assertEqual(value[u"type"], VALUE_TYPE_NUMERIC_RANGE)
         self.assertTrue(isinstance(value[u"max"], Decimal))
@@ -145,7 +145,7 @@ class TestNumberSieveCreation(unittest.TestCase):
         })
 
         value = number.as_json()
-        self.assertTrue(isinstance(number, NumericStepSieveValue))
+        self.assertTrue(isinstance(number, NumericStepWinnowValue))
         self.assertEqual(value[u"type"], VALUE_TYPE_NUMERIC_STEP)
         self.assertTrue(isinstance(value[u"max"], Decimal))
         self.assertTrue(isinstance(value[u"min"], Decimal))
@@ -163,7 +163,7 @@ class TestNumberSieveCreation(unittest.TestCase):
         })
 
         value = number.as_json()
-        self.assertTrue(isinstance(number, NumericNumberSieveValue))
+        self.assertTrue(isinstance(number, NumericNumberWinnowValue))
         self.assertEqual(value[u"type"], VALUE_TYPE_NUMERIC_NUMBER)
         self.assertTrue(isinstance(value[u"value"], Decimal))
         self.assertEqual(value[u"value"], Decimal("13.4"))
@@ -259,38 +259,38 @@ class TestNumberSieveCreation(unittest.TestCase):
 
         number10 = number1.intersection(number3)
 
-        self.assertTrue(isinstance(number10, NumericNumberSieveValue))
+        self.assertTrue(isinstance(number10, NumericNumberWinnowValue))
         self.assertEqual(number10.as_json()[u"value"], Decimal(2))
 
         number11 = number4.intersection(number3)
         number12 = value_factory([4, 8, 10])
 
-        self.assertTrue(isinstance(number11, NumericNumberSieveValue))
+        self.assertTrue(isinstance(number11, NumericNumberWinnowValue))
         self.assertEqual(number11.as_json()[u"value"], Decimal(4))
 
         number13 = number12.intersection(number5)
 
-        self.assertTrue(isinstance(number13, NumericSetSieveValue))
+        self.assertTrue(isinstance(number13, NumericSetWinnowValue))
         self.assertEqual(set(number13.as_json()[u"value"]), {Decimal("4"), Decimal("8")})
 
         number14 = number12.intersection(number6)
 
-        self.assertTrue(isinstance(number14, NumericSetSieveValue))
+        self.assertTrue(isinstance(number14, NumericSetWinnowValue))
         self.assertEqual(set(number14.as_json()[u"value"]), {Decimal("4"), Decimal("8")})
 
         number15 = number6.intersection(number12)
 
-        self.assertTrue(isinstance(number15, NumericSetSieveValue))
+        self.assertTrue(isinstance(number15, NumericSetWinnowValue))
         self.assertEqual(set(number15.as_json()[u"value"]), {Decimal("4"), Decimal("8")})
 
         number16 = number7.intersection(number9)
 
-        self.assertTrue(isinstance(number16, NumericStepSieveValue))
+        self.assertTrue(isinstance(number16, NumericStepWinnowValue))
         self.assertEqual(number16.possible_values(), {Decimal("2"), Decimal("5"), Decimal("8")})
 
         number17 = number9.intersection(number7)
 
-        self.assertTrue(isinstance(number17, NumericStepSieveValue))
+        self.assertTrue(isinstance(number17, NumericStepWinnowValue))
         self.assertEqual(number17.possible_values(), {Decimal("2"), Decimal("5"), Decimal("8")})
 
         number18 = value_factory({
@@ -311,12 +311,12 @@ class TestNumberSieveCreation(unittest.TestCase):
 
         number19 = number9.intersection(number18)
 
-        self.assertTrue(isinstance(number19, NumericNumberSieveValue))
+        self.assertTrue(isinstance(number19, NumericNumberWinnowValue))
         self.assertEqual(number19.as_json()[u"value"], Decimal("8"))
 
         number21 = number20.intersection(number18)
 
-        self.assertTrue(isinstance(number21, NumericSetSieveValue))
+        self.assertTrue(isinstance(number21, NumericSetWinnowValue))
         self.assertEqual(set(number21.as_json()[u"value"]), {Decimal("6"), Decimal("8"), Decimal("10"), Decimal("12")})
 
 

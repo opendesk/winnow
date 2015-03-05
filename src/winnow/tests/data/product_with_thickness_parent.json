@@ -1,0 +1,47 @@
+{
+    "schema": "https://opendesk.cc/schemata/product.json",
+    "type": "product",
+    "path": "/ranges/lean/cafe-table/parent",
+    "source": "https://github.com/opendesk/collection",
+    "base": "https://raw.github.com/opendesk/collection/master",
+    "version": [0,0,1],
+    "name": "Standard Cafe Table",
+    "description": "A nice cafe table with three legs",
+    "is_default": true,
+    "is_public": true,
+    "options":{
+        "sheet": {
+            "rubbish": "junk",
+            "scopes": ["client"],
+            "type": "set::string",
+            "name": "Nominal sheet thickness",
+            "description": "The nominal sheet thickness",
+            "values": [
+                {
+                    "type": "string",
+                    "name": "18mm",
+                    "description": "18mm ply wood",
+                    "image_uri": {"asset": "http://something.com/khgfdkyg.png"},
+                    "value": "18"
+                },
+                {
+                    "type": "string",
+                    "name": "25mm",
+                    "description": "25mm ply wood",
+                    "image_uri": {"asset": "http://something.com/khgfdkyg.png"},
+                    "value": "25"
+                }
+            ]
+        },
+        "thickness": {
+            "scopes": ["making"],
+            "type": "numeric::step",
+            "name": "actual sheet thickness",
+            "description": "The actual thickness of the sheet to the nearest 0.1 mm",
+            "max": 19,
+            "min": 17.5,
+            "start": 17.5,
+            "step": 0.1
+        }
+    }
+}

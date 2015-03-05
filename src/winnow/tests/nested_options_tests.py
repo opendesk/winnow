@@ -2,7 +2,7 @@ import unittest
 from decimal import Decimal
 
 from winnow.values import value_factory
-from winnow.values.option_values import OptionWinnowValue, OptionStringSieveValue
+from winnow.values.option_values import OptionWinnowValue, OptionStringWinnowValue
 from winnow.constants import *
 
 from winnow.exceptions import OptionsExceptionFailedValidation, OptionsExceptionIncompatibleTypes
@@ -48,7 +48,7 @@ class TestNestedOptionSieveCreation(unittest.TestCase):
 
         d = option.as_json()
 
-        self.assertTrue(isinstance(option, OptionStringSieveValue))
+        self.assertTrue(isinstance(option, OptionStringWinnowValue))
         self.assertEqual(option.type, VALUE_TYPE_SET_STRING)
         self.assertTrue(isinstance(d, dict))
 
@@ -216,7 +216,7 @@ class TestNestedOptionSieveCreation(unittest.TestCase):
         intersection = option1.intersection(option2)
         d = intersection.as_json()
 
-        self.assertTrue(isinstance(intersection, OptionStringSieveValue))
+        self.assertTrue(isinstance(intersection, OptionStringWinnowValue))
         self.assertTrue(isinstance(d, dict))
         self.assertTrue(d[VALUES_KEY_NAME][1][u"value"] == u"red")
         self.assertTrue(set(d[VALUES_KEY_NAME][1][u"options"][u"paint_coats"][u"value"]) == {Decimal(4), Decimal(5), Decimal(6)})
@@ -257,7 +257,7 @@ class TestNestedOptionSieveCreation(unittest.TestCase):
         intersection = option1.intersection(option3)
         d = intersection.as_json()
 
-        self.assertTrue(isinstance(intersection, OptionStringSieveValue))
+        self.assertTrue(isinstance(intersection, OptionStringWinnowValue))
         self.assertTrue(isinstance(d, dict))
         self.assertTrue(d[VALUES_KEY_NAME][1][u"value"] == u"red")
         self.assertTrue(d[VALUES_KEY_NAME][1][u"options"][u"paint_coats"][u"max"] == Decimal(6))
@@ -294,7 +294,7 @@ class TestNestedOptionSieveCreation(unittest.TestCase):
         intersection = option1.intersection(option4)
         d = intersection.as_json()
 
-        self.assertTrue(isinstance(intersection, OptionStringSieveValue))
+        self.assertTrue(isinstance(intersection, OptionStringWinnowValue))
         self.assertTrue(isinstance(d, dict))
         self.assertTrue(d[VALUES_KEY_NAME][1][u"value"] == u"red")
         self.assertTrue(d[VALUES_KEY_NAME][1][u"options"][u"paint_coats"][u"max"] == Decimal(6))
@@ -303,7 +303,7 @@ class TestNestedOptionSieveCreation(unittest.TestCase):
         intersection = option4.intersection(option1)
         d = intersection.as_json()
 
-        self.assertTrue(isinstance(intersection, OptionStringSieveValue))
+        self.assertTrue(isinstance(intersection, OptionStringWinnowValue))
         self.assertTrue(isinstance(d, dict))
         self.assertTrue(d[VALUES_KEY_NAME][1][u"value"] == u"red")
         self.assertTrue(d[VALUES_KEY_NAME][1][u"options"][u"paint_coats"][u"max"] == Decimal(6))

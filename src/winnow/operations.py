@@ -4,7 +4,7 @@ from jsonschema import validate, ValidationError
 from winnow.options import OptionsSet
 from winnow import utils
 from winnow import validation
-from winnow.exceptions import OptionsExceptionFailedValidation
+from winnow.exceptions import OptionsExceptionFailedValidation, OptionsExceptionReferenceError
 from winnow.constants import *
 
 
@@ -139,14 +139,31 @@ def expand(source, target):
 
 def _patch_upstream(source, target, options_set):
 
-    upstream_delegate = source.get_upstream()
-    if not upstream_delegate:
+    doc = source.get_doc()
+    if u"upstream" in doc.keys():
+        upstream_delegate = source.get_upstream()
+        if upstream_delegate is None:
+            raise OptionsExceptionReferenceError("Winnow Reference Error: Cannot find upstream reference %s" % doc[u"upstream"])
+    else:
         return options_set
 
     upstream_options = OptionsSet(upstream_delegate.get_options_dict())
     patched_options_set = options_set.patch(upstream_options)
     _add_start_if_needed(source, target)
-    target.add_history_action(HISTORY_ACTION_PATCH, upstream_delegate)
+    upstream_doc = upstream_delegate.get_doc()
+
+
+    kwargs = {
+        "action": HISTORY_ACTION_PATCH,
+        "input_id": upstream_delegate.get_uuid(),
+        "input_name": upstream_doc.get("name"),
+        "input_path": upstream_doc.get("path"),
+        "output_type": doc.get("type")
+    }
+
+    target.add_history_action(kwargs)
+
+
     return _patch_upstream(upstream_delegate, target, patched_options_set)
 
 
