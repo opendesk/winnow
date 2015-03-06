@@ -35,15 +35,9 @@ def merge(source_a, source_b, target, doc):
     _add_start_if_needed(source_a, target)
     _set_doc(target, new_doc)
 
-    kwargs = {
-        "action": HISTORY_ACTION_MERGE,
-        "input_id": source_b.get_uuid(),
-        "input_name": doc_b.get("name"),
-        "input_path": doc_b.get("path"),
-        "output_type": doc.get("type")
-    }
-
-    target.add_history_action(kwargs)
+    target.add_history_action(action=HISTORY_ACTION_MERGE,
+                              input_id=source_b.get_uuid(),
+                              output_type=doc.get("type"))
 
 
 def patch(source_a, source_b, target, doc):
@@ -56,32 +50,22 @@ def patch(source_a, source_b, target, doc):
     _add_start_if_needed(source_a, target)
     _set_doc(target, new_doc)
 
-    kwargs = {
-        "action": HISTORY_ACTION_PATCH,
-        "input_id": source_b.get_uuid(),
-        "input_name": doc_b.get("name"),
-        "input_path": doc_b.get("path"),
-        "output_type": doc.get("type")
-    }
-
-    target.add_history_action(kwargs)
+    target.add_history_action(action=HISTORY_ACTION_PATCH,
+                              input_id=source_b.get_uuid(),
+                              output_type=doc.get("type"))
 
 
-def scope(source, scopes, target, doc):
+def scope(source, scope, target, doc):
     options = OptionsSet(source.get_options_dict())
     new_doc = deepcopy(doc)
-    new_doc[OPTIONS_KEY] = options.scope(scopes).store
+    new_doc[OPTIONS_KEY] = options.scope(scope).store
     target.clone_history_from(source)
     _add_start_if_needed(source, target)
     _set_doc(target, new_doc)
 
-    kwargs = {
-        "action": HISTORY_ACTION_SCOPE,
-        "scopes": scopes,
-        "output_type": doc.get("type")
-    }
-
-    target.add_history_action(kwargs)
+    target.add_history_action(action=HISTORY_ACTION_SCOPE,
+                              scope=scope,
+                              output_type=doc.get("type"))
 
 
 # def extract(source, extractions, target, doc):
@@ -150,19 +134,10 @@ def _patch_upstream(source, target, options_set):
     upstream_options = OptionsSet(upstream_delegate.get_options_dict())
     patched_options_set = options_set.patch(upstream_options)
     _add_start_if_needed(source, target)
-    upstream_doc = upstream_delegate.get_doc()
 
-
-    kwargs = {
-        "action": HISTORY_ACTION_PATCH,
-        "input_id": upstream_delegate.get_uuid(),
-        "input_name": upstream_doc.get("name"),
-        "input_path": upstream_doc.get("path"),
-        "output_type": doc.get("type")
-    }
-
-    target.add_history_action(kwargs)
-
+    target.add_history_action(action=HISTORY_ACTION_PATCH,
+                          input_id=upstream_delegate.get_uuid(),
+                          output_type=doc.get("type"))
 
     return _patch_upstream(upstream_delegate, target, patched_options_set)
 
@@ -171,15 +146,9 @@ def _add_start_if_needed(source, target):
     if target.history_is_empty():
         doc = source.get_doc()
 
-        kwargs = {
-            "action": HISTORY_ACTION_START,
-            "input_id": source.get_uuid(),
-            "input_name": doc.get("name"),
-            "input_path": doc.get("path"),
-            "output_type": doc.get("type")
-        }
-
-        target.add_history_action(kwargs)
+        target.add_history_action(action=HISTORY_ACTION_START,
+                              input_id=source.get_uuid(),
+                              output_type=doc.get("type"))
 
 
 def asset_paths(doc):

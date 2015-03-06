@@ -31,7 +31,7 @@ class WinnowProduct(WinnowVersion):
             winnow.merge(expanded, context, merged, doc)
             expanded = merged
 
-        scoped = expanded.scoped(db, doc, ["client"])
+        scoped = expanded.scoped(db, doc, "client")
 
         db.set(scoped.kwargs[u"uuid"], scoped.kwargs)
         return scoped

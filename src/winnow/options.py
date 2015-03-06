@@ -132,7 +132,7 @@ class OptionsSet(collections.MutableMapping):
         return True
 
 
-    def scope(self, scope_names):
+    def scope(self, scope_name):
         """
         extracts a subset of options by scope
         """
@@ -140,7 +140,7 @@ class OptionsSet(collections.MutableMapping):
         for k, v in self.store.iteritems():
             if isinstance(v, dict) and u"scopes" in v.keys():
                 scopes = set(v[u"scopes"])
-                if not scopes.isdisjoint(set(scope_names)):
+                if not scopes.isdisjoint(set([scope_name])):
                     options[k] = deepcopy(v)
             else:
                 options[k] = deepcopy(v)

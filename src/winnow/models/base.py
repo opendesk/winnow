@@ -108,10 +108,16 @@ class WinnowVersion(OptionsInterface):
     def get_uuid(self):
         return self.kwargs[u"uuid"]
 
-    def add_history_action(self, kwargs):
+    def add_history_action(self, action, output_type, input_id=None, scope=None):
         history = self.kwargs.get(u"history")
         if history is None:
             history = self.kwargs[u"history"] = []
+
+        kwargs = {"action": action,
+                  "output_type" : output_type,
+                  "input_id": input_id,
+                  "scope": scope
+        }
 
         history.append(kwargs)
 
