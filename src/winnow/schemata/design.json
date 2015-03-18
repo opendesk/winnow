@@ -7,11 +7,22 @@
         {"$ref": "https://opendesk.cc/schemata/base/value.json#"},
         {"$ref": "https://opendesk.cc/schemata/base/canonical.json#"},
         {
-            "properties": {
+             "properties": {
+                "name":{},
+                "description":{},
+                "long_description":{},
                 "type": {
                     "type": "string",
                     "pattern": "design"
-                }
+                },
+                "value": {},
+                "schema": {},
+                "image_uri": {},
+                "source": {},
+                "path": {},
+                "base": {},
+                "version": {},
+                "shortcode": {}
             },
             "additionalProperties": false
         }

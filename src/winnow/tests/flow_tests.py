@@ -127,6 +127,7 @@ class TestMakeQuantifiedConfiguration(unittest.TestCase):
         product = flow.publish(self.db, as_dict)
         quantified_configuration = flow.get_default_quantified_configuration(self.db, product, ["/contexts/uk/production", "/contexts/default_quantity"])
 
+        print quantified_configuration
 
 
     def test_update_quantified_configuration(self):
@@ -142,7 +143,6 @@ class TestMakeQuantifiedConfiguration(unittest.TestCase):
         quantified_configuration = flow.get_default_quantified_configuration(self.db, product, ["/contexts/uk/production", "/contexts/default_quantity"])
 
         choice = self._publish("choice.json")
-
         updated_quantified_configuration = flow.get_updated_quantified_configuration(self.db, quantified_configuration, choice)
 
 

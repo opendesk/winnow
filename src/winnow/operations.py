@@ -36,7 +36,7 @@ def merge(source_a, source_b, target, doc):
     _set_doc(target, new_doc)
 
     target.add_history_action(action=HISTORY_ACTION_MERGE,
-                              input_id=source_b.get_uuid(),
+                              input=source_b,
                               output_type=doc.get("type"))
 
 
@@ -51,7 +51,7 @@ def patch(source_a, source_b, target, doc):
     _set_doc(target, new_doc)
 
     target.add_history_action(action=HISTORY_ACTION_PATCH,
-                              input_id=source_b.get_uuid(),
+                              input=source_b,
                               output_type=doc.get("type"))
 
 
@@ -136,7 +136,7 @@ def _patch_upstream(source, target, options_set):
     _add_start_if_needed(source, target)
 
     target.add_history_action(action=HISTORY_ACTION_PATCH,
-                          input_id=upstream_delegate.get_uuid(),
+                          input=upstream_delegate,
                           output_type=doc.get("type"))
 
     return _patch_upstream(upstream_delegate, target, patched_options_set)
@@ -147,7 +147,7 @@ def _add_start_if_needed(source, target):
         doc = source.get_doc()
 
         target.add_history_action(action=HISTORY_ACTION_START,
-                              input_id=source.get_uuid(),
+                              input=source,
                               output_type=doc.get("type"))
 
 

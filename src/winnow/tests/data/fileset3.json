@@ -1,7 +1,7 @@
 {
     "schema": "https://opendesk.cc/schemata/fileset.json",
     "type": "fileset",
-    "path": "/ranges/lean/cafe-table/standard/test_fileset_2",
+    "path": "/ranges/lean/cafe-table/standard/test_fileset_3",
     "source": "https://github.com/opendesk/collection",
     "base": "https://raw.github.com/opendesk/collection/master",
     "category": "sheets", 

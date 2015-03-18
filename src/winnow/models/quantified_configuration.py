@@ -15,7 +15,7 @@ class WinnowQuantifiedConfiguration(WinnowVersion):
         from winnow.models.product import WinnowProduct
         history = self.kwargs["history"]
         first = history[0]
-        if first.get("action") != u"start":
+        if first.get("action") != u"START":
             raise Exception("the history shoud have a start")
         return WinnowProduct.get_from_id(db, first["input_id"])
 
