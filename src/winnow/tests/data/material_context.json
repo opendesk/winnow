@@ -1,0 +1,17 @@
+{
+    "schema": "https://opendesk.cc/schemata/context.json",
+    "type": "context",
+    "name": "UK production context",
+    "path": "/contexts/uk/production",
+    "source": "https://github.com/opendesk/collection",
+    "base": "https://raw.github.com/opendesk/collection/master",
+    "version": [0,0,1],
+    "options":{
+        "material": {
+            "type": "set::resource",
+            "values": [
+                "/materials/opendesk/sheets/wood/composite/plywood/pre-laminated-plywood/wisa-multiwall"
+            ]
+        }
+    }
+}

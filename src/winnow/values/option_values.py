@@ -62,9 +62,10 @@ class OptionWinnowValue(BaseWinnowValue):
 
         elif isinstance(value, dict):
             option_type = value[u"type"]
-            if option_type in (VALUE_TYPE_SET_STRING, VALUE_TYPE_SET_RESOURCE):
-
+            if option_type == VALUE_TYPE_SET_STRING:
                 return OptionStringWinnowValue(value)
+            elif option_type == VALUE_TYPE_SET_RESOURCE:
+                return OptionResourceWinnowValue(value)
             else:
                 raise OptionsExceptionFailedValidation("OptionSieveValue unrecognised value type")
         else:
@@ -242,3 +243,7 @@ class OptionStringWinnowValue(OptionWinnowValue):
 
         return self.__class__(intersection_as_dict)
     
+
+class OptionResourceWinnowValue(OptionStringWinnowValue):
+
+    type = VALUE_TYPE_SET_RESOURCE

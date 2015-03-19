@@ -3,6 +3,7 @@ import json
 import unittest
 import winnow
 from winnow.models.base import WinnowVersion
+from winnow.models.product import WinnowProduct
 from db import MockKVStore
 
 
@@ -41,24 +42,23 @@ class TestExpandReferences(unittest.TestCase):
         birch_ply_material = self.add_doc_at_data_path("birch-ply/material.json")
         wisa_material = self.add_doc_at_data_path("wisa-multiwall/material.json")
         premium_birch_ply = self.add_doc_at_data_path("finishes/premium-birch-ply/finish.json")
+
         processes = premium_birch_ply.get_doc()[u"options"][u"processes"]
-        self.assertEqual(processes[u"type"], u'set::process')
-        self.assertEqual(processes[u"values"], [{u'$ref': u'/processes/fine-sanding'}, {u'$ref': u'/processes/oiling'}])
+        self.assertEqual(processes[u"type"], u'set::resource')
+        self.assertEqual(processes[u"values"], [u'/processes/fine-sanding', u'/processes/oiling'])
+
         expanded = premium_birch_ply.expanded()
         expanded_sanding_value =  expanded.get_doc()[u"options"][u"processes"][u"values"][0]
         self.assertEqual(expanded_sanding_value, fine_sanding_process.get_doc())
 
+    def test_merge_refs(self):
+
+        product = self.add_doc_at_data_path("product_with_refs.json")
+        context = self.add_doc_at_data_path("material_context.json")
+
+        merged = WinnowProduct.merged(self.db, product.get_doc(), {}, product, context)
+
+        print merged
 
 
-    def test_expand_refs_with_options(self):
-
-        fine_sanding_process = self.add_doc_at_data_path("processes/fine-sanding/process.json")
-        oiling_process = self.add_doc_at_data_path("processes/oiling/process.json")
-        birch_ply_material = self.add_doc_at_data_path("birch-ply/material.json")
-        wisa_material = self.add_doc_at_data_path("wisa-multiwall/material.json")
-        premium_birch_ply = self.add_doc_at_data_path("finishes/premium-birch-ply/finish.json")
-        premium_wisa = self.add_doc_at_data_path("finishes/premium-wisa/finish.json")
-        product_with_components = self.add_doc_at_data_path("product_with_components.json")
-
-        expanded = product_with_components.expanded()
 

@@ -1,0 +1,24 @@
+{
+    "schema": "https://opendesk.cc/schemata/product.json",
+    "type": "product",
+    "path": "/ranges/lean/cafe-table/standard",
+    "source": "https://github.com/opendesk/collection",
+    "base": "https://raw.github.com/opendesk/collection/master",
+    "version": [0,0,1],
+    "name": "Standard Cafe Table",
+    "description": "A nice cafe table with three legs",
+    "upstream": "/ranges/lean/cafe-table/parent",
+    "is_default": true,
+    "is_public": true,
+    "options":{
+        "material": {
+            "type": "set::resource",
+            "name": "Material",
+            "description": "Choose one of the materials",
+            "values": [
+                "/materials/opendesk/sheets/wood/composite/plywood/pre-laminated-plywood/wisa-multiwall",
+                "/materials/sheets/wood/composite/plywood/birch-faced-plywood"
+            ]
+        }
+    }
+}

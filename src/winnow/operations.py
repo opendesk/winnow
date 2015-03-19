@@ -97,28 +97,30 @@ def expand(source, target):
     ## expand upstream inheritance
     new_doc[OPTIONS_KEY] = _patch_upstream(source, target, options).store
     ## also expand references
-    # options_dict = new_doc[OPTIONS_KEY]
-    # _inline_option_refs(options_dict, source)
+    options_dict = new_doc[OPTIONS_KEY]
+    _inline_option_refs(options_dict, source)
     _set_doc(target, new_doc)
     target.set_is_expanded()
 
 
-# def _inline_option_refs(node, source):
-#
-#     # walks list and dicts looking for dicts with ref key
-#     #
-#     if isinstance(node, dict):
-#         if u"$ref" in node.keys():
-#             referenced_doc = source.get_ref(node[u"$ref"])
-#             if referenced_doc is not None:
-#                 del node[u"$ref"]
-#                 node.update(referenced_doc)
-#         else:
-#             for k, v in node.iteritems():
-#                 _inline_option_refs(v, source)
-#     if isinstance(node, list):
-#         for v in node:
-#             _inline_option_refs(v, source)
+def _inline_option_refs(node, source):
+
+    # walks list and dicts looking for dicts with ref key
+    #
+    if isinstance(node, dict):
+        if u"type" in node.keys() and node[u"type"] == u"set::resource":
+            if u"values" in node.keys():
+                values = node[u"values"]
+                if type(values) == list:
+                    node[u"values"] = [source.get_ref(ref) for ref in values]
+                elif type(values) == unicode:
+                    node[u"values"] = source.get_ref(values)
+        else:
+            for k, v in node.iteritems():
+                _inline_option_refs(v, source)
+    if isinstance(node, list):
+        for v in node:
+            _inline_option_refs(v, source)
 
 
 def _patch_upstream(source, target, options_set):
