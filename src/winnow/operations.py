@@ -98,7 +98,8 @@ def expand(source, target):
     new_doc[OPTIONS_KEY] = _patch_upstream(source, target, options).store
     ## also expand references
     options_dict = new_doc[OPTIONS_KEY]
-    _inline_option_refs(options_dict, source)
+    # disabled this for now
+    #_inline_option_refs(options_dict, source)
     _set_doc(target, new_doc)
     target.set_is_expanded()
 

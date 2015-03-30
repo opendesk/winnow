@@ -11,7 +11,14 @@
             "type": "string"
         },
         "image_uri": {
-            "type": "string"
+            "type": "object",
+            "properties": {
+                "asset": {
+                    "type": "string"
+                }
+            },
+            "required": ["asset"],
+            "additionalProperties": false
         },
         "scopes": {
             "type": "array",

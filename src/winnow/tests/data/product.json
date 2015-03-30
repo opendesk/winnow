@@ -12,7 +12,7 @@
     "upstream": "qwerty",
     "options":{
         "material": {
-            "type": "set::string",
+            "type": "set::resource",
             "name": "Material",
             "description": "Choose one of the materials",
             "values": [
