@@ -49,6 +49,7 @@
                         }
                     },
                     "required": ["max", "min"]
+
                 },
                 {
                     "properties": {
@@ -71,7 +72,6 @@
                     },
                     "required": ["max", "min", "start", "step"]
                 }
-
             ]
         }
     ]

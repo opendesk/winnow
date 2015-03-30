@@ -27,6 +27,8 @@ class DecimalEncoder(json.JSONEncoder):
     internally all numbers are stored as Decimals
     """
     def default(self, o):
+        if hasattr(o, "__json__"):
+            return o.__json__()
         if isinstance(o, decimal.Decimal):
             if o.to_integral_value() == o:
                 return int(o)
@@ -41,5 +43,15 @@ def json_loads(as_json):
 
 def json_dumps(an_obj):
     return json.dumps(an_obj, indent=4, sort_keys=True, cls=DecimalEncoder)
+
+
+# class DecimalJsonRendererFactory:
+#
+#     def __init__(self, info):
+#         pass
+#
+#     def __call__(self, value, system):
+#         return json_dumps(value)
+
 
 

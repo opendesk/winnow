@@ -12,7 +12,10 @@
                 "name":{},
                 "description":{},
                 "long_description":{},
-                "type": {},
+                "type": {
+                    "type": "string",
+                    "pattern": "product"
+                },
                 "value": {},
                 "schema": {},
                 "image_uri": {},
@@ -27,7 +30,17 @@
                 "is_public":{},
                 "components": {}
             },
-            "additionalProperties": false
+            "additionalProperties": false,
+            "requiredProperties": [
+                "name",
+                "description",
+                "schema",
+                "type",
+                "image_uri",
+                "source",
+                "path",
+                "version"
+            ]
         }
     ]
 }

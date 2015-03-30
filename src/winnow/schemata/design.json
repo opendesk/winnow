@@ -15,7 +15,6 @@
                     "type": "string",
                     "pattern": "design"
                 },
-                "value": {},
                 "schema": {},
                 "image_uri": {},
                 "source": {},
@@ -24,7 +23,17 @@
                 "version": {},
                 "shortcode": {}
             },
-            "additionalProperties": false
+            "additionalProperties": false,
+            "requiredProperties": [
+                "name",
+                "description",
+                "schema",
+                "type",
+                "image_uri",
+                "source",
+                "path",
+                "version"
+            ]
         }
     ]
 }
