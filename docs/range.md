@@ -10,8 +10,9 @@ Validated by the schema ```https://opendesk.cc/schemata/range.json``` the range 
 + **base** - An optional base URL that when joined to the path gives a URL that this document can be downloaded from. *(optional)*
 + **path** - A URI identifier. *(required)*
 + **name** - A display name. *(required)*
-+ **description** - A description of the Range that can contain markdown links. *(required)*
-+ **shortcode** - A short capitalised string identifier for the range. *(required)*
++ **description** - A short description of the Range. *(required)*
++ **long_description** - A long description of the Range. *(optional)*
++ **shortcode** - A short capitalised string identifier for the range. *(optional)*
 + **version** - A list of three integers giving the major, minor and patch version of this document. *(required)*
 + **image_uri** - A reference to an image used to represent this range. Given as an object with a single key "asset" and a value giving a path relative to the location of this document. *(required)*
 
