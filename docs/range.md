@@ -2,19 +2,17 @@
 
 A collection of related designs with common authorship.
 
-Validated by the schema ```https://opendesk.cc/schemata/range.json``` the range has the following attributes:
-
-+ **schema** - Must be ```https://opendesk.cc/schemata/range.json``` *(required)*
-+ **type** - Must be ```range``` *(required)*
++ **schema** - *(string - required)* Must be ```https://opendesk.cc/schemata/range.json``` 
++ **type**  - *(string - required)* Must be ```range```
 + **source** - A base URI that when join with the path gives the canonical identity for this document. The document may or may not be available for download from the resulting URI  *(required)*
 + **base** - An optional base URL that when joined to the path gives a URL that this document can be downloaded from. *(optional)*
-+ **path** - A URI identifier. *(required)*
-+ **name** - A display name. *(required)*
-+ **description** - A short description of the Range. *(required)*
-+ **long_description** - A long description of the Range. *(optional)*
-+ **shortcode** - A short capitalised string identifier for the range. *(optional)*
-+ **version** - A list of three integers giving the major, minor and patch version of this document. *(required)*
-+ **image_uri** - A reference to an image used to represent this range. Given as an object with a single key "asset" and a value giving a path relative to the location of this document. *(required)*
++ **path** - A URI identifier. *(string - required)*
++ **name** - A display name. *(string - required)*
++ **description** - A short description *(string - required)*
++ **long_description** - A long description *(string - optional)*
++ **shortcode** - A short capitalised string identifier for the range. *(string - optional)*
++ **version** - A list of three integers giving the major, minor and patch version of this document. *(list - required)*
++ **image_uri** - A reference to an image used to represent this range. An object with a single key ```asset``` and a relative filepath *(object - optional)*
 
 This is an example:
 

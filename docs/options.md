@@ -7,7 +7,8 @@ Winnow is a json interchange format for describing families of configurable prod
     "options":{
         "colour": ["red", "blue", "green"],
         "size": ["big", "small"],
-        "wheels": [4, 6]
+        "wheels": [4, 6],
+        "varnished": [true, false]
      }
  }
  ```
@@ -16,9 +17,9 @@ This describes the product family for a toy that comes in three colours, two siz
 
 Winnow provides both a json language for defining these options and a set of operations for manipulating them. 
 
-There are currently two types of value for options numeric and set. In the example above ```"colour"``` is a set and ```"wheels"``` is a numeric. Both of these types can be written to include additional information and have sub-types. 
+There are currently three main types of value for options set, numeric and boolean. In the example above ```"colour"``` is a set, ```"wheels"``` is a numeric and ```"varnished"``` is a boolean. These types can be written to include additional information and have sub-types. 
 
-Currently there are six sub-types of value you can use:
+Currently there are seven sub-types of value you can use:
 
 + **set:string**
 + **set:resource**
@@ -26,6 +27,7 @@ Currently there are six sub-types of value you can use:
 + **numeric::set**
 + **numeric::range**
 + **numeric::step**
++ **boolean**
 
 
 ## set values
@@ -357,5 +359,39 @@ example:
         "start": 1.0,
         "step": 0.1
     }
+ }
+ ```
+
+### boolean
+
+A boolean true or false value
+
++ **type** - The type of value, One of the six types below  *(required)*
++ **name** - A display name  *(optional)*
++ **scopes** - A list of scopes that limit the visibility of this value in the winnow pipeline *(optional)*
++ **description** - A short description  *(optional)*
++ **image_uri** - A reference to an image used to represent this range. Given as an object with a single key "asset" and a value giving a path relative to the location of this document. *(optional)*
++ **value** - true, false or either  *(required)*
+
+A boolean value is normally written as ```[true, false]```. The long version looks like this:
+
+
+ ```json
+ {
+    "varnished" : {
+        "type": "boolean",
+        "name": "Varnished",
+        "scopes": ["client"],
+        "description": 'Is it varnished",
+        "value": [true, false]
+    }
+ }
+ ```
+ 
+ And a shorthand one like this:
+
+ ```json
+ {
+    "varnished" : [true, false]
  }
  ```

@@ -15,7 +15,7 @@ In order to write and publish winnow documents you use the first two of these as
 Eight resource types for publishing are currently defined in winnow. Follow links to see their full descriptions.
 
 + [*range*](range.md) - A collection of related designs with common authorship
-+ *design* - A design
++ [*design*](design.md) - A design
 + *product* - A family of versions of a design defined by a common set of options
 + *fileset* - A set of files that are useful for making all or a subset of a product family
 + *finish* - A finish for a product defined by a set of materials and processes

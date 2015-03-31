@@ -9,20 +9,12 @@ class OptionWinnowValue(BaseWinnowValue):
 
     def __init__(self, value):
 
-        if isinstance(value, dict):
+        super(OptionWinnowValue, self).__init__(value)
 
-            self.name = value.get("name")
-            self.description = value.get("description")
-            self.image_url = value.get("image_url")
-            self.scopes = value.get("scopes")
+        if isinstance(value, dict):
             self.set_my_values(value.get(VALUES_KEY_NAME))
 
         else:
-            self.name = None
-            self.description = None
-            self.image_url = None
-            self.scopes = None
-
             self.set_my_values(value)
 
 
@@ -111,16 +103,7 @@ class OptionWinnowValue(BaseWinnowValue):
             VALUES_KEY_NAME: values,
         }
 
-        if self.name is not None:
-            value[u"name"] = self.name
-        if self.description is not None:
-            value[u"description"] = self.description
-        if self.image_url is not None:
-            value[u"image_url"] = self.image_url
-        if self.scopes is not None:
-            value[u"scopes"] = self.scopes
-
-        return value
+        return self.update_with_info(value)
 
 
 
@@ -231,17 +214,11 @@ class OptionStringWinnowValue(OptionWinnowValue):
         if len(values) == 0:
             return None
 
-        ## uses the optional metadata from self but the individual metadata from other. Is this right??
-        intersection_as_dict = {
-            u"type": VALUE_TYPE_SET_STRING,
-            u"scopes": self.scopes if self.scopes is not None else other.scopes,
-            u"image_url": self.image_url if self.image_url is not None else other.image_url,
-            u"name": self.name if self.name is not None else other.name,
-            u"description": self.description if self.description is not None else other.description,
-            VALUES_KEY_NAME: values,
-        }
+        info = self.get_merged_info(other)
+        info[u"type"] = self.type,
+        info[VALUES_KEY_NAME] = values
 
-        return self.__class__(intersection_as_dict)
+        return self.__class__(info)
     
 
 class OptionResourceWinnowValue(OptionStringWinnowValue):

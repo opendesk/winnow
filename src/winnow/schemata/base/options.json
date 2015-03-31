@@ -20,11 +20,18 @@
                             "type": "string"
                         }
                     },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "boolean"
+                        }
+                    },
                     {"type": "string"},
                     {"$ref": "https://opendesk.cc/schemata/base/set.json#"},
                     {"$ref": "https://opendesk.cc/schemata/base/numeric.json#"},
                     {"type": "number"},
-                    {"type": "null"}
+                    {"type": "null"},
+                    {"type": "boolean"}
                 ]}
             },
             "additionalProperties": false

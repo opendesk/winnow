@@ -17,10 +17,11 @@ VALUE_TYPE_SET_STRING    = u"set::string"
 
 VALUE_TYPE_VALUE_STRING    = u"string"
 
+# boolean
+VALUE_TYPE_BOOLEAN     = u"boolean"
+
 # choices with members of a taxonomy
 VALUE_TYPE_SET_RESOURCE  = u"set::resource"
-
-
 
 MAX_VALUE_SET_SIZE = 1000000
 

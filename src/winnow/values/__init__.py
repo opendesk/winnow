@@ -1,32 +1,45 @@
 from decimal import Decimal
 from numeric_values import NumericNumberWinnowValue, NumericWinnowValue
 from option_values import OptionWinnowValue
+from boolean_values import BooleanWinnowValue
 from winnow.constants import *
 
 
 def value_factory(value):
 
+    cls = None
+
     if isinstance(value, dict):
-        return VALUE_TYPES[value["type"]].from_value(value)
+        cls = VALUE_TYPES[value["type"]]
 
-    if isinstance(value, int) or isinstance(value, Decimal)or isinstance(value, float):
-        return NumericWinnowValue.from_value(value)
+    elif  isinstance(value, bool):
+        cls = BooleanWinnowValue
 
-    if isinstance(value, list):
+    elif isinstance(value, int) or isinstance(value, Decimal)or isinstance(value, float):
+        cls = NumericWinnowValue
+
+    elif isinstance(value, unicode):
+        cls = OptionWinnowValue
+
+    elif isinstance(value, list):
         v = value[0]
-
         if isinstance(v, int) or isinstance(v, Decimal)or isinstance(v, float):
-            return NumericWinnowValue.from_value(value)
+            cls = NumericWinnowValue
         if isinstance(v, unicode):
-            return OptionWinnowValue.from_value(value)
+            cls = OptionWinnowValue
+        if isinstance(v, bool):
+            cls = BooleanWinnowValue
+    else:
+        pass
 
-    if isinstance(value, unicode):
-        return OptionWinnowValue.from_value(value)
+    if cls:
+        return cls.from_value(value)
 
     return None
 
 
 VALUE_TYPES = {
+    VALUE_TYPE_BOOLEAN: BooleanWinnowValue,
     VALUE_TYPE_NUMERIC_RANGE: NumericWinnowValue,
     VALUE_TYPE_NUMERIC_NUMBER: NumericWinnowValue,
     VALUE_TYPE_NUMERIC_SET: NumericWinnowValue,

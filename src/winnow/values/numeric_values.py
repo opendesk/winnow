@@ -65,43 +65,25 @@ from winnow.constants import *
 
 class NumericWinnowValue(BaseWinnowValue):
 
-    def __init__(self, value):
-
-        if isinstance(value, dict):
-            self.name = value.get("name")
-            self.description = value.get("description")
-            self.image_url = value.get("image_url")
-            self.scopes = value.get("scopes")
-        else:
-            self.name = None
-            self.description = None
-            self.image_url = None
-            self.scopes = None
 
     @classmethod
     def from_value(cls, value):
-
         if isinstance(value, list):
             try:
                 decimal_list = [Decimal(v) for v in value]
             except:
                 raise OptionsExceptionFailedValidation("NumericSieveValue unrecognised value type")
-            # numeric = NumericSetSieveValue.make(decimal_list)
             numeric = NumericSetWinnowValue(decimal_list)
             if numeric is None:
                 raise OptionsExceptionFailedValidation("NumericSieveValue: empty set")
             return numeric
 
-
         elif isinstance(value, dict):
 
-
             numeric_type = value[u"type"]
-
             if numeric_type == VALUE_TYPE_NUMERIC_NUMBER:
                 return NumericNumberWinnowValue(value)
             elif numeric_type == VALUE_TYPE_NUMERIC_SET:
-                # numeric = NumericSetSieveValue.make(value[u"value"])
                 numeric = NumericSetWinnowValue(value)
                 if numeric is None:
                     raise OptionsExceptionFailedValidation("NumericSieveValue: empty set")
@@ -122,7 +104,6 @@ class NumericWinnowValue(BaseWinnowValue):
                 d = Decimal(value)
             except:
                 raise OptionsExceptionFailedValidation("NumericSieveValue unrecognised value type")
-
             return NumericNumberWinnowValue(d)
 
 
@@ -165,27 +146,7 @@ class NumericWinnowValue(BaseWinnowValue):
         return True
 
 
-    def get_merged_info(self, other):
 
-        return {
-            u"scopes": self.scopes if self.scopes is not None else other.scopes,
-            u"image_url": self.image_url if self.image_url is not None else other.image_url,
-            u"name": self.name if self.name is not None else other.name,
-            u"description": self.description if self.description is not None else other.description,
-        }
-
-    def update_with_info(self, as_json):
-
-        if self.name is not None:
-            as_json[u"name"] = self.name
-        if self.description is not None:
-            as_json[u"description"] = self.description
-        if self.image_url is not None:
-            as_json[u"image_url"] = self.image_url
-        if self.scopes is not None:
-            as_json[u"scopes"] = self.scopes
-
-        return as_json
 
 
     def isdisjoint(self, other):
