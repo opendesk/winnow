@@ -6,7 +6,7 @@ Winnow is a json interchange format for describing families of configurable prod
  {
     "options":{
         "colour": ["red", "blue", "green"],
-        "size": ["big", "small],
+        "size": ["big", "small"],
         "wheels": [4, 6]
      }
      ...
@@ -51,23 +51,23 @@ The full long version:
 {
     "colour": {
         "type": set::string,
-        "name": u"colour",
+        "name": "colour",
         "description": "Please choose one of the colours",
         "default": "red",
         "values": [
             {
                 "type": "string",
-                "name": u"Red",
-                "description": u"the colour red",
-                "image_uri": u"http://something.com/khgfdkyg.png",
-                "value": u"red",
+                "name": "Red",
+                "description": "the colour red",
+                "image_uri": "http://something.com/khgfdkyg.png",
+                "value": "red",
             },
             {
-                u"type": "string",
-                u"name": u"Blue",
-                u"description": u"the colour blue",
-                u"image_uri": u"http://something.com/khgfdkyg.png",
-                u"value": u"blue"
+                "type": "string",
+                "name": "Blue",
+                "description": "the colour blue",
+                "image_uri": "http://something.com/khgfdkyg.png",
+                "value": "blue"
             }
         ]
     }
@@ -80,7 +80,7 @@ You can use shorthand syntax for just the values:
 {
     "colour": {
         "type": set::string,
-        "name": u"colour",
+        "name": "colour",
         "description": "Please choose one of the colours",
         "default": "red",
         "values": ["red", "blue"]
@@ -146,45 +146,45 @@ set::string can also contain nested options sets. The parent of a nested option 
 ```json
 "colour": {
     "type": set::string,
-    "name": u"colour",
+    "name": "colour",
     "description": "Please choose one of the colours",
     "default": "red",
     "values": [
         {
             "type": "string",
-            "name": u"Red",
-            "description": u"the colour red",
-            "image_uri": u"http://something.com/khgfdkyg.png",
-            "value": u"red",
+            "name": "Red",
+            "description": "the colour red",
+            "image_uri": "http://something.com/khgfdkyg.png",
+            "value": "red",
             "options":{
                 type": set::string,
-                "name": u"varnish",
+                "name": "varnish",
                 "description": "Please choose varnish type",
                 "default": "matt",
                 "values":[
                     {
                     "type": "string",
-                    "name": u"Matt",
-                    "description": u"Use matt varish",
-                    "image_uri": u"http://something.com/khgfdkyg.png",
-                    "value": u"matt",
+                    "name": "Matt",
+                    "description": "Use matt varish",
+                    "image_uri": "http://something.com/khgfdkyg.png",
+                    "value": "matt",
                     },
                     {
                     "type": "string",
-                    "name": u"Gloss",
-                    "description": u"Use gloww varish",
-                    "image_uri": u"http://something.com/khgfdkyg.png",
-                    "value": u"gloss",
+                    "name": "Gloss",
+                    "description": "Use gloww varish",
+                    "image_uri": "http://something.com/khgfdkyg.png",
+                    "value": "gloss",
                     }
                 ]
             }
         },
         {
-            u"type": "string",
-            u"name": u"Blue",
-            u"description": u"the colour blue",
-            u"image_uri": u"http://something.com/khgfdkyg.png",
-            u"value": u"blue"
+            "type": "string",
+            "name": "Blue",
+            "description": "the colour blue",
+            "image_uri": "http://something.com/khgfdkyg.png",
+            "value": "blue"
         }
     ]
 }
@@ -227,7 +227,9 @@ You can ask winnow to inline the referenced resources if you want to and the res
 
 Numeric value types can be used to express possible variation of a number and all four numeric value types can be used interchangeably and compared to each other.
 
-### numeric::number - A single number
+### numeric::number
+
+A single number
 
 + **type** - The type of value, One of the six types below  *(required)*
 + **name** - A display name  *(optional)*
@@ -273,7 +275,9 @@ example:
  ```
 
 
-### numeric::set - A set of numbers
+### numeric::set
+
+A set of numbers
 
 + **type** - The type of value, One of the six types below  *(required)*
 + **name** - A display name  *(optional)*
@@ -329,7 +333,9 @@ example:
  }
  ```
 
-### numeric::step - A range of possible numbers with discrete steps between them.
+### numeric::step
+
+A range of possible numbers with discrete steps between them.
 
 + **type** - The type of value, One of the six types below  *(required)*
 + **name** - A display name  *(optional)*
