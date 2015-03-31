@@ -13,7 +13,7 @@ Winnow is a json interchange format for describing families of configurable prod
  }
  ```
 
-This describes the product family for a toy that comes in three colours, two sizes and can have either four or six wheels. 
+This describes the product family for a toy that comes in three colours, two sizes and can have either four or six wheels, and may or may not be varnished.
 
 Winnow provides both a json language for defining these options and a set of operations for manipulating them. 
 
@@ -89,7 +89,7 @@ You can use shorthand syntax for just the values:
 }
 ```
 
-Or more concisely still if you use shorthand syntax for the whole object:
+Or more concisely still you can use shorthand syntax for the whole object:
 
  ```json
 {

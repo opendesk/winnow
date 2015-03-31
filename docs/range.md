@@ -2,6 +2,8 @@
 
 A collection of related designs with common authorship.
 
+Common resource attributes:
+
 + **schema** *(string, required)* - Must be ```https://opendesk.cc/schemata/range.json```.
 + **type** *(string, required)* - Must be ```range```.
 + **source** *(required)* - A base URI that when join with the path gives the canonical identity for this document. The document may or may not be available for download from the resulting URI.
@@ -12,7 +14,7 @@ A collection of related designs with common authorship.
 + **long_description** *(string, optional)* - A long description.
 + **shortcode** *(string, optional)* - A short capitalised string identifier for the range.
 + **version** *(list, required)* - A list of three integers giving the major, minor and patch version of this document.
-+ **image_uri** *(object, optional)* - A reference to an image used to represent this range. An object with a single key ```asset``` and a relative filepath.
++ **image_uri** *(object, optional)* - A reference to an image used to represent this document. An object with a single key ```asset``` and a relative file path.
 
 This is an example:
 

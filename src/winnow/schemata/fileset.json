@@ -9,6 +9,20 @@
         {"$ref": "https://opendesk.cc/schemata/base/canonical.json#"},
         {
             "properties": {
+                "name":{},
+                "description":{},
+                "long_description":{},
+                "schema": {},
+                "image_uri": {},
+                "source": {},
+                "path": {},
+                "base": {},
+                "version": {},
+                "shortcode": {},
+                "type": {
+                    "type": "string",
+                    "pattern": "fileset"
+                },
                 "category":{
                     "type": "string"
                 },
@@ -24,10 +38,6 @@
                         "required": ["asset"],
                          "additionalProperties": false
                     }
-                },
-                "type": {
-                    "type": "string",
-                    "pattern": "fileset"
                 }
             },
             "required": ["category", "files"]

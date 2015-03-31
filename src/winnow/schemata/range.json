@@ -11,17 +11,17 @@
                 "name":{},
                 "description":{},
                 "long_description":{},
-                "type": {
-                    "type": "string",
-                    "pattern": "range"
-                },
                 "schema": {},
                 "image_uri": {},
                 "source": {},
                 "path": {},
                 "base": {},
                 "version": {},
-                "shortcode": {}
+                "shortcode": {},
+                "type": {
+                    "type": "string",
+                    "pattern": "range"
+                }
             },
             "additionalProperties": false,
             "requiredProperties": [

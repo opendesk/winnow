@@ -1,34 +1,87 @@
 # winnow
 
-Tools for publishing and manipulating families of products
+Winnow is a json interchange format for publishing families of configurable products. It has several distinct parts:
 
-Winnow is a specification for a json interchange format for publishing information about families of related and configurable products, and a python implementation for manipulating these documents.
++ A set of json schemata for documents describing products and associated information.
++ A schema for defining sets of configuration options in products.
++ A defined set of basic logical operations for manipulating documents with options.
++ A python library that implements these operations
 
-winnnow has three distinct uses: 
-+ Validation of winnow json documents.
-+ Set based operations for comparing and combining winnow document options.
-+ Searching winnow documents based on matching document options.
+In order to write and publish winnow documents you use the first two of these as they define how winnow documents are constructed. To apply logical operations to, and manipulate, winnow documents you will need to understand winnow's operations and it's library that implements them.
 
-## Validation
 
-To validate a winnow json document simply call ```winnow.validate(doc)``` where doc is a dict obtained by loading the document json. eg:
+## resources and documents
+
+Some winnow documents describe named resources others do not. 
+
+Resource documents have certain features: they are discoverable at a permanent url defined in the document itself; they are versioned and use Semantic Version numbers; these versions are themselves discoverable and resources may inherit from another resource of the same type.
+
+Eight resource types are currently defined in winnow. Follow links to see their full descriptions.
+
++ [*range*](docs/range.md) - A collection of related designs with common authorship
++ [*design*](docs/design.md) - A design
++ [*product*](docs/product.md) - A family of versions of a design defined by a common set of options
++ [*fileset*](docs/fileset.md) - A set of files that are useful for making all or a subset of a product family
++ *finish* - A finish for a product defined by a set of materials and processes
++ *material* - A material
++ *process* - A process that is applied to a material
++ *context* - An collection of options used to filter or extend a product's options
+
+Winnow also defines two document types that are not named resources, but are created as intermediate files during processing:
+
++ *choice*
++ *quantified_configuration*
+
+## validation
+
+In winnow.schemata there are json schemas that can be used to validate winnow documents. This can be done using tools available from [json-schema.org](http://json-schema.org/implementations.html), or using winnow's python library like this:
 
 ```python
-with open(os.path.join("path/to/json"), "r") as f:
-    try:
-        winnow.validate(json.loads(f.read()))
-    except winnow.OptionsExceptionFailedValidation, e: 
-        print "Failed winnow validation %s" % e
+    with open(filepath, "r") as f:
+        doc = json.loads(f.read())
+        winnow.validate(doc)
 ```
 
-There are several distinct classes of object defined by winnow's json schemata:
 
-+ **range** - A collection of related designs with common authorship.
-+ **design** - An individual design.
-+ **product** - A product family. ie a set of variants of the design that share configurable properties.
-+ **fileset** - A collection of binary files, such as CAD files or images, related to products.
-+ **material** - A material that can be used in making a product.
-+ **process** - A process carried out in the making of a product.
-+ **finish** - A combination of material and processes that define the finish of a product.
+## options
 
-## Operations
+Some winnow documents have a top level ```options``` attribute.  This object describes a related family of products by defining a set of possible configurations for a product, for example available colours or sizes. 
+
+ ```json
+ {
+    "options":{
+        "colour": ["red", "blue", "green"],
+        "size": ["big", "small],
+        "wheels": [4, 6]
+     }
+     ...
+ }
+ ```
+
+This describes the product family for a toy that comes in three colours, two sizes and can have either four or six wheels. Winnow provides both a json language for defining these options and a set of operations for manipulating them.
+
+You can read more about winnow's values here [options](docs/options.md)
+
+## operations
+
+Winnow defines a set of simple, but powerful, operations to help manipulate winnow documents.
+
++ *add_doc* 
++ *allows*
++ *intersects*
++ *merge*
++ *patch*
++ *scope*
++ *filter_allows*
++ *filter_allowed_by*
++ *inline*
++ *expand*
++ *asset_paths*
++ *validate*
+
+## library
+
+
+
+
+
