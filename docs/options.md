@@ -9,7 +9,6 @@ Winnow is a json interchange format for describing families of configurable prod
         "size": ["big", "small"],
         "wheels": [4, 6]
      }
-     ...
  }
  ```
 
@@ -50,7 +49,7 @@ The full long version:
 ```json
 {
     "colour": {
-        "type": set::string,
+        "type": "set::string",
         "name": "colour",
         "description": "Please choose one of the colours",
         "default": "red",
@@ -79,7 +78,7 @@ You can use shorthand syntax for just the values:
  ```json
 {
     "colour": {
-        "type": set::string,
+        "type": "set::string",
         "name": "colour",
         "description": "Please choose one of the colours",
         "default": "red",
@@ -145,7 +144,7 @@ set::string can also contain nested options sets. The parent of a nested option 
 
 ```json
 "colour": {
-    "type": set::string,
+    "type": "set::string",
     "name": "colour",
     "description": "Please choose one of the colours",
     "default": "red",
