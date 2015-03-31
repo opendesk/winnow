@@ -1,8 +1,25 @@
-# values
+# options and values
+
+Winnow is a json interchange format for describing families of configurable products and the winnow options is where it does this. Each key in the options object is a named option and its value describes a set of possible values for this key, for example available colours or sizes - like this:
+
+ ```json
+ {
+    "options":{
+        "colour": ["red", "blue", "green"],
+        "size": ["big", "small],
+        "wheels": [4, 6]
+     }
+     ...
+ }
+ ```
+
+This describes the product family for a toy that comes in three colours, two sizes and can have either four or six wheels. 
+
+Winnow provides both a json language for defining these options and a set of operations for manipulating them. 
 
 There are currently two types of value for options numeric and set. In the example above ```"colour"``` is a set and ```"wheels"``` is a numeric. Both of these types can be written to include additional information and have sub-types. 
 
-Currently there are six types you can use:
+Currently there are six sub-types of value you can use:
 
 + **set:string**
 + **set:resource**
@@ -11,15 +28,12 @@ Currently there are six types you can use:
 + **numeric::range**
 + **numeric::step**
 
-The only required attribute for a value is "type".
-
-All values can be written as a json object in this way but there are also shorthand ways of expressing certain types, see below.
 
 ## set values
 
 Set value types are used to express discrete optional variation in a product attribute. There are two set types, string and resource. String values are used to express any arbitrary values types, and resource types refer to other winnow resource documents by path.
 
-# set::string
+### set::string
 
 + **type** - The type of value, One of the six types below  *(required)*
 + **name** - A display name  *(optional)*
@@ -176,7 +190,7 @@ set::string can also contain nested options sets. The parent of a nested option 
 }
 ```
 
-# set::resource
+### set::resource
 
 Sets for resources are much like sets of strings except their "value" is always the path of another winnow document.
 
@@ -213,7 +227,7 @@ You can ask winnow to inline the referenced resources if you want to and the res
 
 Numeric value types can be used to express possible variation of a number and all four numeric value types can be used interchangeably and compared to each other.
 
-# numeric::number - A single number
+### numeric::number - A single number
 
 + **type** - The type of value, One of the six types below  *(required)*
 + **name** - A display name  *(optional)*
@@ -259,7 +273,7 @@ example:
  ```
 
 
-# numeric::set - A set of numbers
+### numeric::set - A set of numbers
 
 + **type** - The type of value, One of the six types below  *(required)*
 + **name** - A display name  *(optional)*
@@ -293,7 +307,7 @@ example:
  }
  ```
  
-# numeric::range - A range of possible numbers
+### numeric::range - A range of possible numbers
 
 + **type** - The type of value, One of the six types below  *(required)*
 + **name** - A display name  *(optional)*
@@ -315,7 +329,7 @@ example:
  }
  ```
 
-# numeric::step - A range of possible numbers with discrete steps between them.
+### numeric::step - A range of possible numbers with discrete steps between them.
 
 + **type** - The type of value, One of the six types below  *(required)*
 + **name** - A display name  *(optional)*

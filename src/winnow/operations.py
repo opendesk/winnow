@@ -68,17 +68,6 @@ def scope(source, scope, target, doc):
                               output_type=doc.get("type"))
 
 
-# def extract(source, extractions, target, doc):
-#     options = OptionsSet(source.get_options_dict())
-#     new_doc = deepcopy(doc)
-#     keys_to_extract = extractions.get_options_dict().keys()
-#     new_doc[OPTIONS_KEY] = options.extract(keys_to_extract).store
-#     target.clone_history_from(source)
-#     _add_start_if_needed(source, target)
-#     _set_doc(target, new_doc)
-#     target.add_history_action(HISTORY_ACTION_EXTRACT, extractions)
-
-
 def filter_allows(filter_source, possible):
     filter_options = OptionsSet(filter_source.get_options_dict())
     return [p for p in possible if filter_options.allows(OptionsSet(p.get_options_dict()))]
@@ -89,17 +78,21 @@ def filter_allowed_by(filter_source, possible):
     return [p for p in possible if OptionsSet(p.get_options_dict()).allows(filter_options)]
 
 
-def expand(source, target):
+def inline(source, target):
+    new_doc = deepcopy(source.get_doc())
+    target.clone_history_from(source)
+    ## inline references
+    options_dict = new_doc[OPTIONS_KEY]
+    _inline_option_refs(options_dict, source)
+    _set_doc(target, new_doc)
 
+
+def expand(source, target):
     options = OptionsSet(source.get_options_dict())
     new_doc = deepcopy(source.get_doc())
     target.clone_history_from(source)
     ## expand upstream inheritance
     new_doc[OPTIONS_KEY] = _patch_upstream(source, target, options).store
-    ## also expand references
-    options_dict = new_doc[OPTIONS_KEY]
-    # disabled this for now
-    #_inline_option_refs(options_dict, source)
     _set_doc(target, new_doc)
     target.set_is_expanded()
 
