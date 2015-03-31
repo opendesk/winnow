@@ -2,8 +2,8 @@
 
 A collection of related designs with common authorship.
 
-+ **schema** - *(string - required)* Must be ```https://opendesk.cc/schemata/range.json``` 
-+ **type**  - *(string - required)* Must be ```range```
++ **schema** *(string, required)* Must be ```https://opendesk.cc/schemata/range.json``` 
++ **type**  *(string, required)* Must be ```range```
 + **source** - A base URI that when join with the path gives the canonical identity for this document. The document may or may not be available for download from the resulting URI  *(required)*
 + **base** - An optional base URL that when joined to the path gives a URL that this document can be downloaded from. *(optional)*
 + **path** - A URI identifier. *(string - required)*
