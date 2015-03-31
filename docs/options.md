@@ -156,7 +156,7 @@ set::string can also contain nested options sets. The parent of a nested option 
             "image_uri": "http://something.com/khgfdkyg.png",
             "value": "red",
             "options":{
-                type": set::string,
+                "type": "set::string",
                 "name": "varnish",
                 "description": "Please choose varnish type",
                 "default": "matt",
