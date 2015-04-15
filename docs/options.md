@@ -1,6 +1,6 @@
 # options and values
 
-Winnow is a json interchange format for describing families of configurable products and the winnow options is where it does this. Each key in the options object is a named option and its value describes a set of possible values for this key, for example available colours or sizes - like this:
+The options set is the core of winnows functionality. Each key in an options object is a named option and its value describes a set of possible values for this key, for example available colours or sizes - like this:
 
  ```json
  {
@@ -19,16 +19,15 @@ Winnow provides both a json language for defining these options and a set of ope
 
 There are currently three main types of value for options set, numeric and boolean. In the example above ```"colour"``` is a set, ```"wheels"``` is a numeric and ```"varnished"``` is a boolean. These types can be written to include additional information and have sub-types. 
 
-Currently there are seven sub-types of value you can use:
+Currently there are seven types and sub-types of value you can use:
 
-+ **set:string**
-+ **set:resource**
++ **set::string**
++ **set::resource**
 + **numeric::number**
 + **numeric::set**
 + **numeric::range**
 + **numeric::step**
 + **boolean**
-
 
 ## set values
 

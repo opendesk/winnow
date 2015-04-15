@@ -12,7 +12,9 @@
                 "type": {
                     "type": "string",
                     "pattern": "material"
-                }
+                },
+                "manufacturer_name": {"type": "string"},
+                "manufacturer_url": {"type": "string"}
             },
             "additionalProperties": true,
             "required": ["name", "description"]

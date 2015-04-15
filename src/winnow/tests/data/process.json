@@ -4,7 +4,5 @@
     "name": "Sanded",
     "path": "/processes/sanded",
     "description": "Sand it!",
-    "image_uri": "http://something.com/khgfdkyg.png",
-    "value": {
-    }
+
 }

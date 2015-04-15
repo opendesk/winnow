@@ -34,14 +34,13 @@ Winnow also defines two document types that are not named resources, but are cre
 
 ## validation
 
-In winnow.schemata there are json schemas that can be used to validate winnow documents. This can be done using tools available from [json-schema.org](http://json-schema.org/implementations.html), or using winnow's python library like this:
+In winnow.schemata there are json schemata that can be used to validate winnow documents. This can be done using tools available from [json-schema.org](http://json-schema.org/implementations.html), or using winnow's python library like this:
 
 ```python
     with open(filepath, "r") as f:
         doc = json.loads(f.read())
         winnow.validate(doc)
 ```
-
 
 ## options
 

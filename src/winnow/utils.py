@@ -45,13 +45,6 @@ def json_dumps(an_obj):
     return json.dumps(an_obj, indent=4, sort_keys=True, cls=DecimalEncoder)
 
 
-# class DecimalJsonRendererFactory:
-#
-#     def __init__(self, info):
-#         pass
-#
-#     def __call__(self, value, system):
-#         return json_dumps(value)
 
 
 

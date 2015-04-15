@@ -7,62 +7,12 @@
     "description": "Birch faced plywood",
     "image_uri": {"asset": "http://something.com/khgfdkyg.png"},
     "version": [0,0,1],
-    "value": "birch-faced-plywood",
     "options":{
         "thickness":{
-            "type": "set::string",
+            "type": "numeric::set",
             "name": "Thickness",
-            "description": "Available sheet thickness",
-            "values": [
-                {
-                    "type": "string",
-                    "name": "6.5mm",
-                    "description": "Nominal thickness 6.5mm",
-                    "value": "6.5mm"
-                },
-                {
-                    "type": "string",
-                    "name": "9mm",
-                    "description": "Nominal thickness 9mm",
-                    "value": "9mm"
-                },
-                {
-                    "type": "string",
-                    "name": "12mm",
-                    "description": "Nominal thickness 12mm",
-                    "value": "12mm"
-                },
-                {
-                    "type": "string",
-                    "name": "15mm",
-                    "description": "Nominal thickness 15mm",
-                    "value": "15mm"
-                },
-                {
-                    "type": "string",
-                    "name": "18mm",
-                    "description": "Nominal thickness 18mm",
-                    "value": "18mm"
-                },
-                {
-                    "type": "string",
-                    "name": "21mm",
-                    "description": "Nominal thickness 21mm",
-                    "value": "21mm"
-                },
-                {
-                    "type": "string",
-                    "name": "24mm",
-                    "description": "Nominal thickness 24mm",
-                    "value": "24mm"
-                },
-                {
-                    "type": "string",
-                    "name": "27mm",
-                    "description": "Nominal thickness 27mm",
-                    "value": "27mm"
-                }
-            ]
+            "description": "Available sheet thickness mm",
+            "values": [6.5, 9.0, 12, 15, 18, 21, 24, 27]
         },
         "size":{
             "type": "set::string",

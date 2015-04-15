@@ -153,7 +153,7 @@ def asset_paths(doc):
         return []
     found = []
     _walk_dict_for_assets(doc, found)
-    return ["%s/%s" % (path, f) for f in found]
+    return found
 
 
 def _walk_dict_for_assets(node, found):

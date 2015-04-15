@@ -2,19 +2,21 @@
     "schema": "https://opendesk.cc/schemata/finish.json",
     "source": "https://github.com/opendesk/collection",
     "type": "finish",
-    "name": "Premium Wisa",
-    "path": "/finishes/opendesk/premium-wisa",
-    "description": "Wisa-Multiwall with its edges sanded nicely",
-    "value": "premium-wisa",
+    "name": "Premium Birch Ply",
+    "path": "/finishes/opendesk/premium-birch-ply",
+    "description": "Nice Birch ply",
     "version": [0,0,1],
     "options":{
         "material": {
             "type": "set::resource",
-            "values": "/materials/sheet/wood/composite/plywood/pre-laminated-plywood/wisa-multiwall"
+            "values": "/materials/sheet/wood/composite/plywood/birch-faced-plywood"
         },
         "processes": {
             "type": "set::resource",
-            "values": "/processes/light-sanding"
+            "values": [
+                "/processes/light-sanding",
+                "/processes/oiling"
+            ]
         }
     }
 }
