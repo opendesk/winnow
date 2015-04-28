@@ -17,14 +17,14 @@ BASIC_STRING = {
             u"default": "red",
             VALUES_KEY_NAME: [
                 {
-                    u"type": VALUE_TYPE_SET_STRING,
+                    u"type": VALUE_TYPE_VALUE_STRING,
                     u"name": u"red",
                     u"description": u"the colour red",
                     u"image_uri": u"http://something.com/khgfdkyg.png",
                     u"value": u"red",
                 },
                 {
-                    u"type": VALUE_TYPE_SET_STRING,
+                    u"type": VALUE_TYPE_VALUE_STRING,
                     u"name": u"blue",
                     u"description": u"the colour blue",
                     u"image_uri": u"http://something.com/khgfdkyg.png",
@@ -125,14 +125,14 @@ class TestOptionSieveCreation(unittest.TestCase):
             u"description": u"please choose one of the colours",
             VALUES_KEY_NAME: [
                 {
-                    u"type": VALUE_TYPE_SET_STRING,
+                    u"type": VALUE_TYPE_VALUE_STRING,
                     u"name": u"red",
                     u"description": u"the colour red",
                     u"image_uri": u"http://something.com/khgfdkyg.png",
                     u"value": u"red",
                 },
                 {
-                    u"type": VALUE_TYPE_SET_STRING,
+                    u"type": VALUE_TYPE_VALUE_STRING,
                     u"name": u"blue",
                     u"description": u"the colour blue",
                     u"image_uri": u"http://something.com/khgfdkyg.png",
@@ -147,14 +147,14 @@ class TestOptionSieveCreation(unittest.TestCase):
             u"description": u"please choose one of the colours",
             VALUES_KEY_NAME: [
                 {
-                    u"type": VALUE_TYPE_SET_STRING,
+                    u"type": VALUE_TYPE_VALUE_STRING,
                     u"name": u"red",
                     u"description": u"the colour red",
                     u"image_uri": u"http://something.com/khgfdkyg.png",
                     u"value": u"red",
                 },
                 {
-                    u"type": VALUE_TYPE_SET_STRING,
+                    u"type": VALUE_TYPE_VALUE_STRING,
                     u"name": u"blue",
                     u"description": u"the colour blue",
                     u"image_uri": u"http://something.com/khgfdkyg.png",
@@ -171,7 +171,7 @@ class TestOptionSieveCreation(unittest.TestCase):
             u"description": u"please choose one of the colours",
             VALUES_KEY_NAME: [
                 {
-                    u"type": VALUE_TYPE_SET_STRING,
+                    u"type": VALUE_TYPE_VALUE_STRING,
                     u"name": u"red",
                     u"description": u"the colour red",
                     u"image_uri": u"http://something.com/khgfdkyg.png",
@@ -189,7 +189,7 @@ class TestOptionSieveCreation(unittest.TestCase):
             u"description": u"please choose one of the colours",
             VALUES_KEY_NAME: [
                 {
-                    u"type": VALUE_TYPE_SET_STRING,
+                    u"type": VALUE_TYPE_VALUE_STRING,
                     u"name": u"pink",
                     u"description": u"the colour red",
                     u"image_uri": u"http://something.com/khgfdkyg.png",
@@ -206,7 +206,7 @@ class TestOptionSieveCreation(unittest.TestCase):
             u"description": u"please choose one of the colours",
             VALUES_KEY_NAME: [
                 {
-                    u"type": VALUE_TYPE_SET_STRING,
+                    u"type": VALUE_TYPE_VALUE_STRING,
                     u"name": u"pink",
                     u"description": u"the colour red",
                     u"image_uri": u"http://something.com/khgfdkyg.png",
@@ -228,14 +228,14 @@ class TestOptionSieveCreation(unittest.TestCase):
             u"image_url": u"http://something.com/kurtjyrd.png",
             VALUES_KEY_NAME: [
                 {
-                    u"type": VALUE_TYPE_SET_STRING,
+                    u"type": VALUE_TYPE_VALUE_STRING,
                     u"name": u"red",
                     u"description": u"the colour red",
                     u"image_uri": u"http://something.com/khgfdkyg.png",
                     u"value": u"red",
                 },
                 {
-                    u"type": VALUE_TYPE_SET_STRING,
+                    u"type": VALUE_TYPE_VALUE_STRING,
                     u"name": u"blue",
                     u"description": u"the colour blue",
                     u"image_uri": u"http://something.com/khgfdkyg.png",
@@ -251,14 +251,14 @@ class TestOptionSieveCreation(unittest.TestCase):
             u"scopes": [u"client"],
             VALUES_KEY_NAME: [
                 {
-                    u"type": VALUE_TYPE_SET_STRING,
+                    u"type": VALUE_TYPE_VALUE_STRING,
                     u"name": u"green",
                     u"description": u"the colour green",
                     u"image_uri": u"http://something.com/khgfdkyg.png",
                     u"value": u"green",
                 },
                 {
-                    u"type": VALUE_TYPE_SET_STRING,
+                    u"type": VALUE_TYPE_VALUE_STRING,
                     u"name": u"blue 2",
                     u"description": u"the colour blue again",
                     u"image_uri": u"http://something.com/khgfdkyg.png",
@@ -320,21 +320,21 @@ class TestOptionSieveCreation(unittest.TestCase):
             u"description": u"please choose one of the colours",
             VALUES_KEY_NAME: [
                 {
-                    u"type": VALUE_TYPE_SET_STRING,
+                    u"type": VALUE_TYPE_VALUE_STRING,
                     u"name": u"red",
                     u"description": u"the colour red",
                     u"image_uri": u"http://something.com/khgfdkyg.png",
                     u"value": u"red",
                 },
                 {
-                    u"type": VALUE_TYPE_SET_STRING,
+                    u"type": VALUE_TYPE_VALUE_STRING,
                     u"name": u"green",
                     u"description": u"the colour green",
                     u"image_uri": u"http://something.com/khgfdkyg.png",
                     u"value": u"green",
                 },
                 {
-                    u"type": VALUE_TYPE_SET_STRING,
+                    u"type": VALUE_TYPE_VALUE_STRING,
                     u"name": u"blue",
                     u"description": u"the colour blue",
                     u"image_uri": u"http://something.com/khgfdkyg.png",
@@ -363,14 +363,14 @@ class TestOptionSieveCreation(unittest.TestCase):
             u"description": u"please choose one of the colours",
             VALUES_KEY_NAME: [
                 {
-                    u"type": VALUE_TYPE_SET_STRING,
+                    u"type": VALUE_TYPE_VALUE_STRING,
                     u"name": u"green",
                     u"description": u"the colour green",
                     u"image_uri": u"http://something.com/khgfdkyg.png",
                     u"value": u"green",
                 },
                 {
-                    u"type": VALUE_TYPE_SET_STRING,
+                    u"type": VALUE_TYPE_VALUE_STRING,
                     u"name": u"orange",
                     u"description": u"the colour orange",
                     u"image_uri": u"http://something.com/khgfdkyg.png",

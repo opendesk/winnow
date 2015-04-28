@@ -4,6 +4,7 @@ from decimal import Decimal
 from winnow.values import value_factory
 from winnow.values.option_values import OptionWinnowValue, OptionStringWinnowValue
 from winnow.constants import *
+from winnow.utils import json_dumps
 
 from winnow.exceptions import OptionsExceptionFailedValidation, OptionsExceptionIncompatibleTypes
 
@@ -314,3 +315,164 @@ class TestNestedOptionSieveCreation(unittest.TestCase):
         disjoint is unaffected by nested options. I think.
 
         """
+
+
+class TestNestedOptionWithNulls(unittest.TestCase):
+
+    def test_null(self):
+
+        NESTED_OPTIONS_STRING = {
+            u"type": VALUE_TYPE_SET_STRING,
+            u"name": u"colour",
+            u"description": u"please choose one of the colours",
+            VALUES_KEY_NAME: [
+                {
+                    u"type": VALUE_TYPE_SET_STRING,
+                    u"name": u"red",
+                    u"description": u"the colour red",
+                    u"image_uri": u"http://something.com/khgfdkyg.png",
+                    u"value": u"red",
+                    u"options":{
+                        u"apples":{
+                            u"type": VALUE_TYPE_SET_STRING,
+                            u"values": [u"cox", u"jazz", u"bramley"]
+                        }
+                    }
+                },
+                {
+                    u"type": VALUE_TYPE_SET_STRING,
+                    u"name": u"blue",
+                    u"description": u"the colour blue",
+                    u"image_uri": u"http://something.com/khgfdkyg.png",
+                    u"value": u"blue"
+                }
+            ]
+        }
+
+        NULL_STRING = {
+            u"type": VALUE_TYPE_SET_NULL,
+            u"options": {
+                u"apples": [u"cox", u"jazz"]
+            }
+        }
+
+        matching_null = value_factory(NULL_STRING)
+
+        nested_option = value_factory(NESTED_OPTIONS_STRING)
+
+        intersection = matching_null.intersection(nested_option)
+
+        expected = {
+            u"description": u"please choose one of the colours",
+            u"name": u"colour",
+            u"type": u"set::string",
+            u"values": [
+                {
+                    u"description": u"the colour blue",
+                    u"image_uri": u"http://something.com/khgfdkyg.png",
+                    u"name": u"blue",
+                    u"options": {
+                        u"apples": [
+                            u"cox",
+                            u"jazz"
+                        ]
+                    },
+                    u"type": u"set::string",
+                    u"value": u"blue"
+                },
+                {
+                    u"description": u"the colour red",
+                    u"image_uri": u"http://something.com/khgfdkyg.png",
+                    u"name": u"red",
+                    u"options": {
+                        u"apples": [
+                            u"cox",
+                            u"jazz"
+                        ]
+                    },
+                    u"type": u"set::string",
+                    u"value": u"red"
+                }
+            ]
+        }
+
+        self.assertEqual(intersection.as_json(), expected)
+
+
+
+class TestNestedOptionWithNulls(unittest.TestCase):
+
+    def test_null(self):
+
+        NESTED_OPTIONS_STRING = {
+            u"type": VALUE_TYPE_SET_STRING,
+            u"name": u"colour",
+            u"description": u"please choose one of the colours",
+            VALUES_KEY_NAME: [
+                {
+                    u"type": VALUE_TYPE_SET_STRING,
+                    u"name": u"red",
+                    u"description": u"the colour red",
+                    u"image_uri": u"http://something.com/khgfdkyg.png",
+                    u"value": u"red",
+                    u"options":{
+                        u"apples":{
+                            u"type": VALUE_TYPE_SET_STRING,
+                            u"values": [u"cox", u"jazz", u"bramley"]
+                        }
+                    }
+                },
+                {
+                    u"type": VALUE_TYPE_SET_STRING,
+                    u"name": u"blue",
+                    u"description": u"the colour blue",
+                    u"image_uri": u"http://something.com/khgfdkyg.png",
+                    u"value": u"blue"
+                }
+            ]
+        }
+
+        NULL_STRING = [u"cox", u"jazz"]
+
+        matching_null = value_factory(NULL_STRING, key="something/apples")
+
+        nested_option = value_factory(NESTED_OPTIONS_STRING)
+
+        intersection = matching_null.intersection(nested_option)
+
+        expected = {
+            u"description": u"please choose one of the colours",
+            u"name": u"colour",
+            u"type": u"set::string",
+            u"values": [
+                {
+                    u"description": u"the colour blue",
+                    u"image_uri": u"http://something.com/khgfdkyg.png",
+                    u"name": u"blue",
+                    u"options": {
+                        u"apples": [
+                            u"cox",
+                            u"jazz"
+                        ]
+                    },
+                    u"type": u"set::string",
+                    u"value": u"blue"
+                },
+                {
+                    u"description": u"the colour red",
+                    u"image_uri": u"http://something.com/khgfdkyg.png",
+                    u"name": u"red",
+                    u"options": {
+                        u"apples": [
+                            u"cox",
+                            u"jazz"
+                        ]
+                    },
+                    u"type": u"set::string",
+                    u"value": u"red"
+                }
+            ]
+        }
+
+        self.assertEqual(intersection.as_json(), expected)
+

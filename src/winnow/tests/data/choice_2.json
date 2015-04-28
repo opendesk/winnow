@@ -1,0 +1,9 @@
+{
+    "schema": "https://opendesk.cc/schemata/options.json",
+    "type": "choice",
+    "name": "paul's choices",
+    "options":{
+        "finish": "/finishes/opendesk/premium-birch-ply",
+        "quantity": 3
+    }
+}

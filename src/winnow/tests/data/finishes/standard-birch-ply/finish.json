@@ -2,9 +2,9 @@
     "schema": "https://opendesk.cc/schemata/finish.json",
     "source": "https://github.com/opendesk/collection",
     "type": "finish",
-    "name": "Premium Birch Ply",
-    "path": "/finishes/opendesk/premium-birch-ply",
-    "description": "Nice Birch ply",
+    "name": "Standard Birch Ply",
+    "path": "/finishes/opendesk/standard-birch-ply",
+    "description": "Standard Birch ply",
     "version": [0,0,1],
     "options":{
         "material": {

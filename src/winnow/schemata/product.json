@@ -19,6 +19,7 @@
                 "base": {},
                 "version": {},
                 "shortcode": {},
+                "components": {},
                 "type": {
                     "type": "string",
                     "pattern": "product"

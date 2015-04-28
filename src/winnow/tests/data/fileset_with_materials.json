@@ -1,0 +1,27 @@
+{
+    "schema": "https://opendesk.cc/schemata/fileset.json",
+    "type": "fileset",
+    "path": "/ranges/lean/cafe-table/standard/test_fileset_2",
+    "source": "https://github.com/opendesk/collection",
+    "base": "https://raw.github.com/opendesk/collection/master",
+    "category": "sheets",
+    "description": "Cad files for 18mm ply",
+    "files": [{"asset": "files/test_3.txt"},
+        {"asset": "files/test_4.txt"}
+    ],
+    "name": "Test Fileset",
+    "version": [1, 0, 1],
+    "options": {
+        "finish/material": {
+            "type": "set::resource",
+            "values": "/materials/sheets/wood/composite/plywood",
+            "options": {
+                "size":"1220x2440",
+                "quantity": 2
+            }
+        },
+        "sheet": "18",
+        "thickness": 17.9,
+        "tolerance": 1
+    }
+}

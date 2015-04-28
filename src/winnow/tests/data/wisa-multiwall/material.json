@@ -8,6 +8,7 @@
     "image_uri": {"asset": "http://something.com/khgfdkyg.png"},
     "manufacturer_name": "UPM Plywood",
     "version": [0,0,1],
+    "upstream": "/materials/opendesk/sheets/wood/composite/plywood",
     "manufacturer_url": "http://www.wisaplywood.com/Products/product-catalogue/wisa-multiwall/Pages/default.aspx",
     "description_long": "WISA-Multiwall is a high quality and elastic lining panel for end uses where a good looking surface material with high resistance is needed. WISA-Multiwall has been developed for sidewalls of vehicles such as horse trailers and linings of vans but also shop fittings and interior linings. WISA-Multiwall is an ideal decorative material for the varied needs of the transport and construction industries.",
     "options":{
@@ -30,123 +31,6 @@
                     "description": "Standard Grey",
                     "value": "grey",
                     "RAL": "7001"
-                }
-            ]
-        },
-        "thickness":{
-            "type": "set::string",
-            "name": "Thickness",
-            "description": "Available sheet thickness",
-            "values": [
-                {
-                    "type": "string",
-                    "name": "6.5mm",
-                    "description": "Nominal thickness 6.5mm",
-                    "value": "6.5mm"
-                },
-                {
-                    "type": "string",
-                    "name": "9mm",
-                    "description": "Nominal thickness 9mm",
-                    "value": "9mm"
-                },
-                {
-                    "type": "string",
-                    "name": "12mm",
-                    "description": "Nominal thickness 12mm",
-                    "value": "12mm"
-                },
-                {
-                    "type": "string",
-                    "name": "15mm",
-                    "description": "Nominal thickness 15mm",
-                    "value": "15mm"
-                },
-                {
-                    "type": "string",
-                    "name": "18mm",
-                    "description": "Nominal thickness 18mm",
-                    "value": "18mm"
-                },
-                {
-                    "type": "string",
-                    "name": "21mm",
-                    "description": "Nominal thickness 21mm",
-                    "value": "21mm"
-                },
-                {
-                    "type": "string",
-                    "name": "24mm",
-                    "description": "Nominal thickness 24mm",
-                    "value": "24mm"
-                },
-                {
-                    "type": "string",
-                    "name": "27mm",
-                    "description": "Nominal thickness 27mm",
-                    "value": "27mm"
-                }
-            ]
-        },
-       "size":{
-            "type": "set::string",
-            "name": "sizes",
-            "description": "available sheet sizes",
-            "values": [
-                {
-                    "type": "string",
-                    "name": "1200x2400",
-                    "description": "1200mm x 2400mm",
-                    "value": "1200x2400",
-                    "size":{
-                        "units": "mm",
-                        "width": 1200,
-                        "heights": 2400
-                    }
-                },
-                      {
-                    "type": "string",
-                    "name": "1220x2440",
-                    "description": "1220mm x 2440mm",
-                    "value": "1220x2440",
-                    "size":{
-                        "units": "mm",
-                        "width": 1220,
-                        "heights": 2440
-                    }
-                },
-                {
-                    "type": "string",
-                    "name": "1250x2500",
-                    "description": "1250mm x 2500mm",
-                    "value": "1250x2500",
-                    "size":{
-                        "units": "mm",
-                        "width": 1250,
-                        "heights": 2500
-                    }
-                },
-                {
-                    "type": "string",
-                    "name": "1500x3000",
-                    "description": "1500mm x 3000mm",
-                    "value": "1500x3000",
-                    "size":{
-                        "units": "mm",
-                        "width": 1500,
-                        "heights": 3000
-                    }
-                },
-                {
-                    "type": "string",
-                    "name": "1525x3050",
-                    "description": "1525mm x 3050mm",
-                    "value": "1525x3050",
-                    "size": {
-                        "units": "mm",
-                        "width": 1525,
-                        "heights": 3050
-                    }
                 }
             ]
         }

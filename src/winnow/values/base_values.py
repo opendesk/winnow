@@ -29,6 +29,7 @@ class BaseWinnowValue(object):
         }
 
     def check_class(self, other):
+        return
         if not self.__class__ == other.__class__:
             raise Exception("sieve value types must match")
 

@@ -1,0 +1,27 @@
+{
+    "description": "", 
+    "is_default": true, 
+    "name": "Standard Cafe", 
+    "options": {
+        "finish": {
+            "description": "Choose a finish", 
+            "name": "Finish", 
+            "type": "set::resource", 
+            "values": [
+                "/finishes/opendesk/premium-birch-ply",
+                "/finishes/opendesk/premium-wisa",
+                "/finishes/opendesk/standard-birch-ply"
+            ]
+        }
+    }, 
+    "path": "/ranges/lean/cafe-table/standard",
+    "schema": "https://opendesk.cc/schemata/product.json", 
+    "shortcode": "LEN/CFT/STD", 
+    "source": "https://github.com/opendesk/collection", 
+    "type": "product", 
+    "version": [
+        1, 
+        0, 
+        0
+    ]
+}

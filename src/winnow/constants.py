@@ -15,6 +15,8 @@ VALUE_TYPE_NUMERIC_STEP     = u"numeric::step"
 # choices & values
 VALUE_TYPE_SET_STRING    = u"set::string"
 
+VALUE_TYPE_SET_NULL    = u"set::null"
+
 VALUE_TYPE_VALUE_STRING    = u"string"
 
 # boolean

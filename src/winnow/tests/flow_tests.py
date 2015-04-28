@@ -145,8 +145,6 @@ class TestMakeQuantifiedConfiguration(unittest.TestCase):
         choice = self._publish("choice.json")
         updated_quantified_configuration = flow.get_updated_quantified_configuration(self.db, quantified_configuration, choice)
 
-
-
     def test_get_filesets(self):
 
         as_dict = dict_at_data_path("product_with_thickness_parent.json")
@@ -176,6 +174,33 @@ class TestMakeQuantifiedConfiguration(unittest.TestCase):
         self.assertEqual(filesets[1][u"fileset"].kwargs[u"doc"][u"files"], [{u'asset': u'files/test_5.txt'}, {u'asset': u'files/test_6.txt'}])
 
 
+
+
+    def test_get_manufacturing_spec(self):
+
+
+        self._publish("uk_context.json")
+        self._publish("default_quantity.json")
+
+        as_dict = dict_at_data_path("product_with_finishes.json")
+        product = flow.publish(self.db, as_dict)
+
+        self._publish("fileset.json")
+        self._publish("fileset_with_materials.json")
+        self._publish("fileset3.json")
+
+        quantified_configuration = flow.get_default_quantified_configuration(self.db, product, ["/contexts/default_quantity"])
+
+        choice = self._publish("choice_2.json")
+        updated_quantified_configuration = flow.get_updated_quantified_configuration(self.db, quantified_configuration, choice)
+
+        filesets = flow.get_filesets_for_quantified_configuration(self.db, updated_quantified_configuration)
+
+        self.assertEqual(len(filesets), 3)
+        self.assertEqual(filesets[0][u"matched"], set([u'finish/material']))
+        self.assertTrue(filesets[1][u"matched"] == set([u'sheet']))
+        self.assertEqual(filesets[0][u"fileset"].kwargs[u"doc"][u"files"], [{u'asset': u'files/test_3.txt'}, {u'asset': u'files/test_4.txt'}])
+        self.assertEqual(filesets[1][u"fileset"].kwargs[u"doc"][u"files"], [{u'asset': u'files/test_5.txt'}, {u'asset': u'files/test_6.txt'}])
 
 
 

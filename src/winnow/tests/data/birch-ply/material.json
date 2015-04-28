@@ -7,13 +7,8 @@
     "description": "Birch faced plywood",
     "image_uri": {"asset": "http://something.com/khgfdkyg.png"},
     "version": [0,0,1],
+    "upstream": "/materials/sheets/wood/composite/plywood",
     "options":{
-        "thickness":{
-            "type": "numeric::set",
-            "name": "Thickness",
-            "description": "Available sheet thickness mm",
-            "values": [6.5, 9.0, 12, 15, 18, 21, 24, 27]
-        },
         "size":{
             "type": "set::string",
             "name": "sizes",
@@ -50,28 +45,6 @@
                         "units": "mm",
                         "width": 1250,
                         "heights": 2500
-                    }
-                },
-                {
-                    "type": "string",
-                    "name": "1500x3000",
-                    "description": "1500mm x 3000mm",
-                    "value": "1500x3000",
-                    "size":{
-                        "units": "mm",
-                        "width": 1500,
-                        "heights": 3000
-                    }
-                },
-                {
-                    "type": "string",
-                    "name": "1525x3050",
-                    "description": "1525mm x 3050mm",
-                    "value": "1525x3050",
-                    "size": {
-                        "units": "mm",
-                        "width": 1525,
-                        "heights": 3050
                     }
                 }
             ]

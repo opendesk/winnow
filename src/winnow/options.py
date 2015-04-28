@@ -52,10 +52,6 @@ class OptionsSet(collections.MutableMapping):
             that = value_factory(other_values)
             intersection = this.intersection(that)
             if intersection == None:
-
-                print "THIS: ", this.possible_values()
-                print "THAT: ", that.possible_values()
-
                 raise OptionsExceptionEmptyOptionValues("The key %s has no possible values when %s is merged with %s" % (key, this, that))
 
 

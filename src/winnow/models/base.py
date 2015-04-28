@@ -81,6 +81,12 @@ class WinnowVersion(OptionsInterface):
         self.db.set(wv.kwargs[u"uuid"], wv.kwargs)
         return wv
 
+    def inlined(self, kwargs={}):
+        wv = self.__class__(self.db, kwargs)
+        winnow.inline(self, wv)
+        self.db.set(wv.kwargs[u"uuid"], wv.kwargs)
+        return wv
+
 
     def allows(self, other):
         return winnow.allows(self, other)

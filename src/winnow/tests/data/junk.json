@@ -1,0 +1,18 @@
+{
+    "job": {
+        "job_id": "3456",
+        "basket" : {
+            "items": [
+                {
+                    "item": {
+                        "item_id": "123456789",
+                        "configuration": {
+                            "product": "/ranges/lean/desk/standard@9876543456",
+                        }
+                    },
+
+                }
+            ]
+        }
+    }
+}

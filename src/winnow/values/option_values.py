@@ -7,7 +7,7 @@ from copy import deepcopy
 class OptionWinnowValue(BaseWinnowValue):
 
 
-    def __init__(self, value):
+    def __init__(self, value=None):
 
         super(OptionWinnowValue, self).__init__(value)
 
@@ -58,8 +58,12 @@ class OptionWinnowValue(BaseWinnowValue):
                 return OptionStringWinnowValue(value)
             elif option_type == VALUE_TYPE_SET_RESOURCE:
                 return OptionResourceWinnowValue(value)
+            elif option_type == VALUE_TYPE_SET_NULL:
+                return OptionNullWinnowValue(value)
             else:
                 raise OptionsExceptionFailedValidation("OptionSieveValue unrecognised value type")
+        elif value is None:
+            return OptionNullWinnowValue(value)
         else:
             try:
                 s = unicode(value)
@@ -133,6 +137,8 @@ class OptionStringWinnowValue(OptionWinnowValue):
 
 
     def isdisjoint(self, other):
+        if isinstance(other, OptionNullWinnowValue):
+            return False
         self.check_class(other)
         other_keys = set(other.values_lookup.keys())
         self_keys = set(self.values_lookup.keys())
@@ -140,6 +146,8 @@ class OptionStringWinnowValue(OptionWinnowValue):
 
 
     def issubset(self, other):
+        if isinstance(other, OptionNullWinnowValue):
+            return True
         from winnow.options import OptionsSet
         self.check_class(other)
         other_keys = set(other.values_lookup.keys())
@@ -160,55 +168,91 @@ class OptionStringWinnowValue(OptionWinnowValue):
 
 
     def intersection(self, other):
+
         from winnow.options import OptionsSet
 
         self.check_class(other)
 
-        other_keys = list(other.values_lookup.keys())
-        self_keys = list(self.values_lookup.keys())
-        other_keys.sort()
-
         values = []
 
-        # find matching values
+        if isinstance(other, OptionNullWinnowValue):
 
-        # get the one to use
+            other_options = other._get_options()
+            if other_options is None:
+                return self
 
-        # add them to the list
+            self_keys = list(self.values_lookup.keys())
 
-        ## when putting together the intersecting values perform a merge on their nested options
-        for value_id in other_keys:
+            for value_id in self_keys:
 
-            this_value = self.values_lookup.get(value_id)
-            if this_value is None:
-                continue
-            other_value = other.values_lookup[value_id]
 
-            ## if they are both unicode just add the value
-            if isinstance(other_value, unicode) and isinstance(this_value, unicode):
-                values.append(this_value)
-            elif isinstance(other_value, unicode) and isinstance(this_value, dict):
-                values.append(deepcopy(this_value))
-            elif isinstance(other_value, dict) and isinstance(this_value, unicode):
-                values.append(deepcopy(other_value))
-            elif isinstance(other_value, dict) and isinstance(this_value, dict):
-                ##prefer this's values over that's
-                new_value = deepcopy(other_value)
-                new_value.update(deepcopy(this_value))
-                ## and then merge their options
-                this_options = self._get_value_options(value_id)
-                that_options = other._get_value_options(value_id)
-
-                if this_options is not None and that_options is not None:
-                    new_value[u"options"] = OptionsSet(this_options).merge(OptionsSet(that_options)).store
-                elif this_options is not None or that_options is not None:
-                    new_value[u"options"] = this_options if this_options is not None else that_options
+                this_value = self.values_lookup.get(value_id)
+                if isinstance(this_value, dict):
+                    new_value = deepcopy(this_value)
+                    this_options = self._get_value_options(value_id)
+                elif isinstance(this_value, unicode):
+                    new_value = {
+                        "type": u"string",
+                        "value": this_value
+                    }
+                    this_options = None
                 else:
-                    pass
+                    raise Exception("This shouldn't ever happen")
+
+                if this_options is None:
+                    new_value[u"options"] = other_options
+                else:
+                    print this_options
+                    print other_options
+                    new_value[u"options"] = OptionsSet(this_options).merge(OptionsSet(other_options)).store
 
                 values.append(new_value)
-            else:
-                raise Exception("this should never happen")
+
+        else:
+            other_keys = list(other.values_lookup.keys())
+            self_keys = list(self.values_lookup.keys())
+            other_keys.sort()
+
+
+            # find matching values
+
+            # get the one to use
+
+            # add them to the list
+
+            ## when putting together the intersecting values perform a merge on their nested options
+            for value_id in other_keys:
+
+                this_value = self.values_lookup.get(value_id)
+                if this_value is None:
+                    continue
+                other_value = other.values_lookup[value_id]
+
+                ## if they are both unicode just add the value
+                if isinstance(other_value, unicode) and isinstance(this_value, unicode):
+                    values.append(this_value)
+                elif isinstance(other_value, unicode) and isinstance(this_value, dict):
+                    values.append(deepcopy(this_value))
+                elif isinstance(other_value, dict) and isinstance(this_value, unicode):
+                    values.append(deepcopy(other_value))
+                elif isinstance(other_value, dict) and isinstance(this_value, dict):
+                    ##prefer this's values over that's
+                    new_value = deepcopy(other_value)
+                    new_value.update(deepcopy(this_value))
+                    ## and then merge their options
+                    this_options = self._get_value_options(value_id)
+                    that_options = other._get_value_options(value_id)
+
+                    if this_options is not None and that_options is not None:
+                        new_value[u"options"] = OptionsSet(this_options).merge(OptionsSet(that_options)).store
+                    elif this_options is not None or that_options is not None:
+                        new_value[u"options"] = this_options if this_options is not None else that_options
+                    else:
+                        pass
+
+                    values.append(new_value)
+                else:
+                    raise Exception("this should never happen")
 
         ## if there is no intersection return None
         if len(values) == 0:
@@ -220,6 +264,86 @@ class OptionStringWinnowValue(OptionWinnowValue):
 
         return self.__class__(info)
     
+
+class OptionNullWinnowValue(OptionStringWinnowValue):
+
+
+    def __init__(self, value=None):
+
+        super(OptionWinnowValue, self).__init__(value)
+        self.values = value
+
+
+    type = VALUE_TYPE_SET_NULL
+
+    def intersection(self, other):
+        from winnow.options import OptionsSet
+
+        if isinstance(other, OptionNullWinnowValue):
+
+            this_options = self._get_options
+            that_options = other._get_options
+
+            options = None
+
+            if this_options is not None and that_options is not None:
+                options = OptionsSet(this_options).merge(OptionsSet(that_options)).store
+            elif this_options is not None or that_options is not None:
+                options = this_options if this_options is not None else that_options
+            else:
+                pass
+
+            info = self.get_merged_info(other)
+            info[u"type"] = self.type,
+
+
+            if options is not None:
+
+                info[VALUES_KEY_NAME] = {
+                    u"options": options
+                }
+
+            return self.__class__(info)
+
+        if isinstance(other, OptionResourceWinnowValue) or isinstance(other, OptionStringWinnowValue):
+            return other.intersection(self)
+
+        return None
+
+
+
+
+    def isdisjoint(self, other):
+        return False
+
+    def issubset(self, other):
+        return isinstance(other, OptionNullWinnowValue)
+
+
+    def _get_options(self):
+        if isinstance(self.values, dict) and u"options" in self.values.keys():
+            return self.values[u"options"]
+        return None
+
+
+
+    def as_json(self):
+
+        values = None
+
+        ## return the value without metadata is there is none
+        if self.name is None and self.scopes is None and self.description is None and self.image_url is None:
+            return values
+
+        ## otherwise wrap it in a dict
+        value =  {
+            u"type": self.type,
+            VALUES_KEY_NAME: values,
+        }
+
+
+        return self.update_with_info(value)
+
 
 class OptionResourceWinnowValue(OptionStringWinnowValue):
 
