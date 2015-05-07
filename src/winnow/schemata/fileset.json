@@ -16,6 +16,7 @@
                 "image_uri": {},
                 "source": {},
                 "path": {},
+                "aliases": {},
                 "base": {},
                 "version": {},
                 "shortcode": {},
@@ -25,6 +26,12 @@
                 },
                 "category":{
                     "type": "string"
+                },
+                "licenses": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "files":{
                     "type": "array",
@@ -36,13 +43,17 @@
                             }
                         },
                         "required": ["asset"],
-                         "additionalProperties": false
+                        "additionalProperties": false
                     }
+                },
+                "is_default": {
+                    "type": "boolean"
+                },
+                "is_public": {
+                    "type": "boolean"
                 }
             },
             "required": ["category", "files"]
         }
     ]
 }
-
-

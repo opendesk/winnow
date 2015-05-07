@@ -10,6 +10,12 @@
         "path": {
             "type": "string"
         },
+        "aliases": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
         "base": {
             "type": "string"
         },
@@ -24,6 +30,12 @@
         },
         "shortcode": {
             "type": "string"
+        },
+        "is_default": {
+            "type": "boolean"
+        },
+        "is_public": {
+            "type": "boolean"
         }
     },
     "required": ["schema", "source", "path", "version"]

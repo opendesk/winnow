@@ -26,8 +26,18 @@
                 },
                 "options": {"type": "object"},
                 "upstream": {"type": "string"},
-                "is_default": {"type": "boolean"},
-                "is_public": {"type": "boolean"}
+                "licenses": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "is_default": {
+                    "type": "boolean"
+                },
+                "is_public": {
+                    "type": "boolean"
+                }
             },
             "additionalProperties": false,
             "requiredProperties": [
