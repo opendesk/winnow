@@ -1,5 +1,5 @@
 from copy import deepcopy
-from jsonschema import validate, ValidationError
+import jsonschema
 
 from winnow.options import OptionsSet
 from winnow import utils
@@ -82,8 +82,7 @@ def inline(source, target):
     new_doc = deepcopy(source.get_doc())
     target.clone_history_from(source)
     ## inline references
-    options_dict = new_doc[OPTIONS_KEY]
-    _inline_option_refs(options_dict, source)
+    _inline_refs(new_doc, source)
     _set_doc(target, new_doc)
 
 
@@ -97,37 +96,80 @@ def expand(source, target):
     target.set_is_expanded()
 
 
-def _inline_option_refs(node, source):
+def _extract_internal_path(doc, path):
+    walker = doc
+    parts = [p for p in path.split("/") if p]
+    for part in parts:
+        print "part", part
+        if not isinstance(walker, dict):
+            raise OptionsExceptionReferenceError("internal_path reference couldn't find %s in %s" % (path, doc))
+        walker = walker.get(part)
+        if walker is None:
+            raise OptionsExceptionReferenceError("internal_path reference couldn't find %s in %s" % (path, doc))
+    return walker
 
-    # walks list and dicts looking for dicts with ref key
+
+def _expanded_ref(reference, source, options):
+
+    if u"~" in reference:
+        ref, internal_path = reference.split(u"~")
+    else:
+        ref = reference
+        internal_path = None
+    referenced_doc = deepcopy(source.get_ref(ref))
+    if referenced_doc is None:
+        return None
+    else:
+        if options is not None:
+            # if the ref also has some options then pre merge them into the reference
+            referenced_options = referenced_doc.get(u"options")
+            if referenced_options is None:
+                referenced_doc[u"options"] = options
+            else:
+                options_a = OptionsSet(referenced_options)
+                options_b = OptionsSet(options)
+                referenced_doc[u"options"] = options_a.merge(options_b).store
+
+        # now if there is an internal_path try to pull this out
+        new_doc = _extract_internal_path(referenced_doc, internal_path) if internal_path else referenced_doc
+        print "inlining new", new_doc
+        _inline_refs(new_doc, source)
+        return new_doc
+
+
+
+def _inline_refs(node, source):
+
+    # walks list and dicts looking for refs
+    # will may break due to inplace editing during iteration of dict
     #
+
     if isinstance(node, dict):
-        if u"type" in node.keys() and node[u"type"] == u"set::resource":
-            if u"values" in node.keys():
-                values = node[u"values"]
-                if type(values) == list:
-                    node[u"values"] = [_expand_doc_inplace(source.get_ref(ref)) for ref in values]
-                elif type(values) == unicode:
-                    node[u"values"] = _expand_doc_inplace(source.get_ref(values))
+        for key, child in node.iteritems():
+            if isinstance(child, dict):
+                if u"$ref" in child.keys():
+                    node[key] = _expanded_ref(child[u"$ref"], source, child.get(u"options"))
                 else:
-                    pass
-        else:
-            for k, v in node.iteritems():
-                _inline_option_refs(v, source)
+                    _inline_refs(child, source)
+            if isinstance(child, unicode):
+                print "found string in dict", child
+                if child.startswith(u"$ref:"):
+                    node[key] = _expanded_ref(child[len(u"$ref:"):], source, None)
+            if isinstance(child, list):
+                _inline_refs(child, source)
     if isinstance(node, list):
-        for v in node:
-            _inline_option_refs(v, source)
-
-
-def _expand_doc_inplace(source):
-    print "source", type(source)
-    options = OptionsSet(source.get_options_dict())
-    new_doc = deepcopy(source.get_doc())
-    ## expand upstream inheritance
-    new_doc[OPTIONS_KEY] = _patch_upstream(source, None, options).store
-    return new_doc
-
-
+        for i, child in enumerate(node[:]):
+            if isinstance(child, dict):
+                if u"$ref" in child.keys():
+                    node[i] = _expanded_ref(child[u"$ref"], source, child.get(u"options"))
+                else:
+                    _inline_refs(child, source)
+            if isinstance(child, unicode):
+                print "found string in list", child
+                if child.startswith(u"$ref:"):
+                    node[i] = _expanded_ref(child[len(u"$ref:"):], source, None)
+            if isinstance(child, list):
+                _inline_refs(child, source)
 
 
 def _patch_upstream(source, target, options_set):
@@ -185,7 +227,7 @@ def _walk_dict_for_assets(node, found):
 def validate(doc):
     try:
         validation.validate(doc)
-    except ValidationError, e:
+    except jsonschema.ValidationError, e:
         raise OptionsExceptionFailedValidation(e)
 
 

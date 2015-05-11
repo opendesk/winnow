@@ -9,7 +9,7 @@
     "version": [0,0,1],
     "upstream": "/materials/sheets/wood/composite/plywood",
     "options":{
-
+        "size" : "$ref:/materials/sheets/wood/composite/plywood~/options/size"
     }
 }
 

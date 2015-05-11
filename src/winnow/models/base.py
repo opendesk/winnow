@@ -145,7 +145,8 @@ class WinnowVersion(OptionsInterface):
         kwargs = self.db.get(ref)
         if kwargs is None:
             return None
-        return WinnowVersion(self.db, kwargs)
+        version = WinnowVersion(self.db, kwargs)
+        return version.get_doc()
 
 
     def clone_history_from(self, options_interface):

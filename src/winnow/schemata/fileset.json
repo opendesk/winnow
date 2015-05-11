@@ -16,6 +16,9 @@
                 "image_uri": {},
                 "source": {},
                 "path": {},
+                "product_version": {
+                    "type": "string"
+                },
                 "aliases": {},
                 "base": {},
                 "version": {},
@@ -27,12 +30,7 @@
                 "category":{
                     "type": "string"
                 },
-                "licenses": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
+                "licenses": {},
                 "files":{
                     "type": "array",
                     "items": {
@@ -46,13 +44,10 @@
                         "additionalProperties": false
                     }
                 },
-                "is_default": {
-                    "type": "boolean"
-                },
-                "is_public": {
-                    "type": "boolean"
-                }
+                "is_default": {},
+                "is_public": {}
             },
+            "additionalProperties": false,
             "required": ["category", "files"]
         }
     ]

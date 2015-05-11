@@ -19,12 +19,7 @@
                 "base": {},
                 "version": {},
                 "shortcode": {},
-                "licenses": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
+                "licenses": {},
                 "designers": {
                     "type": "array",
                     "items": {

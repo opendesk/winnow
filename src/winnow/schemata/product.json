@@ -26,18 +26,10 @@
                 },
                 "options": {"type": "object"},
                 "upstream": {"type": "string"},
-                "licenses": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "is_default": {
-                    "type": "boolean"
-                },
-                "is_public": {
-                    "type": "boolean"
-                }
+                "upstream_at": {"type": "string"},
+                "licenses": {},
+                "is_default": {},
+                "is_public": {}
             },
             "additionalProperties": false,
             "requiredProperties": [

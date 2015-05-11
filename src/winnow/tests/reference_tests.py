@@ -35,7 +35,7 @@ class TestExpandReferences(unittest.TestCase):
         self.db = MockKVStore()
 
 
-    def test_expand_refs(self):
+    def test_expand_refs_from_string(self):
 
         fine_sanding_process = self.add_doc_at_data_path("processes/fine-sanding/process.json")
         oiling_process = self.add_doc_at_data_path("processes/oiling/process.json")
@@ -47,17 +47,46 @@ class TestExpandReferences(unittest.TestCase):
 
         processes = premium_birch_ply.get_doc()[u"options"][u"processes"]
         self.assertEqual(processes[u"type"], u'set::resource')
-        self.assertEqual(processes[u"values"], [u'/processes/fine-sanding', u'/processes/oiling'])
+
+        self.assertEqual(processes[u"values"], [u'$ref:/processes/fine-sanding', u'$ref:/processes/oiling'])
 
         inlined = premium_birch_ply.inlined()
         inlined_sanding_value =  inlined.get_doc()[u"options"][u"processes"][u"values"][0]
         self.assertEqual(inlined_sanding_value, fine_sanding_process.get_doc())
 
+
+
+    def test_refs_recurse(self):
+
+        fine_sanding_process = self.add_doc_at_data_path("processes/fine-sanding/process.json")
+        oiling_process = self.add_doc_at_data_path("processes/oiling/process.json")
+        birch_ply_material = self.add_doc_at_data_path("birch-ply/material.json")
+        wisa_material = self.add_doc_at_data_path("wisa-multiwall/material.json")
+        premium_birch_ply = self.add_doc_at_data_path("finishes/premium-birch-ply/finish.json")
+
+        all_ply = self.add_doc_at_data_path("plywood/material.json")
+
+        processes = premium_birch_ply.get_doc()[u"options"][u"processes"]
+        self.assertEqual(processes[u"type"], u'set::resource')
+
+        self.assertEqual(processes[u"values"], [u'$ref:/processes/fine-sanding', u'$ref:/processes/oiling'])
+
+
+
+        inlined = premium_birch_ply.inlined()
+
         print inlined
+
+        inlined_sanding_value =  inlined.get_doc()[u"options"][u"processes"][u"values"][0]
+        self.assertEqual(inlined_sanding_value, fine_sanding_process.get_doc())
 
         inlined_material_options =  inlined.get_doc()[u"options"][u"material"][u"values"][u"options"]
 
         self.assertTrue(u"size" in inlined_material_options.keys())
+
+        size = inlined_material_options[u"size"]
+
+        print size
 
 
     # def test_merge_refs(self):

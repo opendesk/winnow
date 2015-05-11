@@ -25,9 +25,6 @@
                 "type": "number"
             }
         },
-        "upstream": {
-            "type": "string"
-        },
         "shortcode": {
             "type": "string"
         },
@@ -36,6 +33,12 @@
         },
         "is_public": {
             "type": "boolean"
+        },
+        "licenses": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
         }
     },
     "required": ["schema", "source", "path", "version"]
