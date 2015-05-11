@@ -128,19 +128,24 @@ class WinnowVersion(OptionsInterface):
         history.append(kwargs)
 
     def get_options_dict(self):
-        return self.kwargs[u"doc"][u"options"]
+        try:
+            return self.kwargs[u"doc"][u"options"]
+        except KeyError:
+            return None
 
     def set_doc(self, doc):
         self.kwargs[u"doc"] = doc
 
+
     def get_doc(self):
         return self.kwargs[u"doc"]
 
+
     def get_ref(self, ref):
-        version = self.db.get(ref)
-        if version is None:
+        kwargs = self.db.get(ref)
+        if kwargs is None:
             return None
-        return version[u"doc"]
+        return WinnowVersion(self.db, kwargs)
 
 
     def clone_history_from(self, options_interface):

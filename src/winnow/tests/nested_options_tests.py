@@ -444,6 +444,7 @@ class TestNestedOptionWithNulls(unittest.TestCase):
             u"description": u"please choose one of the colours",
             u"name": u"colour",
             u"type": u"set::string",
+            u'default': u'blue',
             u"values": [
                 {
                     u"description": u"the colour blue",
@@ -473,6 +474,8 @@ class TestNestedOptionWithNulls(unittest.TestCase):
                 }
             ]
         }
+
+        print "expected", intersection.as_json()
 
         self.assertEqual(intersection.as_json(), expected)
 

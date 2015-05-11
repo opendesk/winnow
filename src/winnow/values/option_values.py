@@ -135,6 +135,8 @@ class OptionStringWinnowValue(OptionWinnowValue):
             self.validate_single_value(single_value)
             self.values_lookup[single_value] = v
 
+    def get_default(self):
+        return self.values_lookup.keys()[0]
 
     def isdisjoint(self, other):
         if isinstance(other, OptionNullWinnowValue):

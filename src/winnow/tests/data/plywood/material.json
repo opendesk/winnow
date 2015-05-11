@@ -11,6 +11,7 @@
         "quantity": {
             "type": "numeric::step",
             "name": "Quantity",
+            "default": 1,
             "max": 10000,
             "min": 0,
             "start": 0,
@@ -19,6 +20,7 @@
         "thickness":{
             "type": "numeric::set",
             "name": "Thickness",
+            "default": 18,
             "description": "Available sheet thickness mm",
             "value": [6.5, 9.0, 12, 15, 18, 21, 24, 27]
         },

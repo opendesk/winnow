@@ -5,10 +5,9 @@
     "name": "Oiling",
     "path": "/processes/oiling",
     "description": "oiling wood",
-    "value": "oiling",
     "version": [0,0,1],
-    "instructions": "instructions.txt"
-
+    "instructions": "instructions.txt",
+    "options": {}
 }
 
 

@@ -106,15 +106,28 @@ def _inline_option_refs(node, source):
             if u"values" in node.keys():
                 values = node[u"values"]
                 if type(values) == list:
-                    node[u"values"] = [source.get_ref(ref) for ref in values]
+                    node[u"values"] = [_expand_doc_inplace(source.get_ref(ref)) for ref in values]
                 elif type(values) == unicode:
-                    node[u"values"] = source.get_ref(values)
+                    node[u"values"] = _expand_doc_inplace(source.get_ref(values))
+                else:
+                    pass
         else:
             for k, v in node.iteritems():
                 _inline_option_refs(v, source)
     if isinstance(node, list):
         for v in node:
             _inline_option_refs(v, source)
+
+
+def _expand_doc_inplace(source):
+    print "source", type(source)
+    options = OptionsSet(source.get_options_dict())
+    new_doc = deepcopy(source.get_doc())
+    ## expand upstream inheritance
+    new_doc[OPTIONS_KEY] = _patch_upstream(source, None, options).store
+    return new_doc
+
+
 
 
 def _patch_upstream(source, target, options_set):
@@ -129,11 +142,11 @@ def _patch_upstream(source, target, options_set):
 
     upstream_options = OptionsSet(upstream_delegate.get_options_dict())
     patched_options_set = options_set.patch(upstream_options)
-    _add_start_if_needed(source, target)
-
-    target.add_history_action(action=HISTORY_ACTION_PATCH,
-                          input=upstream_delegate,
-                          output_type=doc.get("type"))
+    if target is not None:
+        _add_start_if_needed(source, target)
+        target.add_history_action(action=HISTORY_ACTION_PATCH,
+                              input=upstream_delegate,
+                              output_type=doc.get("type"))
 
     return _patch_upstream(upstream_delegate, target, patched_options_set)
 

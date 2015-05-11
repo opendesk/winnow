@@ -9,46 +9,7 @@
     "version": [0,0,1],
     "upstream": "/materials/sheets/wood/composite/plywood",
     "options":{
-        "size":{
-            "type": "set::string",
-            "name": "sizes",
-            "description": "available sheet sizes",
-            "values": [
-                {
-                    "type": "string",
-                    "name": "1200x2400",
-                    "description": "1200mm x 2400mm",
-                    "value": "1200x2400",
-                    "size":{
-                        "units": "mm",
-                        "width": 1200,
-                        "heights": 2400
-                    }
-                },
-                      {
-                    "type": "string",
-                    "name": "1220x2440",
-                    "description": "1220mm x 2440mm",
-                    "value": "1220x2440",
-                    "size":{
-                        "units": "mm",
-                        "width": 1220,
-                        "heights": 2440
-                    }
-                },
-                {
-                    "type": "string",
-                    "name": "1250x2500",
-                    "description": "1250mm x 2500mm",
-                    "value": "1250x2500",
-                    "size":{
-                        "units": "mm",
-                        "width": 1250,
-                        "heights": 2500
-                    }
-                }
-            ]
-        }
+
     }
 }
 

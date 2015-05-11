@@ -5,10 +5,6 @@ import uuid
 
 
 def get_doc_hash(data):
-    """
-    This hash function replicates a git has for a blog
-    it is used to hash documents
-    """
     s = hashlib.sha1()
     s.update(data)
     return unicode(s.hexdigest())

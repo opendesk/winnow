@@ -7,6 +7,14 @@
         {
             "$ref": "https://opendesk.cc/schemata/base/option.json#"
         },
+        {
+            "properties": {
+                "value":{
+                    "default": "number"
+                }
+            },
+            "required": ["default"]
+        },
         {"oneOf": [
                 {
                     "properties": {

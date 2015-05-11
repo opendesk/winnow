@@ -5,10 +5,9 @@
     "name": "Fine Sanding",
     "path": "/processes/fine-sanding",
     "description": "fine sanding wood",
-    "value": "fine_sanding",
     "version": [0,0,1],
-    "instructions": "instructions.txt"
-
+    "instructions": "instructions.txt",
+    "options": {}
 }
 
 
