@@ -15,9 +15,11 @@
                 "image_uri": {},
                 "source": {},
                 "path": {},
+                "aliases": {},
                 "base": {},
                 "version": {},
                 "shortcode": {},
+                "royalty_percentage": {},
                 "type": {
                     "type": "string",
                     "pattern": "range"

@@ -15,9 +15,22 @@
                 "image_uri": {},
                 "source": {},
                 "path": {},
+                "aliases": {},
                 "base": {},
                 "version": {},
                 "shortcode": {},
+                "licenses": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "designers": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
                 "type": {
                     "type": "string",
                     "pattern": "design"
