@@ -1,0 +1,13 @@
+{
+    "schema": "https://opendesk.cc/schemata/process.json",
+    "source": "https://github.com/opendesk/collection",
+    "type": "process",
+    "name": "Light Sanding",
+    "path": "/processes/light-sanding",
+    "description": "Light sanding wood",
+    "version": [0,0,1],
+    "instructions": "instructions.txt",
+    "options": {}
+}
+
+

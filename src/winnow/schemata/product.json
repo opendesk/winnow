@@ -29,7 +29,8 @@
                 "upstream_at": {"type": "string"},
                 "licenses": {},
                 "is_default": {},
-                "is_public": {}
+                "is_public": {},
+                "definitions": {}
             },
             "additionalProperties": false,
             "requiredProperties": [

@@ -23,7 +23,12 @@
         "scopes": {
             "type": "array",
             "items": {
-                "type": "string"
+                "type": "string",
+                "oneOf":[
+                    {"pattern": "customer"},
+                    {"pattern": "maker"},
+                    {"pattern": "operator"}
+                ]
             }
         }
     },

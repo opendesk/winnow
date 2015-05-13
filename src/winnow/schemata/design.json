@@ -19,6 +19,7 @@
                 "base": {},
                 "version": {},
                 "shortcode": {},
+                "definitions": {},
                 "licenses": {},
                 "designers": {
                     "type": "array",

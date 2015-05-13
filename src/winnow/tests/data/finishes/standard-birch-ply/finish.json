@@ -9,13 +9,15 @@
     "options":{
         "material": {
             "type": "set::resource",
-            "values": "/materials/sheet/wood/composite/plywood/birch-faced-plywood"
+            "scopes": ["maker"],
+            "values": "$ref:/materials/sheets/wood/composite/plywood/birch-faced-plywood"
         },
         "processes": {
             "type": "set::resource",
+            "scopes": ["maker"],
             "values": [
-                "/processes/light-sanding",
-                "/processes/oiling"
+                "$ref:/processes/light-sanding",
+                "$ref:/processes/oiling"
             ]
         }
     }

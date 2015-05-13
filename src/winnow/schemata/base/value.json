@@ -22,6 +22,9 @@
         "schema": {
             "type": "string"
         },
+        "definitions": {
+            "type": "object"
+        },
         "image_uri": {
             "type": "object",
             "properties": {

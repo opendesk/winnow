@@ -1,12 +1,13 @@
 from copy import deepcopy
 import jsonschema
+from decimal import Decimal
+import os
 
 from winnow.options import OptionsSet
 from winnow import utils
 from winnow import validation
 from winnow.exceptions import OptionsExceptionFailedValidation, OptionsExceptionReferenceError
 from winnow.constants import *
-
 
 
 def add_doc(target, doc):
@@ -56,9 +57,8 @@ def patch(source_a, source_b, target, doc):
 
 
 def scope(source, scope, target, doc):
-    options = OptionsSet(source.get_options_dict())
     new_doc = deepcopy(doc)
-    new_doc[OPTIONS_KEY] = options.scope(scope).store
+    _trim_out_off_scope(new_doc[OPTIONS_KEY], scope)
     target.clone_history_from(source)
     _add_start_if_needed(source, target)
     _set_doc(target, new_doc)
@@ -67,6 +67,48 @@ def scope(source, scope, target, doc):
                               scope=scope,
                               output_type=doc.get("type"))
 
+
+def quantify(source, target, doc):
+
+    quantity_options = {
+        u"quantity": {
+            u"type": u"numeric::step",
+            u"name": u"Quantity",
+            u"default": Decimal("1"),
+            u"max": Decimal("10000"),
+            u"min": Decimal("1"),
+            u"start": Decimal("0"),
+            u"step": Decimal("1")
+        }
+    }
+
+    options_a = OptionsSet(source.get_options_dict())
+    options_b = OptionsSet(quantity_options)
+    new_doc = deepcopy(doc)
+    new_doc[OPTIONS_KEY] = options_a.merge(options_b).store
+    target.clone_history_from(source)
+    _add_start_if_needed(source, target)
+    _set_doc(target, new_doc)
+
+    target.add_history_action(action=HISTORY_ACTION_QUANTIFY,
+                              output_type=doc.get("type"))
+
+
+def _trim_out_off_scope(node, scope):
+    if isinstance(node, dict):
+        for key in node.keys():
+            child = node[key]
+            if isinstance(child, dict):
+                if "scopes" in child.keys() and not scope in child["scopes"]:
+                    del node[key]
+                else:
+                    _trim_out_off_scope(child, scope)
+            if isinstance(child, list):
+                _trim_out_off_scope(child, scope)
+    if isinstance(node, list):
+        for i, child in enumerate(node[:]):
+            if isinstance(child, dict) or isinstance(child, list):
+                _trim_out_off_scope(child, scope)
 
 def filter_allows(filter_source, possible):
     filter_options = OptionsSet(filter_source.get_options_dict())
@@ -100,7 +142,6 @@ def _extract_internal_path(doc, path):
     walker = doc
     parts = [p for p in path.split("/") if p]
     for part in parts:
-        print "part", part
         if not isinstance(walker, dict):
             raise OptionsExceptionReferenceError("internal_path reference couldn't find %s in %s" % (path, doc))
         walker = walker.get(part)
@@ -116,7 +157,14 @@ def _expanded_ref(reference, source, options):
     else:
         ref = reference
         internal_path = None
-    referenced_doc = deepcopy(source.get_ref(ref))
+    if ref == "":
+        referenced_doc = source.get_doc()
+    else:
+        doc = source.get_ref(ref)
+        if doc is None:
+            raise OptionsExceptionReferenceError("Winnow Reference Error: Cannot find reference %s" % ref)
+        referenced_doc = deepcopy(doc)
+
     if referenced_doc is None:
         return None
     else:
@@ -132,7 +180,6 @@ def _expanded_ref(reference, source, options):
 
         # now if there is an internal_path try to pull this out
         new_doc = _extract_internal_path(referenced_doc, internal_path) if internal_path else referenced_doc
-        print "inlining new", new_doc
         _inline_refs(new_doc, source)
         return new_doc
 
@@ -152,7 +199,6 @@ def _inline_refs(node, source):
                 else:
                     _inline_refs(child, source)
             if isinstance(child, unicode):
-                print "found string in dict", child
                 if child.startswith(u"$ref:"):
                     node[key] = _expanded_ref(child[len(u"$ref:"):], source, None)
             if isinstance(child, list):
@@ -165,7 +211,6 @@ def _inline_refs(node, source):
                 else:
                     _inline_refs(child, source)
             if isinstance(child, unicode):
-                print "found string in list", child
                 if child.startswith(u"$ref:"):
                     node[i] = _expanded_ref(child[len(u"$ref:"):], source, None)
             if isinstance(child, list):

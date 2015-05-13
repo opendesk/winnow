@@ -68,11 +68,16 @@ class WinnowVersion(OptionsInterface):
         db.set(wv.kwargs[u"uuid"], wv.kwargs)
         return wv
 
-
-    def scoped(self, db, doc, scopes, kwargs={}):
+    def quantified(self, kwargs={}):
         wv = self.__class__(self.db, kwargs)
-        winnow.scope(self, scopes, wv, doc)
-        db.set(wv.kwargs[u"uuid"], wv.kwargs)
+        winnow.quantify(self, wv, self.get_doc())
+        self.db.set(wv.kwargs[u"uuid"], wv.kwargs)
+        return wv
+
+    def scoped(self, scope, kwargs={}):
+        wv = self.__class__(self.db, kwargs)
+        winnow.scope(self, scope, wv, self.get_doc())
+        self.db.set(wv.kwargs[u"uuid"], wv.kwargs)
         return wv
 
     def expanded(self, kwargs={}):

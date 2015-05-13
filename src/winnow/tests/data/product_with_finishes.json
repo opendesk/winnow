@@ -8,9 +8,39 @@
             "name": "Finish", 
             "type": "set::resource", 
             "values": [
-                "/finishes/opendesk/premium-birch-ply",
-                "/finishes/opendesk/premium-wisa",
-                "/finishes/opendesk/standard-birch-ply"
+                "$ref:/finishes/opendesk/premium-birch-ply",
+                "$ref:/finishes/opendesk/premium-wisa",
+                "$ref:/finishes/opendesk/standard-birch-ply"
+            ]
+        },
+        "size": {
+            "description": "Choose a size",
+            "name": "Size",
+            "type": "set::string",
+            "scopes": ["maker"],
+            "values": [
+                {
+                    "type": "string",
+                    "name": "Big",
+                    "value": "big",
+                    "size": {
+                        "width": 600,
+                        "height": 850,
+                        "depth": 450,
+                        "units": "mm"
+                    }
+                },
+                {
+                    "type": "string",
+                    "value": "small",
+                    "name": "Small",
+                    "size": {
+                        "width": 400,
+                        "height": 550,
+                        "depth": 350,
+                        "units": "mm"
+                    }
+                }
             ]
         }
     }, 
