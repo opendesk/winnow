@@ -25,15 +25,21 @@
         "definitions": {
             "type": "object"
         },
-        "image_uri": {
-            "type": "object",
-            "properties": {
-                "asset": {
-                    "type": "string"
-                }
-            },
-            "required": ["asset"],
-            "additionalProperties": false
+        "images": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "asset": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    }
+                },
+                "required": ["asset"],
+                "additionalProperties": false
+            }
         }
     },
     "required": ["type"]

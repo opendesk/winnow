@@ -25,6 +25,20 @@ def intersects(source_a, source_b):
     options_b = OptionsSet(source_b.get_options_dict())
     return options_a.intersects(options_b)
 
+def merge(source_a, source_b, target, doc):
+    doc_b = source_b.get_doc()
+    options_a = OptionsSet(source_a.get_options_dict())
+    options_b = OptionsSet(source_b.get_options_dict())
+    new_doc = deepcopy(doc)
+    new_doc[OPTIONS_KEY] = options_a.merge(options_b).store
+    target.clone_history_from(source_a)
+    _add_start_if_needed(source_a, target)
+    _set_doc(target, new_doc)
+
+    target.add_history_action(action=HISTORY_ACTION_MERGE,
+                              input=source_b,
+                              output_type=doc.get("type"))
+
 
 def merge(source_a, source_b, target, doc):
     doc_b = source_b.get_doc()
@@ -120,22 +134,12 @@ def filter_allowed_by(filter_source, possible):
     return [p for p in possible if OptionsSet(p.get_options_dict()).allows(filter_options)]
 
 
-def inline(source, target):
+def expand(source, target):
     new_doc = deepcopy(source.get_doc())
     target.clone_history_from(source)
     ## inline references
     _inline_refs(new_doc, source)
     _set_doc(target, new_doc)
-
-
-def expand(source, target):
-    options = OptionsSet(source.get_options_dict())
-    new_doc = deepcopy(source.get_doc())
-    target.clone_history_from(source)
-    ## expand upstream inheritance
-    new_doc[OPTIONS_KEY] = _patch_upstream(source, target, options).store
-    _set_doc(target, new_doc)
-    target.set_is_expanded()
 
 
 def _extract_internal_path(doc, path):
@@ -160,9 +164,10 @@ def _expanded_ref(reference, source, options):
     if ref == "":
         referenced_doc = source.get_doc()
     else:
-        doc = source.get_ref(ref)
-        if doc is None:
-            raise OptionsExceptionReferenceError("Winnow Reference Error: Cannot find reference %s" % ref)
+        wv = source.lookup(ref)
+        if wv is None:
+            raise OptionsExceptionReferenceError("Winnow Reference Error: Cannot find reference %s in %s" % (ref, source.get_doc()[u"path"]))
+        doc = wv.get_doc()
         referenced_doc = deepcopy(doc)
 
     if referenced_doc is None:
@@ -182,7 +187,6 @@ def _expanded_ref(reference, source, options):
         new_doc = _extract_internal_path(referenced_doc, internal_path) if internal_path else referenced_doc
         _inline_refs(new_doc, source)
         return new_doc
-
 
 
 def _inline_refs(node, source):

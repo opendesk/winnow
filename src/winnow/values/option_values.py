@@ -56,6 +56,10 @@ class OptionWinnowValue(BaseWinnowValue):
             option_type = value[u"type"]
             if option_type == VALUE_TYPE_SET_STRING:
                 return OptionStringWinnowValue(value)
+            elif option_type == VALUE_TYPE_SET_COLOUR:
+                return OptionStringWinnowValue(value)
+            elif option_type == VALUE_TYPE_SET_SIZE:
+                return OptionStringWinnowValue(value)
             elif option_type == VALUE_TYPE_SET_RESOURCE:
                 return OptionResourceWinnowValue(value)
             elif option_type == VALUE_TYPE_SET_NULL:
@@ -204,8 +208,6 @@ class OptionStringWinnowValue(OptionWinnowValue):
                 if this_options is None:
                     new_value[u"options"] = other_options
                 else:
-                    print this_options
-                    print other_options
                     new_value[u"options"] = OptionsSet(this_options).merge(OptionsSet(other_options)).store
 
                 values.append(new_value)
@@ -350,3 +352,12 @@ class OptionNullWinnowValue(OptionStringWinnowValue):
 class OptionResourceWinnowValue(OptionStringWinnowValue):
 
     type = VALUE_TYPE_SET_RESOURCE
+
+class OptionSizeWinnowValue(OptionStringWinnowValue):
+
+    type = VALUE_TYPE_SET_SIZE
+
+class OptionColourWinnowValue(OptionStringWinnowValue):
+
+    type = VALUE_TYPE_SET_COLOUR
+

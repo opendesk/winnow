@@ -54,6 +54,22 @@
                     "properties": {
                         "type": {
                             "type": "string",
+                            "pattern": "set::colour"
+                        }
+                    }
+                },
+                {
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "pattern": "set::size"
+                        }
+                    }
+                },
+                {
+                    "properties": {
+                        "type": {
+                            "type": "string",
                             "pattern": "set::resource"
                         }
                     }

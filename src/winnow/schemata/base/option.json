@@ -10,15 +10,21 @@
         "description":{
             "type": "string"
         },
-        "image_uri": {
-            "type": "object",
-            "properties": {
-                "asset": {
-                    "type": "string"
-                }
-            },
-            "required": ["asset"],
-            "additionalProperties": false
+        "images": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "asset": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    }
+                },
+                "required": ["asset"],
+                "additionalProperties": false
+            }
         },
         "scopes": {
             "type": "array",
@@ -27,7 +33,9 @@
                 "oneOf":[
                     {"pattern": "customer"},
                     {"pattern": "maker"},
-                    {"pattern": "operator"}
+                    {"pattern": "operator"},
+                    {"pattern": "admin"},
+                    {"pattern": "designer"}
                 ]
             }
         }

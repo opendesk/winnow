@@ -27,8 +27,8 @@ class OptionsInterface(object):
     def get_doc(self):
         raise OptionsExceptionMissingInterfaceMethod("get_doc")
 
-    def get_ref(self, ref):
-        raise OptionsExceptionMissingInterfaceMethod("get_ref")
+    def lookup(self, path):
+        raise OptionsExceptionMissingInterfaceMethod("lookup")
 
     def clone_history_from(self, options_delegate):
         raise OptionsExceptionMissingInterfaceMethod("clone_history_from")

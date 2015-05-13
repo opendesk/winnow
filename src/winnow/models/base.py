@@ -86,13 +86,6 @@ class WinnowVersion(OptionsInterface):
         self.db.set(wv.kwargs[u"uuid"], wv.kwargs)
         return wv
 
-    def inlined(self, kwargs={}):
-        wv = self.__class__(self.db, kwargs)
-        winnow.inline(self, wv)
-        self.db.set(wv.kwargs[u"uuid"], wv.kwargs)
-        return wv
-
-
     def allows(self, other):
         return winnow.allows(self, other)
 
@@ -146,12 +139,12 @@ class WinnowVersion(OptionsInterface):
         return self.kwargs[u"doc"]
 
 
-    def get_ref(self, ref):
-        kwargs = self.db.get(ref)
+    def lookup(self, path):
+        kwargs = self.db.get(path)
         if kwargs is None:
             return None
         version = WinnowVersion(self.db, kwargs)
-        return version.get_doc()
+        return version
 
 
     def clone_history_from(self, options_interface):

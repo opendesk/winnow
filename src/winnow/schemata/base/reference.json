@@ -1,0 +1,25 @@
+{
+    "id": "https://opendesk.cc/schemata/base/reference.json",
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Winnow Reference",
+    "type": "object",
+    "oneOf": [
+        {
+            "type": "string",
+            "pattern": "^[$]ref[:]\/[/.\\w-]{,254}([@]((\\d([.]\\d){,2})|([a-z0-9]{64})))?([~][\/[/.\\w-]{,254})?$"
+        },
+        {
+            "type": "object",
+            "properties": {
+                "$ref":{
+                    "type": "string",
+                    "pattern": "^\/[/.\\w-]{,254}([@]((\\d([.]\\d){,2})|([a-z0-9]{64})))?([~][\/[/.\\w-]{,254})?$"
+                },
+                "options":{
+                     "type": "object"
+                }
+            },
+            "required": ["$ref"]
+        }
+    ]
+}

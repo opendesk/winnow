@@ -1,0 +1,14 @@
+{
+    "schema": "https://opendesk.cc/schemata/product.json",
+    "source": "https://github.com/opendesk/collection",
+    "type": "product",
+    "path": "ranges/lean/desk/medium-regular",
+    "version": [1,0,0],
+    "shortcode": "LEN/DSK/MDR",
+    "name": "Medium Regular",
+    "description": "...",
+    "is_default": true,
+    "options":{
+        "material": "$ref:/contexts/opendesk/standard-materials~/options/material"
+    }
+}

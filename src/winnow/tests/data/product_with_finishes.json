@@ -6,7 +6,8 @@
         "finish": {
             "description": "Choose a finish", 
             "name": "Finish", 
-            "type": "set::resource", 
+            "type": "set::resource",
+            "default": "/finishes/opendesk/premium-birch-ply",
             "values": [
                 "$ref:/finishes/opendesk/premium-birch-ply",
                 "$ref:/finishes/opendesk/premium-wisa",
@@ -17,7 +18,7 @@
             "description": "Choose a size",
             "name": "Size",
             "type": "set::string",
-            "scopes": ["maker"],
+            "default": "big",
             "values": [
                 {
                     "type": "string",

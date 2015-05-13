@@ -1,27 +1,114 @@
-//if it's a string just write in the reference or not
-
-//"/materials/sheets/wood/composite/plywood"
-
-"$ref:/materials/sheets/wood/composite/plywood"
-
 {
-    "$ref": "/materials/sheets/wood/composite/plywood",
-}
-
-
-{
-    "$ref": "/materials/sheets/wood/composite/plywood@1.3.4~/options",
-}
-
-//this would allow you to mess with the options pre merged into it
-{
-    "$ref": "/materials/sheets/wood/composite/plywood",
-    "options": {
-            "size": "1200x1500"
+    "schema": "https://opendesk.cc/schemata/context.json",
+    "source": "https://github.com/opendesk/collection",
+    "type": "context",
+    "path": "/contexts/opendesk/standard-materials",
+    "version": [1,0,0],
+    "name": "Standard Materials",
+    "description": "The standard set of materials choices offered by OpenDesk",
+    "options":{
+        "material": {
+            "description": "Choose a material",
+            "type": "set::string",
+            "name": "material",
+            "default": "birch-ply",
+            "values": [
+                {
+                    "name": "Birch Ply",
+                    "description": "...",
+                    "images": [
+                        {
+                        "asset": "../assets/publish/lean_logo.png",
+                        "type": "banner"
+                        }
+                    ],
+                    "value": "birch-ply",
+                    "type": "string",
+                    "options":{
+                        "finish":{
+                            "scopes": ["maker"],
+                            "type": "set::resource",
+                            "default": "/finishes/opendesk/standard-birch-ply",
+                            "values": [
+                                "$ref:/finishes/opendesk/standard-birch-ply",
+                                "$ref:/finishes/opendesk/premium-birch-ply"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Standard Laminate",
+                    "description": "...",
+                    "image": {
+                        "asset": "../assets/publish/lean_logo.png"
+                    },
+                    "value": "standard-laminate",
+                    "type": "string",
+                    "options":{
+                        "finish":{
+                            "scopes": ["maker"],
+                            "type": "set::resource",
+                            "default": "/finishes/opendesk/standard-laminate",
+                            "values": [
+                                "$ref:/finishes/opendesk/standard-laminate"
+                            ]
+                        },
+                        "colour":{
+                            "description": "Choose a colour",
+                            "type": "set::string",
+                            "name": "Colour",
+                            "default": "white",
+                            "values":[
+                                {
+                                    "name": "White",
+                                    "type": "string",
+                                    "images": [{"asset": "images/white.jpg"}],
+                                    "value": "white"
+                                },
+                                {
+                                    "name": "Grey",
+                                    "type": "string",
+                                    "images": [{"asset": "images/grey.jpg"}],
+                                    "value": "grey"
+                                },
+                                {
+                                    "name": "Black",
+                                    "type": "string",
+                                    "images": [{"asset": "images/black.jpg"}],
+                                    "value": "black"
+                                },
+                                {
+                                    "name": "Blue",
+                                    "type": "string",
+                                    "images": [{"asset": "images/blue.jpg"}],
+                                    "value": "blue"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Custom Lamination",
+                    "description": "Wild and whacky stuff that you'll talk to the maker about",
+                    "images": [
+                        {
+                            "asset": "../assets/publish/lean_logo.png"
+                        }
+                    ],
+                    "value": "custom-lamination",
+                    "type": "string",
+                    "options":{
+                        "finish":{
+                            "scopes": ["maker"],
+                            "type": "set::resource",
+                            "default": "/finishes/opendesk/custom-lamination",
+                            "values": [
+                                "$ref:/finishes/opendesk/custom-lamination"
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
     }
-}
-
-// this would allow you to target parts of a document for compostiion
-{
-    "$ref": "/materials/sheets/wood/composite/plywood~/options/size"
 }

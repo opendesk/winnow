@@ -69,6 +69,8 @@ VALUE_TYPES = {
     VALUE_TYPE_NUMERIC_SET: NumericWinnowValue,
     VALUE_TYPE_NUMERIC_STEP: NumericWinnowValue,
     VALUE_TYPE_SET_STRING: OptionWinnowValue,
+    VALUE_TYPE_SET_COLOUR: OptionWinnowValue,
+    VALUE_TYPE_SET_SIZE: OptionWinnowValue,
     VALUE_TYPE_SET_RESOURCE: OptionWinnowValue,
     VALUE_TYPE_SET_NULL: OptionNullWinnowValue
 }

@@ -29,6 +29,7 @@
                     {"type": "string"},
                     {"$ref": "https://opendesk.cc/schemata/base/set.json#"},
                     {"$ref": "https://opendesk.cc/schemata/base/numeric.json#"},
+                    {"$ref": "https://opendesk.cc/schemata/base/reference.json#"},
                     {"type": "number"},
                     {"type": "null"},
                     {"type": "boolean"}
