@@ -23,6 +23,7 @@
                 "base": {},
                 "version": {},
                 "changes": {},
+                "options": {},
                 "shortcode": {},
                 "type": {
                     "type": "string",
