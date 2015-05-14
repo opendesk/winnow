@@ -23,7 +23,12 @@
             "type": "array",
             "items": {
                 "type": "number"
-            }
+            },
+            "maxItems": 3,
+            "minItems": 3
+        },
+        "changes": {
+            "type": "string"
         },
         "shortcode": {
             "type": "string"
