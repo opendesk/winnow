@@ -42,7 +42,8 @@
                 "images",
                 "source",
                 "path",
-                "version"
+                "version",
+                "changes"
             ]
         }
     ]

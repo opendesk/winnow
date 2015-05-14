@@ -9,6 +9,7 @@
         {
             "properties": {
                 "images":{},
+                "changes":{},
                 "name":{},
                 "description":{},
                 "long_description":{},
@@ -34,7 +35,8 @@
                 "images",
                 "source",
                 "path",
-                "version"
+                "version",
+                "changes"
             ]
         }
     ]
