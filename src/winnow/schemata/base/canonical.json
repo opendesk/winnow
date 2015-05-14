@@ -46,6 +46,6 @@
             }
         }
     },
-    "required": ["schema", "source", "path", "version"]
+    "required": ["schema", "source", "path", "version", "changes"]
 }
 

@@ -13,7 +13,7 @@
                 "description":{},
                 "long_description":{},
                 "schema": {},
-                "image_uri": {},
+                "images":{},
                 "source": {},
                 "path": {},
                 "base": {},
@@ -39,7 +39,7 @@
                 "description",
                 "schema",
                 "type",
-                "image_uri",
+                "images",
                 "source",
                 "path",
                 "version"

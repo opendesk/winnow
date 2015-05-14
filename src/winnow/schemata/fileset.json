@@ -13,7 +13,7 @@
                 "description":{},
                 "long_description":{},
                 "schema": {},
-                "image_uri": {},
+                "images":{},
                 "source": {},
                 "path": {},
                 "product_version": {
@@ -49,7 +49,7 @@
                 "is_public": {}
             },
             "additionalProperties": false,
-            "required": ["category", "files"]
+            "required": ["category", "files", "changes", "name"]
         }
     ]
 }

@@ -8,11 +8,11 @@
         {"$ref": "https://opendesk.cc/schemata/base/canonical.json#"},
         {
             "properties": {
+                "images":{},
                 "name":{},
                 "description":{},
                 "long_description":{},
                 "schema": {},
-                "image_uri": {},
                 "source": {},
                 "path": {},
                 "aliases": {},
@@ -31,7 +31,7 @@
                 "description",
                 "schema",
                 "type",
-                "image_uri",
+                "images",
                 "source",
                 "path",
                 "version"
