@@ -1,0 +1,37 @@
+{
+  "schema": "https://opendesk.cc/schemata/material.json",
+  "source": "https://github.com/opendesk/collection",
+  "type": "material",
+  "name": "WISA Multiwall",
+  "path": "/materials/opendesk/sheets/wood/composite/plywood/laminated/pre-laminated/wisa-multiwall",
+  "description": "Pre laminated plywood with polypropylene coating on a lacquered surface.",
+  "images": [
+    {"asset": "http://example.com/foo.png"}
+  ],
+  "version": [0, 0, 1],
+  "changes": "Initial public version.",
+  "options":{
+    "colour":{
+      "type": "set::string",
+      "name": "Colour",
+      "description": "please choose one of the colours",
+      "default": "white",
+      "values": [
+        {
+          "type": "string",
+          "name": "White",
+          "description": "Standard White",
+          "value": "white",
+          "RAL": "9010"
+        },
+        {
+          "type": "string",
+          "name": "Grey",
+          "description": "Standard Grey",
+          "value": "grey",
+          "RAL": "7001"
+        }
+      ]
+    }
+  }
+}

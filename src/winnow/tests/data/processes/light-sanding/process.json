@@ -6,6 +6,7 @@
     "path": "/processes/light-sanding",
     "description": "Light sanding wood",
     "version": [0,0,1],
+    "changes": "changes",
     "instructions": "instructions.txt",
     "options": {}
 }

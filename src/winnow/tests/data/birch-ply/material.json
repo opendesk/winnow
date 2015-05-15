@@ -7,6 +7,7 @@
     "description": "Birch faced plywood",
     "image_uri": {"asset": "http://something.com/khgfdkyg.png"},
     "version": [0,0,1],
+    "changes": "changes",
     "upstream": "/materials/sheets/wood/composite/plywood",
     "options":{
         "size" : "$ref:/materials/sheets/wood/composite/plywood~/options/size"

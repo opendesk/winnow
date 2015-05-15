@@ -9,6 +9,7 @@
     "description": "A nice cafe table with three legs",
     "is_default": true,
     "is_public": true,
+    "changes": "changes",
     "components": {
         "top": {
             "finish": "#top_finish"

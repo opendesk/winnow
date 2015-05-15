@@ -91,6 +91,11 @@ class TestExpandReferences(unittest.TestCase):
         self.assertEqual(doc["options"]["finish"]["values"][0]["options"], {})
 
 
+    def test_expand_from_object_ref(self):
+        material = self.add_doc_at_data_path("ref_tests/wisa-multiwall/material.json")
+        product = self.add_doc_at_data_path("fileset_with_ref.json")
+        expanded = product.expanded()
+        doc = expanded.get_doc()
 
 
 

@@ -1,7 +1,8 @@
 {
     "description": "", 
     "is_default": true, 
-    "name": "Standard Cafe", 
+    "name": "Standard Cafe",
+    "changes": "changes",
     "options": {
         "finish": {
             "description": "Choose a finish", 

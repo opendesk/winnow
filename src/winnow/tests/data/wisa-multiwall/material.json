@@ -8,6 +8,7 @@
     "image_uri": {"asset": "http://something.com/khgfdkyg.png"},
     "manufacturer_name": "UPM Plywood",
     "version": [0,0,1],
+    "changes": "changes",
     "upstream": "/materials/opendesk/sheets/wood/composite/plywood",
     "manufacturer_url": "http://www.wisaplywood.com/Products/product-catalogue/wisa-multiwall/Pages/default.aspx",
     "description_long": "WISA-Multiwall is a high quality and elastic lining panel for end uses where a good looking surface material with high resistance is needed. WISA-Multiwall has been developed for sidewalls of vehicles such as horse trailers and linings of vans but also shop fittings and interior linings. WISA-Multiwall is an ideal decorative material for the varied needs of the transport and construction industries.",

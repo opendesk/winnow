@@ -6,6 +6,7 @@
     "path": "/finishes/opendesk/premium-birch-ply",
     "description": "Nice Birch ply",
     "version": [0,0,1],
+    "changes": "changes",
     "options":{
         "material": {
             "type": "set::resource",

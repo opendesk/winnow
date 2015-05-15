@@ -1,0 +1,26 @@
+{
+    "category": "artwork/areas", 
+    "changes": "Initial version", 
+    "description": "Cafe Table Files\nFor Wisa Multiwall Laminate", 
+    "files": [
+        {
+            "asset": "files/LEN_CFT_STD_M02_areas_216px.png"
+        }, 
+        {
+            "asset": "files/LEN_CFT_STD_M02_areas_750px.png"
+        }
+    ], 
+    "name": "wisa-multiwall-artwork-areas", 
+    "options": {
+        "*/material": "$ref:/materials/opendesk/sheets/wood/composite/plywood/laminated/pre-laminated/wisa-multiwall"
+    }, 
+    "path": "/ranges/lean/cafe/standard/wisa-multiwall-artwork-areas", 
+    "schema": "https://opendesk.cc/schemata/fileset.json", 
+    "source": "https://github.com/opendesk/collection", 
+    "type": "fileset", 
+    "version": [
+        0, 
+        0, 
+        5
+    ]
+}

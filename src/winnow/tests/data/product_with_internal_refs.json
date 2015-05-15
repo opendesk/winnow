@@ -10,6 +10,7 @@
     "upstream": "/ranges/lean/cafe-table/parent",
     "is_default": true,
     "is_public": true,
+    "changes": "changes",
     "options":{
         "material": {
             "type": "set::resource",
