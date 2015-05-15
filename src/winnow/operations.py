@@ -281,7 +281,6 @@ def validate(doc):
 
 
 def _set_doc(target, doc):
-    print utils.json_dumps(doc)
     validate(doc)
     target.set_doc(doc)
     target.set_doc_hash(utils.get_doc_hash(utils.json_dumps(doc)))
