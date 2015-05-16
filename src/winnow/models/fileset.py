@@ -18,13 +18,13 @@ class WinnowFileset(WinnowVersion):
 
         product_path = "/".join(path_elements[:-1])
         product = WinnowProduct.get_from_path(db, product_path)
+        product_doc = product.get_doc()
 
         if product is None:
             raise OptionsExceptionReferenceError("Reference Error: couldn't find %s" % product_path)
 
-        expanded_version = product.expanded()
-        kwargs = {"product_version_hash": expanded_version.get_doc_hash()}
-
+        version = product_doc["version"]
+        kwargs = {"product_version": "%s@%s.%s.%s" % (product_doc["path"], version[0], version[1], version[2])}
         fileset = WinnowFileset.add_doc(db, fileset_json, kwargs=kwargs)
 
         if not product.allows(fileset):

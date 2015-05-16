@@ -12,8 +12,7 @@
                 "value":{
                     "default": "number"
                 }
-            },
-            "required": ["default"]
+            }
         },
         {"oneOf": [
                 {

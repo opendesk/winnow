@@ -11,13 +11,6 @@ class WinnowQuantifiedConfiguration(WinnowVersion):
         doc[u"schema"] = "https://opendesk.cc/schemata/options.json"
         return WinnowQuantifiedConfiguration.merged(db, doc, {}, self, choice_document)
 
-    def get_product(self, db):
-        from winnow.models.product import WinnowProduct
-        history = self.kwargs["history"]
-        first = history[0]
-        if first.get("action") != u"START":
-            raise Exception("the history shoud have a start")
-        return WinnowProduct.get_from_id(db, first["input_id"])
 
     def get_filesets(self, db):
 

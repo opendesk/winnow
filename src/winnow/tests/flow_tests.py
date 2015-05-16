@@ -1,229 +1,120 @@
 import os
-import unittest
 import json
-import time
-from decimal import Decimal
-from db import MockKVStore
-import winnow.utils as utils
-from winnow.exceptions import OptionsExceptionReferenceError
-import winnow.pipeline.flow as flow
+import unittest
+from winnow.tests.db import MockKVStore
+from winnow.pipeline import flow
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 
+COLLECTION_PATH = "/Users/paul/Dropbox/paulharter/OpenDesk/collection"
 
-DEFAULT_QUANTITY = {
-    "schema": "https://opendesk.cc/schemata/options.json",
-    "type": "context",
-    "name": "Default Quantity",
-    "options":{
-        "quantity": {
-            "type": "numeric::step",
-            "name": "Quantity",
-            "max": 10000,
-            "min": 1,
-            "start": 1,
-            "step": 1
+class TestExpandReferences(unittest.TestCase):
+
+    def add_doc_at_data_path(self, path):
+
+        with open(os.path.join(DATA_DIR, path), "r") as f:
+            as_dict = json.loads(f.read())
+
+        doc = flow.publish(self.db, as_dict)
+
+        return doc
+
+    def add_all_files_below(self, collection_directory):
+
+        files = []
+
+        def add_files(arg, dir_name, names):
+            for file_name in names:
+                file_path = os.path.join(dir_name, file_name)
+                if os.path.isfile(file_path):
+                    if file_name.endswith(".json"):
+                        files.append(self.add_doc_at_data_path(file_path))
+
+        os.path.walk(collection_directory, add_files, None)
+
+        return files
+
+
+    def setUp(self):
+        self.db = MockKVStore()
+        self.all_files = self.add_all_files_below(COLLECTION_PATH)
+
+
+    def test_get_product_options(self):
+
+        session_id = u"12345"
+        product_path = u"/ranges/lean/desk/long-wide"
+        product_options = flow.get_default_product_options(self.db, product_path, session_id)
+
+
+    def test_get_quantified_configuration(self):
+
+        product_path = u"/ranges/lean/desk/long-wide"
+
+        choices = {
+            u"configuration": u"profiled-tops",
+            u"material-choices": u"birch-ply",
+            u"quantity": 1
         }
-    }
-}
+
+        quantified_configuration = flow.get_quantified_configuration(self.db, product_path, choices)
 
 
-def get_timestamp():
-    return unicode(time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime()))
-
-
-def dict_at_data_path(path):
-    with open(os.path.join(DATA_DIR, path), "r") as f:
-        return utils.json_loads(f.read())
-
-
-class TestPublishingResources(unittest.TestCase):
-
-    def setUp(self):
-        self.maxDiff = None
-        self.db = MockKVStore()
-
-
-    def _publish(self, path):
-        as_dict = dict_at_data_path(path)
-        flow.publish(self.db, as_dict)
-
-
-    def test_publish_product_sieve(self):
-        fine_sanding_process = self._publish("processes/fine-sanding/process.json")
-        oiling_process = self._publish("processes/oiling/process.json")
-        birch_ply_material = self._publish("birch-ply/material.json")
-        wisa_material = self._publish("wisa-multiwall/material.json")
-        premium_birch_ply = self._publish("finishes/premium-birch-ply/finish.json")
-        premium_wisa = self._publish("finishes/premium-wisa/finish.json")
-
-
-class TestPublishingProduct(unittest.TestCase):
-
-    def setUp(self):
-        self.maxDiff = None
-        self.db = MockKVStore()
-
-
-    def test_publish_product_fail_upstream(self):
-        as_dict = dict_at_data_path("product_with_thickness.json")
-        self.assertRaises(OptionsExceptionReferenceError, flow.publish, self.db, as_dict)
-
-
-    def test_publish_product(self):
-        as_dict = dict_at_data_path("product_with_thickness_parent.json")
-        flow.publish(self.db, as_dict)
-
-        as_dict = dict_at_data_path("product_with_thickness.json")
-        product = flow.publish(self.db, as_dict)
-
-
-    def test_publish_product_expanded(self):
-
-        as_dict = dict_at_data_path("product_with_thickness_parent.json")
-        flow.publish(self.db, as_dict)
-
-        as_dict = dict_at_data_path("product_with_thickness.json")
-        product = flow.publish(self.db, as_dict)
-
-        expanded = product.expanded()
-
-        print expanded
-
-class TestPublishingFileset(unittest.TestCase):
-
-    def setUp(self):
-        self.maxDiff = None
-        self.db = MockKVStore()
-
-    def test_publish_fileset(self):
-        as_dict = dict_at_data_path("product_with_components.json")
-        product = flow.publish(self.db, as_dict)
-        as_dict = dict_at_data_path("fileset.json")
-        fileset = flow.publish(self.db, as_dict)
-        self.assertEqual(fileset.kwargs["product_version_hash"], product.kwargs["doc_hash"])
-
-class TestMakeQuantifiedConfiguration(unittest.TestCase):
-
-
-    def setUp(self):
-        self.maxDiff = None
-        self.db = MockKVStore()
-
-    def _publish(self, path):
-
-        as_dict = dict_at_data_path(path)
-        return flow.publish(self.db, as_dict)
-
-
-    def test_make_quantified_configuration(self):
-
-        as_dict = dict_at_data_path("product_with_thickness_parent.json")
-        flow.publish(self.db, as_dict)
-
-        context = self._publish("uk_context.json")
-        quantity = self._publish("default_quantity.json")
-        as_dict = dict_at_data_path("product_with_thickness.json")
-        product = flow.publish(self.db, as_dict)
-        quantified_configuration = flow.get_default_quantified_configuration(self.db, product, ["/contexts/uk/production", "/contexts/default_quantity"])
-
-        print quantified_configuration
-
-
-    def test_update_quantified_configuration(self):
-
-        as_dict = dict_at_data_path("product_with_thickness_parent.json")
-        flow.publish(self.db, as_dict)
-
-        context = self._publish("uk_context.json")
-        quantity = self._publish("default_quantity.json")
-
-        as_dict = dict_at_data_path("product_with_thickness.json")
-        product = flow.publish(self.db, as_dict)
-        quantified_configuration = flow.get_default_quantified_configuration(self.db, product, ["/contexts/uk/production", "/contexts/default_quantity"])
-
-        choice = self._publish("choice.json")
-        updated_quantified_configuration = flow.get_updated_quantified_configuration(self.db, quantified_configuration, choice)
 
     def test_get_filesets(self):
 
-        as_dict = dict_at_data_path("product_with_thickness_parent.json")
-        flow.publish(self.db, as_dict)
+        product_path = u"/ranges/lean/desk/long-wide"
 
-        self._publish("uk_context.json")
-        self._publish("default_quantity.json")
+        choices = {
+            u"configuration": u"profiled-tops",
+            u"material-choices": u"birch-ply",
+            u"quantity": 1
+        }
 
-        as_dict = dict_at_data_path("product_with_thickness.json")
-        product = flow.publish(self.db, as_dict)
+        quantified_configuration = flow.get_quantified_configuration(self.db, product_path, choices)
+        filesets = flow.get_filesets_for_quantified_configuration(self.db, quantified_configuration)
+        fileset = filesets[0]["fileset"]
+        files = fileset.get_doc()["files"]
 
-        self._publish("fileset.json")
-        self._publish("fileset2.json")
-        self._publish("fileset3.json")
+        found_files = [f["asset"].split("/")[-1] for f in files]
 
-        quantified_configuration = flow.get_default_quantified_configuration(self.db, product, ["/contexts/uk/production", "/contexts/default_quantity"])
+        expected_files = [
+            "LEN_DSK_LGW_C-PT_A-SA_M-AP_cad-1_18.00~0.0.dxf",
+            "LEN_DSK_LGW_C-PT_A-SA_M-AP_cad-2_18.00~0.0.dxf",
+            "LEN_DSK_LGW_C-PT_A-SA_M-AP_cad-3_18.00~0.0.dxf",
+            "LEN_DSK_LGW_C-PT_A-SA_M-AP_cad-4_18.00~0.0.dxf"
+        ]
 
-        choice = self._publish("choice.json")
-        updated_quantified_configuration = flow.get_updated_quantified_configuration(self.db, quantified_configuration, choice)
-
-        filesets = flow.get_filesets_for_quantified_configuration(self.db, updated_quantified_configuration)
-
-        self.assertTrue(len(filesets) == 2)
-        self.assertTrue(filesets[0][u"matched"] == set([u'material', u'sheet']))
-        self.assertTrue(filesets[1][u"matched"] == set([u'sheet']))
-        self.assertEqual(filesets[0][u"fileset"].kwargs[u"doc"][u"files"], [{u'asset': u'files/test_3.txt'}, {u'asset': u'files/test_4.txt'}])
-        self.assertEqual(filesets[1][u"fileset"].kwargs[u"doc"][u"files"], [{u'asset': u'files/test_5.txt'}, {u'asset': u'files/test_6.txt'}])
+        self.assertEqual(found_files, expected_files)
 
 
+    def test_get_other_filesets(self):
 
+        product_path = u"/ranges/lean/desk/mid-long-wide"
 
-    def test_get_manufacturing_spec(self):
+        choices = {
+            u"configuration": u"straight-tops",
+            u"material-choices": {
+                u"type": u"set::string",
+                u"values": u"standard-laminate"
+            },
+            u"quantity": 2
+        }
 
+        quantified_configuration = flow.get_quantified_configuration(self.db, product_path, choices)
+        filesets = flow.get_filesets_for_quantified_configuration(self.db, quantified_configuration)
+        fileset = filesets[0]["fileset"]
+        files = fileset.get_doc()["files"]
 
-        self._publish("uk_context.json")
-        self._publish("default_quantity.json")
+        found_files = [f["asset"].split("/")[-1] for f in files]
 
-        as_dict = dict_at_data_path("product_with_finishes.json")
-        product = flow.publish(self.db, as_dict)
+        expected_files = [
+            "LEN_DSK_MLW_C-ST_A-SA_M-AP_cad-1_18.00~0.0.dxf",
+            "LEN_DSK_MLW_C-ST_A-SA_M-AP_cad-2_18.00~0.0.dxf",
+            "LEN_DSK_MLW_C-ST_A-SA_M-AP_cad-3_18.00~0.0.dxf",
+            "LEN_DSK_MLW_C-ST_A-SA_M-AP_cad-4_18.00~0.0.dxf"
+        ]
 
-        self._publish("fileset.json")
-        self._publish("fileset_with_materials.json")
-        self._publish("fileset3.json")
-
-        quantified_configuration = flow.get_default_quantified_configuration(self.db, product, ["/contexts/default_quantity"])
-
-        choice = self._publish("choice_2.json")
-        updated_quantified_configuration = flow.get_updated_quantified_configuration(self.db, quantified_configuration, choice)
-
-        filesets = flow.get_filesets_for_quantified_configuration(self.db, updated_quantified_configuration)
-
-        self.assertEqual(len(filesets), 3)
-        self.assertEqual(filesets[0][u"matched"], set([u'finish/material']))
-        self.assertTrue(filesets[1][u"matched"] == set([u'sheet']))
-        self.assertEqual(filesets[0][u"fileset"].kwargs[u"doc"][u"files"], [{u'asset': u'files/test_3.txt'}, {u'asset': u'files/test_4.txt'}])
-        self.assertEqual(filesets[1][u"fileset"].kwargs[u"doc"][u"files"], [{u'asset': u'files/test_5.txt'}, {u'asset': u'files/test_6.txt'}])
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        self.assertEqual(found_files, expected_files)
 
 

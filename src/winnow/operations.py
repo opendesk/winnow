@@ -39,13 +39,14 @@ def merge(source_a, source_b, target, doc):
                               input=source_b,
                               output_type=doc.get("type"))
 
-
 def merge(source_a, source_b, target, doc):
     doc_b = source_b.get_doc()
     options_a = OptionsSet(source_a.get_options_dict())
     options_b = OptionsSet(source_b.get_options_dict())
     new_doc = deepcopy(doc)
+
     new_doc[OPTIONS_KEY] = options_a.merge(options_b).store
+
     target.clone_history_from(source_a)
     _add_start_if_needed(source_a, target)
     _set_doc(target, new_doc)
@@ -249,7 +250,6 @@ def _add_start_if_needed(source, target):
         target.add_history_action(action=HISTORY_ACTION_START,
                               input=source,
                               output_type=doc.get("type"))
-
 
 def asset_paths(doc):
     path = doc.get("path")

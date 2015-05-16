@@ -1,7 +1,9 @@
 import collections
 from copy import deepcopy
+from winnow.utils import json_dumps
 
-from winnow.values import value_factory
+from winnow.values import value_factory, value_path_factory
+from winnow.keys.key_matching import KeyMatcher
 from winnow.exceptions import OptionsExceptionEmptyOptionValues
 
 """
@@ -22,7 +24,7 @@ class OptionsSet(collections.MutableMapping):
         really its just a wrapped around an existing dict
         """
         self.store = d
-
+        self.matcher = KeyMatcher.from_dict(d)
 
     def __getitem__(self, key):
         return self.store[key]
@@ -39,42 +41,34 @@ class OptionsSet(collections.MutableMapping):
     def __len__(self):
         return len(self.store)
 
+    def mega_store(self, other):
+        expanded = deepcopy(self.store)
+        for k in self.store.keys():
+            if "*" in k:
+                matching = other.matcher.get_matching_paths(k)
+                for match in matching:
+                    expanded[match] = self.store[k]
+        mega_store = {}
 
-    def _merge_values(self, other, key):
-        self_values = self.store.get(key)
-        other_values = other.store.get(key)
-        if self_values is None:
-            return other_values
-        elif other_values is None:
-            return self_values
-        else:
-            this = value_factory(self_values)
-            that = value_factory(other_values)
-            intersection = this.intersection(that)
-            if intersection == None:
-                raise OptionsExceptionEmptyOptionValues("The key %s has no possible values when %s is merged with %s" % (key, this, that))
+        for k, v in expanded.iteritems():
+            new_key, real_value = value_path_factory(k, v)
+            if not new_key in mega_store.keys():
+                mega_store[new_key] = []
+            mega_store[new_key].append(real_value)
 
-
-
-
-            return intersection.as_json()
+        return mega_store
 
 
-    def _patch_values(self, other, key):
-        self_values = self.store.get(key)
-        other_values = other.store.get(key)
-        if self_values is None:
-            return other_values
-        else:
-            return self_values
+    def _merge_value_array(self, key, values):
+        if len(values) == 1:
+            return values[0]
+        result = values[0]
+        for v in values[1:]:
+            result = result.intersection(v)
+            if result == None:
+                raise OptionsExceptionEmptyOptionValues("The key %s has no possible values when %s is merged with %s" % (key, result, v))
+        return result
 
-
-    def patch(self, other):
-        """
-        A union of all keys
-        Self values overwrite others
-        """
-        return self._combine(other, self._patch_values)
 
 
     def merge(self, other):
@@ -82,39 +76,18 @@ class OptionsSet(collections.MutableMapping):
         A union of all keys
         An intersection of values
         """
-        return self._combine(other, self._merge_values)
 
-
-    def _combine(self, other, combine_func):
-        """
-        Merge or patch and return a new OptionsSet
-
-        """
         options = {}
-        for key in self.key_set.union(other.key_set):
-            options[key] = combine_func(other, key)
+        this_mega_store = self.mega_store(other)
+        that_mega_store = other.mega_store(self)
+        this_keys = set(this_mega_store.keys())
+        that_keys = set(that_mega_store.keys())
+
+        for key in this_keys.union(that_keys):
+            all_values = this_mega_store.get(key, []) + that_mega_store.get(key, [])
+            options[key] = self._merge_value_array(key, all_values).as_json()
+
         return OptionsSet(options)
-
-
-    def intersects(self, other):
-        """
-        An intersection of keys
-        An intersection check on values
-        """
-
-        this_keys = self.key_set
-        that_keys = other.key_set
-
-        if this_keys is not None and that_keys is not None:
-            all_keys = this_keys.intersection(that_keys)
-            if all_keys is not None:
-                for key in this_keys.intersection(that_keys):
-                    this = value_factory(self.store.get(key))
-                    that = value_factory(other.store.get(key))
-                    if that.isdisjoint(this):
-                        return False
-
-        return True
 
 
     def allows(self, other):
@@ -123,14 +96,17 @@ class OptionsSet(collections.MutableMapping):
         A subset check on values
         """
 
-        this_keys = self.key_set
-        that_keys = other.key_set
+        this_mega_store = self.mega_store(other)
+        that_mega_store = other.mega_store(self)
+        this_keys = set(this_mega_store.keys())
+        that_keys = set(that_mega_store.keys())
+
         if this_keys is not None and that_keys is not None:
             all_keys = this_keys.intersection(that_keys)
             if all_keys is not None:
-                for key in this_keys.intersection(that_keys):
-                    this = value_factory(self.store.get(key))
-                    that = value_factory(other.store.get(key))
+                for key in all_keys:
+                    this = self._merge_value_array(key, this_mega_store[key])
+                    that = self._merge_value_array(key, that_mega_store[key])
                     if not that.issubset(this):
                         return False
         return True
@@ -151,26 +127,12 @@ class OptionsSet(collections.MutableMapping):
         return OptionsSet(options)
 
 
-    def extract(self, key_names):
-        """
-        extracts a subset of options by key
-        """
-        options = {}
-        for key in self.key_set:
-            if key in key_names:
-                options[key] = deepcopy(self.store[key])
-        return OptionsSet(options)
-
-
     def match(self, others):
         return [other for other in others if self.allows(other)]
 
-    def match_intersects(self, others):
-        return [other for other in others if self.intersects(other)]
 
     def reverse_match(self, others):
         return [other for other in others if other.allows(self)]
-
 
     @property
     def key_set(self):

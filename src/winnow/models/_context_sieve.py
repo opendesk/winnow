@@ -30,7 +30,6 @@ class ContextSieve(PublishedSieve):
     @classmethod
     def publish(self, db, context_json):
         context = ContextSieve.from_doc(context_json)
-        print context.get_canonical_uri()
         context.save(db, index=context.get_canonical_uri())
 
     def get_canonical_uri(self):

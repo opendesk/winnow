@@ -46,6 +46,7 @@ class TestOptionNullCreation(unittest.TestCase):
         d = option.as_json()
         self.assertTrue(isinstance(option, OptionNullWinnowValue))
         self.assertEqual(option.type, VALUE_TYPE_SET_NULL)
+        print d
         self.assertTrue(d is None)
 
     def test_logic(self):
@@ -74,28 +75,7 @@ class TestOptionNullCreation(unittest.TestCase):
 
         intersection = string_option.intersection(null_option)
 
-        expected = [
-            {
-                "options": {
-                    "eat": [
-                        "fish",
-                        "chips"
-                    ]
-                },
-                "type": "string",
-                "value": "green"
-            },
-            {
-                "options": {
-                    "eat": [
-                        "fish",
-                        "chips"
-                    ]
-                },
-                "type": "string",
-                "value": "red"
-            }
-        ]
+        expected = [{'type': u'string', 'value': u'green'}, {'type': u'string', 'value': u'red'}]
 
         self.assertEqual(expected, intersection.as_json())
         self.assertTrue(string_option.isdisjoint(null_option) is False)

@@ -105,6 +105,7 @@ class OptionWinnowValue(BaseWinnowValue):
         if self.name is None and self.scopes is None and self.description is None and self.image_url is None:
             return values
 
+
         ## otherwise wrap it in a dict
         value =  {
             u"type": self.type,
@@ -125,7 +126,7 @@ class OptionStringWinnowValue(OptionWinnowValue):
 
 
     def __str__(self):
-        return str(self.values_lookup.keys())
+        return str(self.as_json())
 
 
     def _set_value_list(self, value_list):
@@ -205,9 +206,7 @@ class OptionStringWinnowValue(OptionWinnowValue):
                 else:
                     raise Exception("This shouldn't ever happen")
 
-                if this_options is None:
-                    new_value[u"options"] = other_options
-                else:
+                if this_options is not None:
                     new_value[u"options"] = OptionsSet(this_options).merge(OptionsSet(other_options)).store
 
                 values.append(new_value)
@@ -277,7 +276,6 @@ class OptionNullWinnowValue(OptionStringWinnowValue):
         super(OptionWinnowValue, self).__init__(value)
         self.values = value
 
-
     type = VALUE_TYPE_SET_NULL
 
     def intersection(self, other):
@@ -333,20 +331,25 @@ class OptionNullWinnowValue(OptionStringWinnowValue):
 
     def as_json(self):
 
-        values = None
+        options = self._get_options()
 
-        ## return the value without metadata is there is none
-        if self.name is None and self.scopes is None and self.description is None and self.image_url is None:
-            return values
+        if options is None:
+            return None
+
+        # values = None
+        #
+        # ## return the value without metadata is there is none
+        # if self.name is None and self.scopes is None and self.description is None and self.image_url is None:
+        #     return values
 
         ## otherwise wrap it in a dict
         value =  {
             u"type": self.type,
-            VALUES_KEY_NAME: values,
+            u"options": options,
         }
 
 
-        return self.update_with_info(value)
+        return value
 
 
 class OptionResourceWinnowValue(OptionStringWinnowValue):

@@ -11,3 +11,5 @@ class OptionsExceptionEmptyOptionValues(OptionsExceptionBase):pass
 class OptionsExceptionMissingInterfaceMethod(OptionsExceptionBase):pass
 
 class OptionsExceptionReferenceError(OptionsExceptionBase):pass
+
+class OptionsExceptionKeyError(OptionsExceptionBase):pass

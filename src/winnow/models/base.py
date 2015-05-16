@@ -60,14 +60,6 @@ class WinnowVersion(OptionsInterface):
         db.set(wv.kwargs[u"uuid"], wv.kwargs)
         return wv
 
-
-    @classmethod
-    def patched(cls, db, doc, kwargs, source_a, source_b):
-        wv = cls(db, kwargs)
-        winnow.patch(source_a, source_b, wv, doc)
-        db.set(wv.kwargs[u"uuid"], wv.kwargs)
-        return wv
-
     def quantified(self, kwargs={}):
         wv = self.__class__(self.db, kwargs)
         winnow.quantify(self, wv, self.get_doc())
@@ -88,9 +80,6 @@ class WinnowVersion(OptionsInterface):
 
     def allows(self, other):
         return winnow.allows(self, other)
-
-    def intersects(self, other):
-        return winnow.intersects(self, other)
 
     def filter_allows(self, possible):
         return winnow.filter_allows(self, possible)

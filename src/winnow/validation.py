@@ -12,7 +12,6 @@ def add_file(store, dir_name, names):
         if os.path.isfile(file_path):
             if file_path.endswith(".json"):
                 with open(file_path, "r") as f:
-                    print file_path
                     schema = json.loads(f.read())
                     jsonschema.Draft4Validator.check_schema(schema)
                     store[schema["id"]] = schema
