@@ -6,14 +6,18 @@ from winnow.pipeline import flow
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 
+# this has to be set
 COLLECTION_PATH = "/Users/paul/Dropbox/paulharter/OpenDesk/collection"
+
 
 class TestExpandReferences(unittest.TestCase):
 
     def add_doc_at_data_path(self, path):
 
-        with open(os.path.join(DATA_DIR, path), "r") as f:
+
+        with open(path, "r") as f:
             as_dict = json.loads(f.read())
+
 
         doc = flow.publish(self.db, as_dict)
 
@@ -37,6 +41,10 @@ class TestExpandReferences(unittest.TestCase):
 
     def setUp(self):
         self.db = MockKVStore()
+
+        if not os.path.exists(COLLECTION_PATH):
+            raise Exception("**** DID YOU SET COLLECTION_PATH ***")
+
         self.all_files = self.add_all_files_below(COLLECTION_PATH)
 
 
