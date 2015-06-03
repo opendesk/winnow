@@ -4,7 +4,7 @@ class OptionsExceptionFailedValidation(OptionsExceptionBase):pass
 
 class OptionsExceptionIncompatibleTypes(OptionsExceptionBase):pass
 
-class OptionsExceptionNoAllowed(OptionsExceptionBase):pass
+class OptionsExceptionNotAllowed(OptionsExceptionBase):pass
 
 class OptionsExceptionEmptyOptionValues(OptionsExceptionBase):pass
 
