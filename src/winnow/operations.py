@@ -76,7 +76,6 @@ def quantify(source, target, doc):
 
 def _trim_out_off_scope(node, scopes):
 
-
     if isinstance(node, dict):
         for key in node.keys():
             child = node[key]
