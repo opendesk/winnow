@@ -77,25 +77,40 @@ class TestExpandReferences(unittest.TestCase):
     def test_inline_and_scope(self):
         product = self.add_doc_at_data_path("product_with_finishes.json")
         expanded = product.expanded()
-        scoped = expanded.scoped("client")
+        scoped = expanded.scoped(["client"])
         doc = scoped.get_doc()
         self.assertEqual(len(doc["options"]["finish"]["values"]), 3)
         self.assertEqual(doc["options"]["finish"]["values"][0]["options"], {})
 
+    def test_inline_and_multiple_scope(self):
+        product = self.add_doc_at_data_path("product_with_finishes.json")
+        expanded = product.expanded()
+        scoped = expanded.scoped(["client", "maker"])
+        doc = scoped.get_doc()
+        self.assertEqual(len(doc["options"]["finish"]["values"]), 3)
+        self.assertNotEquals(doc["options"]["finish"]["values"][0]["options"], {})
+
     def test_quantified(self):
         product = self.add_doc_at_data_path("product_with_finishes.json")
         expanded = product.expanded()
-        scoped = expanded.scoped("client")
+        scoped = expanded.scoped(["client"])
         quantified = scoped.quantified()
         doc = quantified.get_doc()
         self.assertEqual(doc["options"]["finish"]["values"][0]["options"], {})
-
 
     def test_expand_from_object_ref(self):
         material = self.add_doc_at_data_path("ref_tests/wisa-multiwall/material.json")
         product = self.add_doc_at_data_path("fileset_with_ref.json")
         expanded = product.expanded()
         doc = expanded.get_doc()
+
+    def test_inline_and_scope_in_values(self):
+        product = self.add_doc_at_data_path("product_with_finishes.json")
+        expanded = product.expanded()
+        scoped = expanded.scoped(["client"])
+        doc = scoped.get_doc()
+        self.assertEqual(len(doc["options"]["size"]["values"]), 1)
+
 
 
 

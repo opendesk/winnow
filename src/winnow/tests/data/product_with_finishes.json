@@ -36,6 +36,7 @@
                     "type": "string",
                     "value": "small",
                     "name": "Small",
+                    "scopes": ["maker"],
                     "size": {
                         "width": 400,
                         "height": 550,

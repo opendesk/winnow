@@ -106,7 +106,7 @@ class TestKeyMatcher(unittest.TestCase):
         matcher.set("any/thing/else/paul", "test")
         self.assertEqual(matcher.get("*/paul"), "test")
 
-    def test_key_matcher_get_6(self):
+    def test_key_matcher_get_7(self):
         matcher = KeyMatcher()
         matcher.set("*/paul", "test")
         self.assertEqual(matcher.get("any/thing/else/paul"), "test")

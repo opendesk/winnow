@@ -20,11 +20,6 @@ def allows(source_a, source_b):
     return options_a.allows(options_b)
 
 
-def intersects(source_a, source_b):
-    options_a = OptionsSet(source_a.get_options_dict())
-    options_b = OptionsSet(source_b.get_options_dict())
-    return options_a.intersects(options_b)
-
 def merge(source_a, source_b, target, doc):
     doc_b = source_b.get_doc()
     options_a = OptionsSet(source_a.get_options_dict())
@@ -39,47 +34,16 @@ def merge(source_a, source_b, target, doc):
                               input=source_b,
                               output_type=doc.get("type"))
 
-def merge(source_a, source_b, target, doc):
-    doc_b = source_b.get_doc()
-    options_a = OptionsSet(source_a.get_options_dict())
-    options_b = OptionsSet(source_b.get_options_dict())
+
+def scope(source, scopes, target, doc):
     new_doc = deepcopy(doc)
-
-    new_doc[OPTIONS_KEY] = options_a.merge(options_b).store
-
-    target.clone_history_from(source_a)
-    _add_start_if_needed(source_a, target)
-    _set_doc(target, new_doc)
-
-    target.add_history_action(action=HISTORY_ACTION_MERGE,
-                              input=source_b,
-                              output_type=doc.get("type"))
-
-
-def patch(source_a, source_b, target, doc):
-    doc_b = source_b.get_doc()
-    options_a = OptionsSet(source_a.get_options_dict())
-    options_b = OptionsSet(source_b.get_options_dict())
-    new_doc = deepcopy(doc)
-    new_doc[OPTIONS_KEY] = options_a.patch(options_b).store
-    target.clone_history_from(source_a)
-    _add_start_if_needed(source_a, target)
-    _set_doc(target, new_doc)
-
-    target.add_history_action(action=HISTORY_ACTION_PATCH,
-                              input=source_b,
-                              output_type=doc.get("type"))
-
-
-def scope(source, scope, target, doc):
-    new_doc = deepcopy(doc)
-    _trim_out_off_scope(new_doc[OPTIONS_KEY], scope)
+    _trim_out_off_scope(new_doc[OPTIONS_KEY], set(scopes))
     target.clone_history_from(source)
     _add_start_if_needed(source, target)
     _set_doc(target, new_doc)
 
     target.add_history_action(action=HISTORY_ACTION_SCOPE,
-                              scope=scope,
+                              scope=scopes,
                               output_type=doc.get("type"))
 
 
@@ -109,21 +73,38 @@ def quantify(source, target, doc):
                               output_type=doc.get("type"))
 
 
-def _trim_out_off_scope(node, scope):
+
+def _trim_out_off_scope(node, scopes):
+
+
     if isinstance(node, dict):
         for key in node.keys():
             child = node[key]
             if isinstance(child, dict):
-                if "scopes" in child.keys() and not scope in child["scopes"]:
-                    del node[key]
+                if "scopes" in child.keys():
+                    child_scopes = set(child["scopes"])
+                    if scopes.isdisjoint(child_scopes):
+                        del node[key]
                 else:
-                    _trim_out_off_scope(child, scope)
+                    _trim_out_off_scope(child, scopes)
             if isinstance(child, list):
-                _trim_out_off_scope(child, scope)
+                _trim_out_off_scope(child, scopes)
+
+    # recursively trim inside lists
     if isinstance(node, list):
         for i, child in enumerate(node[:]):
-            if isinstance(child, dict) or isinstance(child, list):
-                _trim_out_off_scope(child, scope)
+            if isinstance(child, dict):
+                if "scopes" in child.keys():
+                    child_scopes = set(child["scopes"])
+                    if scopes.isdisjoint(child_scopes):
+                        node.remove(child)
+                else:
+                    _trim_out_off_scope(child, scopes)
+            if isinstance(child, list):
+                _trim_out_off_scope(child, scopes)
+
+
+
 
 def filter_allows(filter_source, possible):
     filter_options = OptionsSet(filter_source.get_options_dict())
@@ -251,13 +232,23 @@ def _add_start_if_needed(source, target):
                               input=source,
                               output_type=doc.get("type"))
 
-def asset_paths(doc):
+def asset_paths(doc, dl_base=None):
     path = doc.get("path")
     if path is None:
         return []
     found = []
     _walk_dict_for_assets(doc, found)
-    return found
+    paths = []
+    for asset_relpath in found:
+        base = doc.get("base") if doc.get("base") else dl_base
+        paths.append({
+            "source": doc["source"],
+            "base": base,
+            "path": os.path.normpath("%s/%s" % (doc.get(u"path"), asset_relpath)),
+            "relpath": asset_relpath
+        })
+    return paths
+
 
 
 def _walk_dict_for_assets(node, found):

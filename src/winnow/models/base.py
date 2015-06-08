@@ -66,9 +66,9 @@ class WinnowVersion(OptionsInterface):
         self.db.set(wv.kwargs[u"uuid"], wv.kwargs)
         return wv
 
-    def scoped(self, scope, kwargs={}):
+    def scoped(self, scopes, kwargs={}):
         wv = self.__class__(self.db, kwargs)
-        winnow.scope(self, scope, wv, self.get_doc())
+        winnow.scope(self, scopes, wv, self.get_doc())
         self.db.set(wv.kwargs[u"uuid"], wv.kwargs)
         return wv
 
