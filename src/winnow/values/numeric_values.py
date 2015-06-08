@@ -59,7 +59,7 @@ VALUE_TYPE_NUMERIC_STEP = "numeric::step"
 from copy import deepcopy
 from decimal import Decimal
 from base_values import BaseWinnowValue
-from winnow.exceptions import OptionsExceptionFailedValidation, OptionsExceptionIncompatibleTypes, OptionsExceptionNoAllowed
+from winnow.exceptions import OptionsExceptionFailedValidation, OptionsExceptionIncompatibleTypes, OptionsExceptionNotAllowed
 
 from winnow.constants import *
 
@@ -222,7 +222,7 @@ class NumericSetWinnowValue(NumericWinnowValue):
         if isinstance(value, list) or isinstance(value, set):
             as_list = value
             if len(as_list) > MAX_VALUE_SET_SIZE:
-                raise OptionsExceptionNoAllowed("maximum value set size exceeded")
+                raise OptionsExceptionNotAllowed("maximum value set size exceeded")
             elif len(as_list) == 0:
                 print "should be this"
                 return None
@@ -235,7 +235,7 @@ class NumericSetWinnowValue(NumericWinnowValue):
             if not (isinstance(as_list, list) or isinstance(as_list, set)):
                 raise OptionsExceptionFailedValidation("NumericNumberSieveValue must be a Decimal")
             if len(as_list) > MAX_VALUE_SET_SIZE:
-                raise OptionsExceptionNoAllowed("maximum value set size exceeded")
+                raise OptionsExceptionNotAllowed("maximum value set size exceeded")
             elif len(as_list) == 0:
                 return None
             elif len(as_list) == 1:
