@@ -231,7 +231,7 @@ def _add_start_if_needed(source, target):
                               input=source,
                               output_type=doc.get("type"))
 
-def asset_paths(doc, dl_base=None):
+def asset_props(doc, dl_base=None):
     path = doc.get("path")
     if path is None:
         return []
