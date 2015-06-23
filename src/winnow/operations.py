@@ -4,6 +4,7 @@ from decimal import Decimal
 import os
 
 from winnow.options import OptionsSet
+from winnow import inline
 from winnow import utils
 from winnow import validation
 from winnow.exceptions import OptionsExceptionFailedValidation, OptionsExceptionReferenceError
@@ -22,10 +23,28 @@ def allows(source_a, source_b):
 
 def merge(source_a, source_b, target, doc):
     doc_b = source_b.get_doc()
-    options_a = OptionsSet(source_a.get_options_dict())
-    options_b = OptionsSet(source_b.get_options_dict())
+
+    # get the options from bothe sources
+    options_a = deepcopy(source_a.get_options_dict())
+    options_b = deepcopy(source_b.get_options_dict())
+
+    # expand the options dicts collecting their replaced refs
+    ref_hashes = {}
+    inline.inline_refs(options_a, source_a, ref_hashes)
+    inline.inline_refs(options_b, source_a, ref_hashes)
+
+    # do the merge
+    options_a = OptionsSet(options_a)
+    options_b = OptionsSet(options_b)
+    merged_options = options_a.merge(options_b).store
+
+    # un merge unchanged refs by looking at the ref_hashes
+    inline.restore_unchanged_refs(merged_options, ref_hashes)
+
+    # put this merged options into a copy of the doc
     new_doc = deepcopy(doc)
-    new_doc[OPTIONS_KEY] = options_a.merge(options_b).store
+    new_doc[OPTIONS_KEY] = merged_options
+
     target.clone_history_from(source_a)
     _add_start_if_needed(source_a, target)
     _set_doc(target, new_doc)
@@ -103,8 +122,6 @@ def _trim_out_off_scope(node, scopes):
                 _trim_out_off_scope(child, scopes)
 
 
-
-
 def filter_allows(filter_source, possible):
     filter_options = OptionsSet(filter_source.get_options_dict())
     return [p for p in possible if filter_options.allows(OptionsSet(p.get_options_dict()))]
@@ -124,87 +141,11 @@ def expand(source, target):
     new_doc = deepcopy(source.get_doc())
     target.clone_history_from(source)
     ## inline references
-    _inline_refs(new_doc, source)
+    ref_hashes = {}
+    inline.inline_refs(new_doc, source, ref_hashes)
     _set_doc(target, new_doc)
+    return ref_hashes
 
-
-def _extract_internal_path(doc, path):
-    walker = doc
-    parts = [p for p in path.split("/") if p]
-    for part in parts:
-        if not isinstance(walker, dict):
-            raise OptionsExceptionReferenceError("internal_path reference couldn't find %s in %s" % (path, doc))
-        walker = walker.get(part)
-        if walker is None:
-            raise OptionsExceptionReferenceError("internal_path reference couldn't find %s in %s" % (path, doc))
-    return walker
-
-
-def _expanded_ref(reference, source, options):
-
-    if u"~" in reference:
-        ref, internal_path = reference.split(u"~")
-    else:
-        ref = reference
-        internal_path = None
-    if ref == "":
-        referenced_doc = source.get_doc()
-    else:
-        wv = source.lookup(ref)
-        if wv is None:
-            raise OptionsExceptionReferenceError("Winnow Reference Error: Cannot find reference %s in %s" % (ref, source.get_doc()[u"path"]))
-        doc = wv.get_doc()
-        referenced_doc = deepcopy(doc)
-
-    if referenced_doc is None:
-        return None
-    else:
-        if options is not None:
-            # if the ref also has some options then pre merge them into the reference
-            referenced_options = referenced_doc.get(u"options")
-            if referenced_options is None:
-                referenced_doc[u"options"] = options
-            else:
-                options_a = OptionsSet(referenced_options)
-                options_b = OptionsSet(options)
-                referenced_doc[u"options"] = options_a.merge(options_b).store
-
-        # now if there is an internal_path try to pull this out
-        new_doc = _extract_internal_path(referenced_doc, internal_path) if internal_path else referenced_doc
-        _inline_refs(new_doc, source)
-        return new_doc
-
-
-def _inline_refs(node, source):
-
-    # walks list and dicts looking for refs
-    # will may break due to inplace editing during iteration of dict
-    #
-
-    if isinstance(node, dict):
-        for key, child in node.iteritems():
-            if isinstance(child, dict):
-                if u"$ref" in child.keys():
-                    node[key] = _expanded_ref(child[u"$ref"], source, child.get(u"options"))
-                else:
-                    _inline_refs(child, source)
-            if isinstance(child, unicode):
-                if child.startswith(u"$ref:"):
-                    node[key] = _expanded_ref(child[len(u"$ref:"):], source, None)
-            if isinstance(child, list):
-                _inline_refs(child, source)
-    if isinstance(node, list):
-        for i, child in enumerate(node[:]):
-            if isinstance(child, dict):
-                if u"$ref" in child.keys():
-                    node[i] = _expanded_ref(child[u"$ref"], source, child.get(u"options"))
-                else:
-                    _inline_refs(child, source)
-            if isinstance(child, unicode):
-                if child.startswith(u"$ref:"):
-                    node[i] = _expanded_ref(child[len(u"$ref:"):], source, None)
-            if isinstance(child, list):
-                _inline_refs(child, source)
 
 
 def _patch_upstream(source, target, options_set):
@@ -236,6 +177,7 @@ def _add_start_if_needed(source, target):
                               input=source,
                               output_type=doc.get("type"))
 
+
 def asset_props(doc, dl_base=None):
     path = doc.get("path")
     if path is None:
@@ -252,7 +194,6 @@ def asset_props(doc, dl_base=None):
             "relpath": asset_relpath
         })
     return paths
-
 
 
 def _walk_dict_for_assets(node, found):

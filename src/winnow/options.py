@@ -1,10 +1,11 @@
 import collections
 from copy import deepcopy
-from winnow.utils import json_dumps
+
+from winnow import utils
 
 from winnow.values import value_factory, value_path_factory
 from winnow.keys.key_matching import KeyMatcher
-from winnow.exceptions import OptionsExceptionEmptyOptionValues
+from winnow.exceptions import OptionsExceptionEmptyOptionValues, OptionsExceptionReferenceError
 
 """
 
@@ -70,7 +71,6 @@ class OptionsSet(collections.MutableMapping):
         return result
 
 
-
     def merge(self, other):
         """
         A union of all keys
@@ -82,6 +82,8 @@ class OptionsSet(collections.MutableMapping):
         that_mega_store = other.mega_store(self)
         this_keys = set(this_mega_store.keys())
         that_keys = set(that_mega_store.keys())
+
+
 
         for key in this_keys.union(that_keys):
             all_values = this_mega_store.get(key, []) + that_mega_store.get(key, [])
@@ -137,5 +139,6 @@ class OptionsSet(collections.MutableMapping):
     @property
     def key_set(self):
         return set(self.store.keys())
+
 
 

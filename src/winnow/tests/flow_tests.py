@@ -7,7 +7,7 @@ from winnow.pipeline import flow
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 
 # this has to be set
-COLLECTION_PATH = "/Users/paul/Dropbox/paulharter/OpenDesk/collection"
+COLLECTION_PATH = "/Users/paul/Dropbox/paulharter/OpenDesk/opendesk-collection"
 
 
 class TestExpandReferences(unittest.TestCase):
