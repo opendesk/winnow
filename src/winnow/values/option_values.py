@@ -140,8 +140,30 @@ class OptionStringWinnowValue(OptionWinnowValue):
             self.validate_single_value(single_value)
             self.values_lookup[single_value] = v
 
+
     def get_default(self):
-        return self.values_lookup.keys()[0]
+        return self._default if self._default is not None else self.values_lookup.keys()[0]
+
+    @property
+    def default(self):
+        from winnow.options import OptionsSet
+
+        default_string = self._default if self._default is not None else self.values_lookup.keys()[0]
+        default_value = self.values_lookup[default_string]
+        new_value = deepcopy(default_value)
+        value_options = new_value.get(u"options")
+
+        if value_options is None or value_options == {}:
+            return default_string
+        else:
+            new_value[u"options"] = OptionsSet(value_options).default().store
+
+        info = self.get_merged_info(self)
+        info[u"type"] = self.type,
+        info[VALUES_KEY_NAME] = [new_value]
+
+        return self.__class__(info).as_json()
+
 
     def isdisjoint(self, other):
         if isinstance(other, OptionNullWinnowValue):

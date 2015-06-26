@@ -83,8 +83,6 @@ class OptionsSet(collections.MutableMapping):
         this_keys = set(this_mega_store.keys())
         that_keys = set(that_mega_store.keys())
 
-
-
         for key in this_keys.union(that_keys):
             all_values = this_mega_store.get(key, []) + that_mega_store.get(key, [])
             options[key] = self._merge_value_array(key, all_values).as_json()
@@ -114,19 +112,26 @@ class OptionsSet(collections.MutableMapping):
         return True
 
 
-    def scope(self, scope_name):
-        """
-        extracts a subset of options by scope
-        """
+    def default(self):
         options = {}
         for k, v in self.store.iteritems():
-            if isinstance(v, dict) and u"scopes" in v.keys():
-                scopes = set(v[u"scopes"])
-                if not scopes.isdisjoint(set([scope_name])):
-                    options[k] = deepcopy(v)
-            else:
-                options[k] = deepcopy(v)
+            options[k] = value_factory(v).default
         return OptionsSet(options)
+
+    #
+    # def scope(self, scope_name):
+    #     """
+    #     extracts a subset of options by scope
+    #     """
+    #     options = {}
+    #     for k, v in self.store.iteritems():
+    #         if isinstance(v, dict) and u"scopes" in v.keys():
+    #             scopes = set(v[u"scopes"])
+    #             if not scopes.isdisjoint(set([scope_name])):
+    #                 options[k] = deepcopy(v)
+    #         else:
+    #             options[k] = deepcopy(v)
+    #     return OptionsSet(options)
 
 
     def match(self, others):

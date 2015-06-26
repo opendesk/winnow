@@ -66,6 +66,28 @@ def scope(source, scopes, target, doc):
                               output_type=doc.get("type"))
 
 
+def default_choices(source, scopes):
+
+    #take a copy of the options
+    options_dict = deepcopy(source.get_options_dict())
+
+    #expand it
+    ref_hashes = {}
+    inline.inline_refs(options_dict, source, ref_hashes)
+
+    #scope it
+    _trim_out_off_scope(options_dict, set(scopes))
+
+    # wrap it in an options set
+    options_set = OptionsSet(options_dict)
+
+    #get default options set
+    default = options_set.default()
+
+    return default.store
+
+
+
 def quantify(source, target, doc):
 
     quantity_options = {
