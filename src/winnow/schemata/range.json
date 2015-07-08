@@ -21,6 +21,9 @@
                 "version": {},
                 "shortcode": {},
                 "royalty_percentage": {},
+                "external_links": {
+                    "type": "array"
+                },
                 "type": {
                     "type": "string",
                     "pattern": "range"
