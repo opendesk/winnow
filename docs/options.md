@@ -22,7 +22,6 @@ There are currently three main types of value for options set, numeric and boole
 Currently there are seven types and sub-types of value you can use:
 
 + **set::string**
-+ **set::resource**
 + **numeric::number**
 + **numeric::set**
 + **numeric::range**
@@ -189,39 +188,6 @@ set::string can also contain nested options sets. The parent of a nested option 
     ]
 }
 ```
-
-### set::resource
-
-Sets for resources are much like sets of strings except their "value" is always the path of another winnow document.
-
-+ **type** - The type of value, One of the six types below  *(required)*
-+ **name** - A display name  *(optional)*
-+ **scopes** - A list of scopes that limit the visibility of this value in the winnow pipeline *(optional)*
-+ **description** - A short description  *(optional)*
-+ **image_uri** - A reference to an image used to represent this range. Given as an object with a single key "asset" and a value giving a path relative to the location of this document. *(optional)*
-+ **values** - A list of string values objects  *(required)*
-+ **default** - The value in the default value object  *(optional)*
-
-
-A set::resource is always written like this and doesn't have a shorthand version:
-
-```json
-{
-    "material": {
-        "type": "set::resource",
-        "name": "Material",
-        "description": "Choose one of the materials",
-        "values": [
-            "/materials/opendesk/sheets/wood/composite/plywood",
-            "/materials/opendesk/sheets/wood/composite/plywood/pre-laminated-plywood/wisa-multiwall"
-        ]
-    }
-}
-```
-
-Only ```type``` and ```values``` are required.
-
-You can ask winnow to inline the referenced resources if you want to and the resource documents will be written inline in place of their links. This works because all winnow documents with ```path``` attributes are themselves value types.
 
 ## numeric values
 
