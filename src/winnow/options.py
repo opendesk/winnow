@@ -1,10 +1,11 @@
 import collections
 from copy import deepcopy
-from winnow.utils import json_dumps
+
+from winnow import utils
 
 from winnow.values import value_factory, value_path_factory
 from winnow.keys.key_matching import KeyMatcher
-from winnow.exceptions import OptionsExceptionEmptyOptionValues
+from winnow.exceptions import OptionsExceptionEmptyOptionValues, OptionsExceptionReferenceError
 
 """
 
@@ -70,7 +71,6 @@ class OptionsSet(collections.MutableMapping):
         return result
 
 
-
     def merge(self, other):
         """
         A union of all keys
@@ -112,19 +112,26 @@ class OptionsSet(collections.MutableMapping):
         return True
 
 
-    def scope(self, scope_name):
-        """
-        extracts a subset of options by scope
-        """
+    def default(self):
         options = {}
         for k, v in self.store.iteritems():
-            if isinstance(v, dict) and u"scopes" in v.keys():
-                scopes = set(v[u"scopes"])
-                if not scopes.isdisjoint(set([scope_name])):
-                    options[k] = deepcopy(v)
-            else:
-                options[k] = deepcopy(v)
+            options[k] = value_factory(v).default
         return OptionsSet(options)
+
+    #
+    # def scope(self, scope_name):
+    #     """
+    #     extracts a subset of options by scope
+    #     """
+    #     options = {}
+    #     for k, v in self.store.iteritems():
+    #         if isinstance(v, dict) and u"scopes" in v.keys():
+    #             scopes = set(v[u"scopes"])
+    #             if not scopes.isdisjoint(set([scope_name])):
+    #                 options[k] = deepcopy(v)
+    #         else:
+    #             options[k] = deepcopy(v)
+    #     return OptionsSet(options)
 
 
     def match(self, others):
@@ -137,5 +144,6 @@ class OptionsSet(collections.MutableMapping):
     @property
     def key_set(self):
         return set(self.store.keys())
+
 
 

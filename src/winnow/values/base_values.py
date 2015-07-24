@@ -12,14 +12,23 @@ class BaseWinnowValue(object):
             self.description = value.get("description")
             self.image_url = value.get("image_url")
             self.scopes = value.get("scopes")
-            self.default = value.get("default")
+            self._default = value.get("default")
         else:
             self.name = None
             self.description = None
             self.image_url = None
             self.scopes = None
-            self.default = None
+            self._default = None
 
+
+
+    @property
+    def default(self):
+        return self.default_value
+
+    @property
+    def default_value(self):
+        return self._default if self._default is not None else self.get_default()
 
     def get_merged_info(self, other):
 
@@ -29,6 +38,9 @@ class BaseWinnowValue(object):
             u"name": self.name if self.name is not None else other.name,
             u"description": self.description if self.description is not None else other.description,
         }
+
+    def get_default(self):
+        return None
 
     def check_class(self, other):
         return
@@ -49,10 +61,9 @@ class BaseWinnowValue(object):
             as_json[u"image_url"] = self.image_url
         if self.scopes is not None:
             as_json[u"scopes"] = self.scopes
-        if self.default is not None:
-            as_json[u"default"] = self.default
-        else:
-            as_json[u"default"] = self.get_default()
+
+        as_json[u"default"] = self.default_value
+
         return as_json
 
 

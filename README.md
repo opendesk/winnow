@@ -67,15 +67,15 @@ Winnow defines a set of simple, but powerful, operations to help manipulate winn
 
 + *add_doc* 
 + *allows*
-+ *intersects*
 + *merge*
-+ *patch*
 + *scope*
++ *default_choices*
++ *quantify*
 + *filter_allows*
 + *filter_allowed_by*
-+ *inline*
++ *is_allowed_by*
 + *expand*
-+ *asset_paths*
++ *asset_props*
 + *validate*
 
 ## library
