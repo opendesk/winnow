@@ -240,20 +240,17 @@ def asset_props(doc, dl_base=None):
     path = doc.get("path")
     if path is None:
         return []
-    found = []
-    _walk_dict_for_assets(doc, found)
-    paths = []
-    for asset_relpath in found:
-        base = doc.get("base") if doc.get("base") else dl_base
-        paths.append({
-            "source": doc["source"],
-            "base": base,
-            "path": os.path.normpath("%s/%s" % (doc.get(u"path"), asset_relpath)),
-            "relpath": asset_relpath
-        })
-    return paths
+    relpaths = []
+    _walk_dict_for_assets(doc, relpaths)
+    return [asset_from_relpath(doc, dl_base=dl_base, rp) for rp in relpaths]
 
-
+def asset_from_relpath(doc, dl_base=None, relpath):
+    return {
+        "source": doc['source'],
+        "base": doc.get("base", dl_base),
+        "path": os.path.normpath("%s/%s" % (doc['path'], relpath)),
+        "relpath": relpath
+    }
 
 def _walk_dict_for_assets(node, found):
 
