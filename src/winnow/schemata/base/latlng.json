@@ -1,0 +1,26 @@
+{
+    "id": "https://opendesk.cc/schemata/base/latlng.json",
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Winnow Point",
+    "type": "object",
+    "allOf": [
+        {
+            "$ref": "https://opendesk.cc/schemata/base/option.json#"
+        },
+        {
+            "properties": {
+                "lat": {
+                    "type": "numeric::range",
+                    "max": 90,
+                    "min": -90
+                },
+                "lng":{
+                    "type": "numeric::range",
+                    "max": 180,
+                    "min": -180
+                }
+            },
+            "required": ["lat", "lng"]
+        }
+    ]
+}

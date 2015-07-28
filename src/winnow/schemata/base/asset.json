@@ -1,0 +1,22 @@
+{
+    "id": "https://opendesk.cc/schemata/base/asset.json",
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Winnow Asset",
+    "type": "object",
+    "allOf": [
+        {
+            "$ref": "https://opendesk.cc/schemata/base/option.json#"
+        },
+        {
+            "properties": {
+                "asset": {
+                    "type": "string"
+                },
+                "type":{
+                    "type": "string"
+                }
+            },
+            "required": ["asset"]
+        }
+    ]
+}

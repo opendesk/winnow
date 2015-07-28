@@ -28,6 +28,33 @@
                         "type": "object"
                     }
                 },
+                "strap_image": {
+                    "type": "asset"
+                },
+                "strap_bg_colour": {
+                    "type": "string"
+                },
+                "instructions_template_image": {
+                    "type": "asset"
+                },
+                "instructions_doc": {
+                    "type": "asset"
+                },
+                "download_price": {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "type": "number"
+                        },
+                        "type":{
+                            "currency": "string"
+                        }
+                    },
+                    "required": ["value"]
+                },
+                "point": {
+                    "type": "latlng"
+                },
                 "type": {
                     "type": "string",
                     "pattern": "design"

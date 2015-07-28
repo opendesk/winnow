@@ -1,7 +1,7 @@
 {
-    "id": "https://opendesk.cc/schemata/range.json",
+    "id": "https://opendesk.cc/schemata/license.json",
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "title": "Winnow Product",
+    "title": "Winnow License",
     "type": "object",
     "allOf": [
         {"$ref": "https://opendesk.cc/schemata/base/value.json#"},
@@ -12,32 +12,35 @@
                 "changes":{},
                 "name":{},
                 "description":{},
-                "long_description":{},
+                "short_description":{},
                 "schema": {},
                 "source": {},
                 "path": {},
                 "aliases": {},
                 "base": {},
                 "version": {},
-                "shortcode": {},
-                "royalty_percentage": {
-                    "type": "number"
+                "acronym": {},
+                "icon": {
+                    "type": "asset"
                 },
-                "external_links": {
-                    "type": "array"
+                "is_non_commercial": {
+                    "type": "boolean"
+                },
+                "url": {
+                    "type": "asset"
                 },
                 "type": {
                     "type": "string",
-                    "pattern": "range"
+                    "pattern": "license"
                 }
             },
             "additionalProperties": false,
             "requiredProperties": [
                 "name",
                 "description",
-                "schema",
+                "short_description",
+                "is_non_commercial",
                 "type",
-                "images",
                 "source",
                 "path",
                 "version",
@@ -46,5 +49,3 @@
         }
     ]
 }
-
-
