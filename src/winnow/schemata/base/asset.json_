@@ -5,9 +5,6 @@
     "type": "object",
     "allOf": [
         {
-            "$ref": "https://opendesk.cc/schemata/base/option.json#"
-        },
-        {
             "properties": {
                 "asset": {
                     "type": "string"

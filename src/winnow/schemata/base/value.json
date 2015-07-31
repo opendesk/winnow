@@ -28,7 +28,17 @@
         "images": {
             "type": "array",
             "items": {
-                "type": "asset"
+                "type": "object",
+                "properties": {
+                    "asset": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    }
+                },
+                "required": ["asset"],
+                "additionalProperties": false
             }
         }
     },

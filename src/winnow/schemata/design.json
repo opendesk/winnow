@@ -29,16 +29,40 @@
                     }
                 },
                 "strap_image": {
-                    "type": "asset"
+                    "properties": {
+                        "asset": {
+                            "type": "string"
+                        },
+                        "type":{
+                            "type": "string"
+                        }
+                    },
+                    "required": ["asset"]
                 },
                 "strap_bg_colour": {
                     "type": "string"
                 },
                 "instructions_template_image": {
-                    "type": "asset"
+                    "properties": {
+                        "asset": {
+                            "type": "string"
+                        },
+                        "type":{
+                            "type": "string"
+                        }
+                    },
+                    "required": ["asset"]
                 },
                 "instructions_doc": {
-                    "type": "asset"
+                    "properties": {
+                        "asset": {
+                            "type": "string"
+                        },
+                        "type":{
+                            "type": "string"
+                        }
+                    },
+                    "required": ["asset"]
                 },
                 "download_price": {
                     "type": "object",
@@ -53,7 +77,19 @@
                     "required": ["value"]
                 },
                 "point": {
-                    "type": "latlng"
+                    "properties": {
+                        "lat": {
+                            "type": "number",
+                            "max": 90,
+                            "min": -90
+                        },
+                        "lng":{
+                            "type": "number",
+                            "max": 180,
+                            "min": -180
+                        }
+                    },
+                    "required": ["lat", "lng"]
                 },
                 "type": {
                     "type": "string",

@@ -33,7 +33,7 @@
                     "type": "string"
                 },
                 "licenses": {},
-                "files":{
+                "files": {
                     "type": "array",
                     "items": {
                         "type": "object",
