@@ -209,11 +209,15 @@ def asset_props(doc, dl_base=None):
     return [asset_from_relpath(doc, rp, dl_base=dl_base) for rp in relpaths]
 
 def asset_from_relpath(doc, relpath, dl_base=None):
+    if '://' in relpath:
+        path = relpath
+    else:
+        path = os.path.normpath("%s/%s" % (doc['path'], relpath))
     return {
+        "path": path,
         "source": doc['source'],
         "base": doc.get("base", dl_base),
-        "path": os.path.normpath("%s/%s" % (doc['path'], relpath)),
-        "relpath": relpath
+        "relpath": relpath,
     }
 
 def _walk_dict_for_assets(node, found):
