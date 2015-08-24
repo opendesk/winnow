@@ -5,6 +5,7 @@
     "type": "object",
     "allOf": [
         {"$ref": "https://opendesk.cc/schemata/base/value.json#"},
+        {"$ref": "https://opendesk.cc/schemata/base/options.json#"},
         {"$ref": "https://opendesk.cc/schemata/base/canonical.json#"},
         {
             "properties": {
@@ -12,6 +13,7 @@
                 "changes":{},
                 "name":{},
                 "description":{},
+                "public_description":{},
                 "short_description":{},
                 "schema": {},
                 "source": {},
@@ -48,7 +50,8 @@
                 "type": {
                     "type": "string",
                     "pattern": "license"
-                }
+                },
+                "options": {}
             },
             "additionalProperties": false,
             "requiredProperties": [
