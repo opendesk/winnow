@@ -51,6 +51,9 @@
                                         "name": {
                                             "type": "string"
                                         },
+                                        "slug": {
+                                            "type": "string"
+                                        },
                                         "linear_metres": {
                                             "type": "number"
                                         },
