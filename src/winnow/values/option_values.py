@@ -536,11 +536,13 @@ class OptionResourceWinnowValue(OptionStringWinnowValue):
                 # print "other_value", other_value
 
                 merged_value = self.munge_values(this_value, other_value)
-                options = merged_value["options"]
+
+                # options = merged_value["options"]
                 # print "options xxx for %s" % path, options.keys()
                 # and then add these options to a copy of the origional value from all_values
                 new_value = all_values[path]
-                new_value["options"] = options
+                if "options" in merged_value:
+                    new_value["options"] = merged_value["options"]
 
                 values.append(new_value)
 
