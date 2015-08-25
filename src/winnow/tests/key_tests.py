@@ -2,6 +2,7 @@ import unittest
 from decimal import Decimal
 
 from winnow.constants import *
+from winnow.utils import json_dumps
 
 from winnow.keys.key_matching import KeyMatcher
 
@@ -35,6 +36,35 @@ NESTED_OPTIONS = {
                 }
             ]
         }
+
+
+class  TestbrokenMatcher(unittest.TestCase):
+
+    def test_finish_matcher(self):
+
+        options_dict_b =  {
+            u"configuration": u"straight-tops",
+            u"material-choices": {
+                u"default": u"standard-laminate",
+                u"name": u"Material",
+                u"type": u"set::string",
+                u"values": {
+                    u"name": u"Standard Laminate",
+                    u"options": {
+                        u"finish": u"$ref:/finishes/opendesk/standard-laminate"
+                    },
+                    u"type": u"string",
+                    u"value": u"standard-laminate"
+                }
+            }
+        }
+
+        b_matcher = KeyMatcher.from_dict(options_dict_b)
+
+        self.assertEqual(b_matcher.options["material-choices/finish"], "$ref:/finishes/opendesk/standard-laminate")
+
+
+
 
 class TestNestedKeyMatcher(unittest.TestCase):
 

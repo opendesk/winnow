@@ -2,6 +2,7 @@
 from base_values import BaseWinnowValue
 from winnow.exceptions import OptionsExceptionFailedValidation
 from winnow.constants import *
+from winnow.utils import json_dumps
 from copy import deepcopy
 
 class OptionWinnowValue(BaseWinnowValue):
@@ -38,6 +39,8 @@ class OptionWinnowValue(BaseWinnowValue):
             return True
 
 
+
+
     @classmethod
     def from_value(cls, value):
 
@@ -47,6 +50,8 @@ class OptionWinnowValue(BaseWinnowValue):
             except:
                 raise OptionsExceptionFailedValidation("OptionStringSieveValue unrecognised value type")
             # numeric = NumericSetSieveValue.make(decimal_list)
+
+
             option = OptionStringWinnowValue(string_list)
             if option is None:
                 raise OptionsExceptionFailedValidation("OptionSieveValue: empty set")
@@ -130,6 +135,7 @@ class OptionStringWinnowValue(OptionWinnowValue):
 
 
     def _set_value_list(self, value_list):
+
         self.values_lookup = {}
         for v in value_list:
             try:
@@ -213,8 +219,6 @@ class OptionStringWinnowValue(OptionWinnowValue):
             self_keys = list(self.values_lookup.keys())
 
             for value_id in self_keys:
-
-
                 this_value = self.values_lookup.get(value_id)
                 if isinstance(this_value, dict):
                     new_value = deepcopy(this_value)
@@ -261,20 +265,7 @@ class OptionStringWinnowValue(OptionWinnowValue):
                 elif isinstance(other_value, dict) and isinstance(this_value, unicode):
                     values.append(deepcopy(other_value))
                 elif isinstance(other_value, dict) and isinstance(this_value, dict):
-                    ##prefer this's values over that's
-                    new_value = deepcopy(other_value)
-                    new_value.update(deepcopy(this_value))
-                    ## and then merge their options
-                    this_options = self._get_value_options(value_id)
-                    that_options = other._get_value_options(value_id)
-
-                    if this_options is not None and that_options is not None:
-                        new_value[u"options"] = OptionsSet(this_options).merge(OptionsSet(that_options)).store
-                    elif this_options is not None or that_options is not None:
-                        new_value[u"options"] = this_options if this_options is not None else that_options
-                    else:
-                        pass
-
+                    new_value = self.munge_values(this_value, other_value)
                     values.append(new_value)
                 else:
                     raise Exception("this should never happen")
@@ -288,6 +279,30 @@ class OptionStringWinnowValue(OptionWinnowValue):
         info[VALUES_KEY_NAME] = values
 
         return self.__class__(info)
+
+    def _get_options(self, value):
+        if isinstance(value, unicode):
+            return None
+        return value.get(u"options")
+
+    def munge_values(self, this_value, other_value):
+
+        from winnow.options import OptionsSet
+
+        new_value = deepcopy(other_value)
+        new_value.update(deepcopy(this_value))
+        ## and then merge their options
+        this_options = self._get_options(this_value)
+        that_options = self._get_options(other_value)
+
+        if this_options is not None and that_options is not None:
+            new_value[u"options"] = OptionsSet(this_options).merge(OptionsSet(that_options)).store
+        elif this_options is not None or that_options is not None:
+            new_value[u"options"] = this_options if this_options is not None else that_options
+        else:
+            pass
+
+        return new_value
     
 
 class OptionNullWinnowValue(OptionStringWinnowValue):
@@ -374,9 +389,172 @@ class OptionNullWinnowValue(OptionStringWinnowValue):
         return value
 
 
+
+
 class OptionResourceWinnowValue(OptionStringWinnowValue):
 
     type = VALUE_TYPE_SET_RESOURCE
+
+    @classmethod
+    def from_value(cls, value):
+
+        return OptionResourceWinnowValue(value)
+
+
+    @staticmethod
+    def _are_related_in_taxonomy(path_a, path_b):
+        return path_a == path_b or path_a.startswith(path_b) or path_b.startswith(path_a)
+
+
+    @staticmethod
+    def _prune_child_nodes(paths):
+        passed = []
+        for path_a in paths:
+            if not any(p for p in paths if path_a.startswith(p) and p != path_a):
+                passed.append(path_a)
+        return passed
+
+    @staticmethod
+    def _nearest_match(path, paths):
+
+        match = None
+        for other_path in paths:
+            if len(other_path) <= len(path) and path.startswith(other_path) and (match is None or len(other_path) > len(match)):
+                match = other_path
+        return match
+
+
+    @staticmethod
+    def _intersection_of_path_sets(paths_a, paths_b):
+        passed = []
+        for path_a in paths_a:
+            if any(p for p in paths_b if path_a.startswith(p)):
+                if not path_a in passed:
+                    passed.append(path_a)
+        for path_b in paths_b:
+            if any(p for p in paths_a if path_b.startswith(p)):
+                if not path_b in passed:
+                    passed.append(path_b)
+        return passed
+
+
+
+    def issubset(self, other):
+
+        if isinstance(other, OptionNullWinnowValue):
+            return False
+
+        if not self.__class__ == other.__class__:
+            raise Exception("types must match")
+
+        other_paths = set(other.values_lookup.keys())
+        self_paths = set(self.values_lookup.keys())
+
+        # each path must find itself or parent in other
+        for p1 in self_paths:
+            if not any(p2 for p2 in other_paths if p1.startswith(p2)):
+                return False
+        return True
+
+
+    def isdisjoint(self, other):
+        if isinstance(other, OptionNullWinnowValue):
+            return False
+
+        if not self.__class__ == other.__class__:
+            raise Exception("types must match")
+
+        other_paths = set(other.values_lookup.keys())
+        self_paths = set(self.values_lookup.keys())
+
+        for p1 in self_paths:
+            for p2 in other_paths:
+                if self._are_related_in_taxonomy(p1, p2):
+                    return False
+        return True
+
+
+    def intersection(self, other):
+
+        # print "doing intersection"
+
+        from winnow.options import OptionsSet
+
+        self.check_class(other)
+
+        values = []
+
+        if isinstance(other, OptionNullWinnowValue):
+
+            other_options = other._get_options()
+            if other_options is None:
+                return self
+
+            self_keys = list(self.values_lookup.keys())
+
+            for value_id in self_keys:
+                this_value = self.values_lookup.get(value_id)
+                if isinstance(this_value, dict):
+                    new_value = deepcopy(this_value)
+                    this_options = self._get_value_options(value_id)
+                else:
+                    raise Exception("This shouldn't ever happen")
+
+                if this_options is not None:
+                    new_value[u"options"] = OptionsSet(this_options).merge(OptionsSet(other_options)).store
+
+                values.append(new_value)
+
+        else:
+
+            # take a cope of the the possible values in a lookup table keyed by path
+            all_values = deepcopy(self.values_lookup)
+            all_values.update(deepcopy(other.values_lookup))
+
+            # prune and child nodes from each set
+
+            other_paths = list(other.values_lookup.keys())
+            self_paths = list(self.values_lookup.keys())
+
+            other_paths_pruned = self._prune_child_nodes(other_paths)
+            self_paths_pruned = self._prune_child_nodes(self_paths)
+
+            # then add values if it or parent is in other
+            intersecting_paths = self._intersection_of_path_sets(other_paths_pruned, self_paths_pruned)
+
+            # for each intersecting path find the most specific option set on each side and merge them
+            values = []
+
+            # print "intersecting_paths", intersecting_paths
+
+            for path in intersecting_paths:
+                # find best fit values to get merged options
+                this_value = self.values_lookup[self._nearest_match(path, self_paths)]
+                other_value = other.values_lookup[self._nearest_match(path, other_paths)]
+
+                # print "this_value", this_value
+                # print "other_value", other_value
+
+                merged_value = self.munge_values(this_value, other_value)
+                options = merged_value["options"]
+                # print "options xxx for %s" % path, options.keys()
+                # and then add these options to a copy of the origional value from all_values
+                new_value = all_values[path]
+                new_value["options"] = options
+
+                values.append(new_value)
+
+
+        ## if there is no intersection return None
+        if len(values) == 0:
+            return None
+
+        info = self.get_merged_info(other)
+        info[u"type"] = self.type,
+        info[VALUES_KEY_NAME] = values
+
+        return self.__class__(info)
+
 
 class OptionSizeWinnowValue(OptionStringWinnowValue):
 

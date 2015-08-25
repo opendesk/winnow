@@ -1,8 +1,9 @@
 from decimal import Decimal
 from numeric_values import NumericNumberWinnowValue, NumericWinnowValue
-from option_values import OptionWinnowValue, OptionNullWinnowValue
+from option_values import OptionWinnowValue, OptionNullWinnowValue, OptionResourceWinnowValue
 from boolean_values import BooleanWinnowValue
 from winnow.constants import *
+from winnow import utils
 from winnow.exceptions import OptionsExceptionFailedValidation
 
 
@@ -78,12 +79,23 @@ def value_path_factory(key, input_value):
 
 def value_factory(input_value, key=None):
 
+    # print "***************"
+    # print "key", key
+    # print "input_value", utils.json_dumps(input_value)
+
     value = input_value if key is None else value_with_key(input_value, key)
 
     cls = None
-
     if isinstance(value, dict):
-        cls = VALUE_TYPES[value["type"]]
+        if value.has_key(u"path"):
+            cls = OptionResourceWinnowValue
+            value = {
+                u"type": VALUE_TYPE_SET_RESOURCE,
+                u"values": [value]
+            }
+        else:
+            cls = VALUE_TYPES[value["type"]]
+
     elif  isinstance(value, bool):
         cls = BooleanWinnowValue
 
@@ -107,12 +119,26 @@ def value_factory(input_value, key=None):
             cls = OptionWinnowValue
         if isinstance(v, bool):
             cls = BooleanWinnowValue
+        if isinstance(v, dict):
+
+            if v.has_key(u"path"):
+                cls = OptionResourceWinnowValue
+                value = {
+                    u"type": VALUE_TYPE_SET_RESOURCE,
+                    u"values": value
+                }
+            else:
+                cls = VALUE_TYPES[v["type"]]
     else:
         pass
 
+    # print "found class", cls
     if cls:
+        result = cls.from_value(value)
 
-        return cls.from_value(value)
+        # print "result class", result.__class__
+
+        return result
 
     return None
 
@@ -126,6 +152,6 @@ VALUE_TYPES = {
     VALUE_TYPE_SET_STRING: OptionWinnowValue,
     VALUE_TYPE_SET_COLOUR: OptionWinnowValue,
     VALUE_TYPE_SET_SIZE: OptionWinnowValue,
-    VALUE_TYPE_SET_RESOURCE: OptionWinnowValue,
+    VALUE_TYPE_SET_RESOURCE: OptionResourceWinnowValue,
     VALUE_TYPE_SET_NULL: OptionNullWinnowValue
 }

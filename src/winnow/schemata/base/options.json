@@ -32,6 +32,12 @@
                             "$ref": "https://opendesk.cc/schemata/resource.json#"
                         }
                     },
+                    {
+                        "type": "array",
+                        "items": {
+                            "$ref": "https://opendesk.cc/schemata/base/reference.json#"
+                        }
+                    },
                     {"type": "string"},
                     {"$ref": "https://opendesk.cc/schemata/base/set.json#"},
                     {"$ref": "https://opendesk.cc/schemata/base/numeric.json#"},

@@ -6,6 +6,7 @@ from winnow.models.base import WinnowVersion
 from winnow.operations import OptionsExceptionReferenceError
 from winnow.tests.db import MockKVStore
 from winnow.pipeline import flow
+from winnow.utils import json_dumps
 
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
@@ -80,7 +81,5 @@ class TestExpandReferences(unittest.TestCase):
         ]
 
         self.assertEqual(found_files, expected_files)
-
-
 
 

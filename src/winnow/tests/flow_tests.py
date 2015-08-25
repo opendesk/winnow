@@ -126,3 +126,38 @@ class TestExpandReferences(unittest.TestCase):
         self.assertEqual(found_files, expected_files)
 
 
+    def test_make_manufacturing_spec(self):
+
+        product_path = u"/ranges/lean/desk/mid-long-wide"
+
+        choices = {
+            u"configuration": u"straight-tops",
+            u"material-choices": {
+                u"type": u"set::string",
+                u"values": u"standard-laminate"
+            },
+            u"quantity": 2
+        }
+
+        quantified_configuration = flow.get_quantified_configuration(self.db, product_path, choices)
+        filesets = flow.get_filesets_for_quantified_configuration(self.db, quantified_configuration)
+        fileset = filesets[1]["fileset"]
+
+        manufacturing_spec = flow.get_manufacturing_spec(self.db, quantified_configuration, fileset)
+
+        print manufacturing_spec
+
+        self.assertTrue(manufacturing_spec != None)
+
+        # files = fileset.get_doc()["files"]
+        #
+        # found_files = [f["asset"].split("/")[-1] for f in files]
+        #
+        # expected_files = [
+        #     "LEN_DSK_MLW_C-ST_A-SA_M-AP_cad-1_18.00~0.0.dxf",
+        #     "LEN_DSK_MLW_C-ST_A-SA_M-AP_cad-2_18.00~0.0.dxf",
+        #     "LEN_DSK_MLW_C-ST_A-SA_M-AP_cad-3_18.00~0.0.dxf",
+        #     "LEN_DSK_MLW_C-ST_A-SA_M-AP_cad-4_18.00~0.0.dxf"
+        # ]
+        #
+        # self.assertEqual(found_files, expected_files)

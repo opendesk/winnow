@@ -21,25 +21,24 @@ def allows(source_a, source_b):
     return options_a.allows(options_b)
 
 
+
+
+
 def merge(source_a, source_b, target, doc):
+
+    # print "source_a", source_a
+    # print "source_b", source_b
+    # print "target", target
+    # print "doc", doc
+
+    # print source_a, source_b
     doc_b = source_b.get_doc()
 
     # get the options from bothe sources
     options_a = deepcopy(source_a.get_options_dict())
     options_b = deepcopy(source_b.get_options_dict())
 
-    # expand the options dicts collecting their replaced refs
-    ref_hashes = {}
-    inline.inline_refs(options_a, source_a, ref_hashes)
-    inline.inline_refs(options_b, source_a, ref_hashes)
-
-    # do the merge
-    options_a = OptionsSet(options_a)
-    options_b = OptionsSet(options_b)
-    merged_options = options_a.merge(options_b).store
-
-    # un merge unchanged refs by looking at the ref_hashes
-    inline.restore_unchanged_refs(merged_options, ref_hashes)
+    merged_options = inline._merge_option_dicts(source_a, options_a, options_b)
 
     # put this merged options into a copy of the doc
     new_doc = deepcopy(doc)

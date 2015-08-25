@@ -261,6 +261,7 @@ class NumericSetWinnowValue(NumericWinnowValue):
 
         for v in self.as_list:
             if not isinstance(v, Decimal):
+                print v
                 raise OptionsExceptionFailedValidation("NumericSetSieveValue all values must be Decimals")
 
         if len(self.as_list) == 0:

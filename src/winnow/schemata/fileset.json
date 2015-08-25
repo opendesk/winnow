@@ -33,18 +33,53 @@
                     "type": "string"
                 },
                 "licenses": {},
+                "manufacturing": {},
                 "files": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties":{
-                            "asset" : {
-                                "type": "string"
+                    "oneOf": [
+                        {
+                            "type": "object",
+                            "patternProperties": {
+                                "[/*]?[a-z]": {
+                                    "type": "object",
+                                    "properties": {
+                                        "asset": {
+                                            "type": "string"
+                                        },
+                                        "type": {
+                                            "type": "string"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "linear_metres": {
+                                            "type": "number"
+                                        },
+                                        "num_components": {
+                                            "type": "number"
+                                        },
+                                        "num_sheets": {
+                                            "type": "number"
+                                        }
+                                    },
+                                    "additionalProperties": false
+                                }
                             }
                         },
-                        "required": ["asset"],
-                        "additionalProperties": false
-                    }
+                        {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "asset": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": ["asset"],
+                                "additionalProperties": false
+                            }
+                        }
+                    ]
+
                 },
                 "is_default": {},
                 "is_public": {}

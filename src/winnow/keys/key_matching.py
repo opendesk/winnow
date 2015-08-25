@@ -22,18 +22,25 @@ class KeyMatcher():
 
     def _add_options_paths(self, option, key_path):
         self.set(key_path, option)
-        # the option is and object
+
+        def _add_it(v):
+            if isinstance(v, dict):
+                if "options" in v.keys():
+                    for option_key, new_option in v["options"].iteritems():
+                        new_key_path = "%s/%s" % (key_path, option_key)
+                        self._add_options_paths(new_option, new_key_path)
+
+        # the option is an object
         if isinstance(option, dict):
             # with values
             if "values" in option.keys():
                 values = option["values"]
+                if isinstance(values, dict):
+                     _add_it(values)
                 if isinstance(values, list):
                     for v in values:
-                        if isinstance(v, dict):
-                            if "options" in v.keys():
-                                for option_key, new_option in v["options"].iteritems():
-                                    new_key_path = "%s/%s" % (key_path, option_key)
-                                    self._add_options_paths(new_option, new_key_path)
+                        _add_it(v)
+
 
     def _get_last(self, kp):
         return kp.split("/")[-1]

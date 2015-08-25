@@ -43,31 +43,53 @@ class OptionsSet(collections.MutableMapping):
         return len(self.store)
 
     def mega_store(self, other):
+
+        #
+        # print "****STORES****"
+        # print self.store
+        # print other.store
+        #
+
         expanded = deepcopy(self.store)
         for k in self.store.keys():
             if "*" in k:
                 matching = other.matcher.get_matching_paths(k)
                 for match in matching:
                     expanded[match] = self.store[k]
+                # this consumes matched wildcards values
+                if matching:
+                    del expanded[k]
         mega_store = {}
 
         for k, v in expanded.iteritems():
             new_key, real_value = value_path_factory(k, v)
-            if not new_key in mega_store.keys():
-                mega_store[new_key] = []
-            mega_store[new_key].append(real_value)
+            if real_value is not None:
+                if not new_key in mega_store.keys():
+                    mega_store[new_key] = []
+                mega_store[new_key].append(real_value)
 
         return mega_store
 
 
     def _merge_value_array(self, key, values):
+        #
+        # print ""
+        # print "key", key
+        #
+        # print "************  values  **************\n",
+        # #
+        # for v in values:
+        #     print type(v)
+        #     print v
+
+
         if len(values) == 1:
             return values[0]
         result = values[0]
         for v in values[1:]:
             result = result.intersection(v)
             if result == None:
-                raise OptionsExceptionEmptyOptionValues("The key %s has no possible values when %s is merged with %s" % (key, result, v))
+                raise OptionsExceptionEmptyOptionValues("The key %s has no possible values when %s are merged" % (key, [str(v) for v in values]))
         return result
 
 
@@ -77,14 +99,24 @@ class OptionsSet(collections.MutableMapping):
         An intersection of values
         """
 
+        # print "***********  merge  **************"
+        # print self.store
+        # print utils.json_dumps(other.store)
+        #
+
         options = {}
         this_mega_store = self.mega_store(other)
         that_mega_store = other.mega_store(self)
         this_keys = set(this_mega_store.keys())
         that_keys = set(that_mega_store.keys())
+        #
+        # print this_keys, that_keys
 
         for key in this_keys.union(that_keys):
             all_values = this_mega_store.get(key, []) + that_mega_store.get(key, [])
+            # print "key", key
+            # print "all_values", all_values
+
             options[key] = self._merge_value_array(key, all_values).as_json()
 
         return OptionsSet(options)

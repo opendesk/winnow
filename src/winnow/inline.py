@@ -10,6 +10,22 @@ def _lookup_and_hash_ref(reference, source, options, node, ref_hashes):
     ref_hashes[expanded_hash] = node
     return found
 
+def _merge_option_dicts(source, options_a, options_b):
+
+    # expand the options dicts collecting their replaced refs
+    ref_hashes = {}
+    inline_refs(options_a, source, ref_hashes)
+    inline_refs(options_b, source, ref_hashes)
+
+    # do the merge
+    set_a = OptionsSet(options_a)
+    set_b = OptionsSet(options_b)
+
+    merged_options = set_a.merge(set_b).store
+    # un merge unchanged refs by looking at the ref_hashes
+    restore_unchanged_refs(merged_options, ref_hashes)
+
+    return merged_options
 
 def _find_expanded_ref(reference, source, options, ref_hashes):
 
@@ -39,9 +55,9 @@ def _find_expanded_ref(reference, source, options, ref_hashes):
             else:
                 options_a = OptionsSet(referenced_options)
                 options_b = OptionsSet(options)
-                referenced_doc[u"options"] = options_a.merge(options_b).store
 
-        # now if there is an internal_path try to pull this out
+                referenced_doc[u"options"] = _merge_option_dicts(source, options_a.store, options_b.store)
+
         new_doc = _extract_internal_path(referenced_doc, internal_path) if internal_path else referenced_doc
         inline_refs(new_doc, source, ref_hashes, )
         return new_doc

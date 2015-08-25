@@ -7,9 +7,13 @@ from winnow.models.process import WinnowProcess
 from winnow.models.material import WinnowMaterial
 from winnow.models.finish import WinnowFinish
 from winnow.models.base import WinnowVersion
+from winnow.models.namespace import WinnowNamespace
+from winnow.models.licence import WinnowLicence
 from winnow.models.quantified_configuration import WinnowQuantifiedConfiguration
 
 FACTORY_LOOKUP = {
+    "license": WinnowLicence,
+    "namespace": WinnowNamespace,
     "range" : WinnowVersion,
     "design" : WinnowVersion,
     "process" : WinnowProcess,
@@ -25,7 +29,11 @@ FACTORY_LOOKUP = {
 
 
 def publish(db, as_json):
-    cls = FACTORY_LOOKUP[as_json[u"type"]]
+    try:
+        cls = FACTORY_LOOKUP[as_json[u"type"]]
+    except KeyError, e:
+        print as_json
+        raise e
     return cls.publish(db, as_json)
 
 
@@ -64,9 +72,8 @@ def get_quantified_configuration(db, product_path, choices):
     choice_document = WinnowVersion.add_doc(db, doc)
 
     product = WinnowProduct.get_from_path(db, product_path)
-    expanded = product.expanded()
 
-    qc_doc = deepcopy(expanded.get_doc())
+    qc_doc = deepcopy(product.get_doc())
     product_doc = product.get_doc()
 
     version = product_doc["version"]
@@ -75,7 +82,7 @@ def get_quantified_configuration(db, product_path, choices):
     qc_doc[u"schema"] = "https://opendesk.cc/schemata/options.json"
     qc_doc[u"product"] = "%s@%s.%s.%s" % (product_doc["path"], version[0], version[1], version[2])
 
-    return WinnowQuantifiedConfiguration.merged(db, qc_doc, {}, expanded, choice_document)
+    return WinnowQuantifiedConfiguration.merged(db, qc_doc, {}, product, choice_document)
 
 
 def get_filesets_for_quantified_configuration(db, quantified_configuration):
@@ -108,9 +115,20 @@ def get_filesets_for_quantified_configuration(db, quantified_configuration):
 
     return sorted_found
 
+    # return quantified_configuration.get_filesets(db)
+    #
 
-    return quantified_configuration.get_filesets(db)
 
+
+def get_manufacturing_spec(db, quantified_configuration, fileset):
+
+    ms_doc = deepcopy(quantified_configuration.get_doc())
+
+    ms_doc[u"type"] = "manufacturing_spec"
+    ms_doc[u"schema"] = "https://opendesk.cc/schemata/options.json"
+
+
+    return WinnowQuantifiedConfiguration.merged(db, ms_doc, {}, fileset, quantified_configuration)
 
 
 

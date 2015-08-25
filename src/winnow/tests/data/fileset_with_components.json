@@ -1,0 +1,87 @@
+{
+    "schema": "https://opendesk.cc/schemata/fileset.json",
+    "type": "fileset",
+    "name": "test_fileset",
+    "path": "/ranges/lean/cafe-table/standard/components",
+    "source": "https://github.com/opendesk/collection",
+    "base": "https://raw.github.com/opendesk/collection/master",
+    "category": "sheets",
+    "files": {
+        "tops": {
+            "asset": "...dxf",
+            "type": "sheet",
+            "name": "tops",
+            "linear_metres": 20.2,
+            "num_components": 12,
+            "num_sheets": 1
+        },
+        "base":{
+            "asset": "...dxf",
+            "type": "sheet",
+            "name": "base",
+            "linear_metres": 10.2,
+            "num_components": 2,
+            "num_sheets": 1
+        }
+    },
+    "manufacturing": {
+        "cutting": {
+            "total_linear_metres": 30.4,
+            "total_components": 14,
+            "total_sheets": 2
+        },
+        "parts": [
+            {}
+        ],
+        "strategies":{
+            "one": {
+                "type": "string",
+                "value": "one",
+                "sheets":[
+                    {
+                        "sheet": "$ref:~/files/tops",
+                        "use": "$ref:/materials/opendesk/sheets/wood/composite/plywood/pre-laminated-plywood/wisa-multiwall"
+                    }
+                ]
+            },
+            "two":{
+                "type": "string",
+                "value": "two",
+                "sheets":[
+                    {
+                        "sheet": "$ref:~/files/tops",
+                        "use": "$ref:/materials/opendesk/sheets/wood/composite/plywood/pre-laminated-plywood/wisa-multiwall"
+                    }
+                ]
+            }
+        }
+    },
+    "options":{
+        "*/material": [
+                {
+                    "$ref": "/materials/sheets/wood/composite/plywood"
+                },
+                {
+                    "$ref": "/materials/sheets/wood/composite/plywood/birch-faced-plywood",
+                    "options": {
+                        "strategies": {
+                            "type": "set::string",
+                            "default": "",
+                            "scopes": ["maker", "operator"],
+                            "values": [
+                                "$ref:~/manufacturing/strategies/one",
+                                "$ref:~/manufacturing/strategies/two"
+                            ]
+                        }
+                    }
+
+                }
+            ]
+    },
+    "changes": "Initial version",
+    "version": [
+        1,
+        0,
+        0
+    ]
+}
