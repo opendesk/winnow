@@ -144,10 +144,6 @@ class TestTaxonomyValues(unittest.TestCase):
 
 
 
-
-
-
-
     def test_making_options(self):
 
         options_dict_a =  {

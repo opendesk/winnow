@@ -11,7 +11,7 @@ from winnow.utils import json_dumps
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 
-COLLECTION_PATH = "/Users/paul/Dropbox/paulharter/OpenDesk/collection"
+COLLECTION_PATH = "/Users/paul/Dropbox/paulharter/OpenDesk/opendesk-collection"
 
 class TestExpandReferences(unittest.TestCase):
 
@@ -52,11 +52,8 @@ class TestExpandReferences(unittest.TestCase):
     def test_get_default_product_options(self):
 
         session_id = u"12345"
-
         product_path = u"/ranges/lean/desk/long-wide"
-
         default_product_options = flow.get_default_product_options(self.db, product_path, session_id)
-
         choices = {
             u"configuration": u"profiled-tops",
             u"material-choices": u"birch-ply",
@@ -64,15 +61,10 @@ class TestExpandReferences(unittest.TestCase):
         }
 
         quantified_configuration = flow.get_quantified_configuration(self.db, product_path, choices)
-
         filesets = flow.get_filesets_for_quantified_configuration(self.db, quantified_configuration)
-
         fileset = filesets[0]["fileset"]
-
         files = fileset.get_doc()["files"]
-
         found_files = [f["asset"].split("/")[-1] for f in files]
-
         expected_files = [
             "LEN_DSK_LGW_C-PT_A-SA_M-AP_cad-1_18.00~0.0.dxf",
             "LEN_DSK_LGW_C-PT_A-SA_M-AP_cad-2_18.00~0.0.dxf",

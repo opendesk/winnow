@@ -45,6 +45,7 @@ def get_default_product_options(db, product_path, session_id):
 
     context_paths = get_customer_contexts(session_id)
     product = WinnowProduct.get_from_path(db, product_path)
+
     expanded = product.expanded() # no need to save this
 
     for context_path in context_paths:
