@@ -94,6 +94,7 @@ def get_filesets_for_quantified_configuration(db, quantified_configuration):
     product = WinnowProduct.get_from_path(db, product_path)
 
     filesets = product.get_filesets(db)
+
     matching = winnow.filter_allowed_by(quantified_configuration, filesets)
 
     self_keys = set(qc_doc[u"options"].keys())
@@ -123,10 +124,16 @@ def get_filesets_for_quantified_configuration(db, quantified_configuration):
 
 def get_manufacturing_spec(db, quantified_configuration, fileset):
 
-    ms_doc = deepcopy(quantified_configuration.get_doc())
+    qc_doc = quantified_configuration.get_doc()
+    fs_doc = fileset.get_doc()
 
+    ms_doc = {}
+    ms_doc[u"product"] = qc_doc[u"product"]
     ms_doc[u"type"] = "manufacturing_spec"
     ms_doc[u"schema"] = "https://opendesk.cc/schemata/options.json"
+    ms_doc[u"fileset"] = fs_doc[u"path"]
+    ms_doc[u"manufacturing"] = fs_doc[u"manufacturing"]
+    ms_doc[u"files"] = fs_doc[u"files"]
 
 
     return WinnowQuantifiedConfiguration.merged(db, ms_doc, {}, fileset, quantified_configuration)
