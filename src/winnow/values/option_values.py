@@ -157,12 +157,11 @@ class OptionStringWinnowValue(OptionWinnowValue):
         default_string = self._default if self._default is not None else self.values_lookup.keys()[0]
         default_value = self.values_lookup[default_string]
         new_value = deepcopy(default_value)
-        value_options = new_value.get(u"options")
 
+        value_options = new_value.get(u"options") if hasattr(new_value, 'get') else None
         if value_options is None or value_options == {}:
             return default_string
-        else:
-            new_value[u"options"] = OptionsSet(value_options).default().store
+        new_value[u"options"] = OptionsSet(value_options).default().store
 
         info = self.get_merged_info(self)
         info[u"type"] = self.type,
