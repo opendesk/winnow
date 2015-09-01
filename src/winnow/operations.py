@@ -69,11 +69,12 @@ def scope(source, scopes, target, doc):
 def default_choices(source, scopes):
 
     #take a copy of the options
+    doc = source.get_doc()
     options_dict = deepcopy(source.get_options_dict())
 
     #expand it
     ref_hashes = {}
-    inline.inline_refs(options_dict, source, ref_hashes)
+    inline.inline_refs(options_dict, doc, source, ref_hashes)
 
     #scope it
     _trim_out_off_scope(options_dict, set(scopes))
