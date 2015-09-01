@@ -32,13 +32,14 @@ def merge(source_a, source_b, target, doc):
     # print "doc", doc
 
     # print source_a, source_b
+    doc_a = source_a.get_doc()
     doc_b = source_b.get_doc()
 
     # get the options from bothe sources
     options_a = deepcopy(source_a.get_options_dict())
     options_b = deepcopy(source_b.get_options_dict())
 
-    merged_options = inline._merge_option_dicts(source_a, options_a, options_b)
+    merged_options = inline._merge_option_dicts(source_a, options_a, options_b, doc_a, doc_b)
 
     # put this merged options into a copy of the doc
     new_doc = deepcopy(doc)
@@ -163,7 +164,7 @@ def expand(source, target):
     target.clone_history_from(source)
     ## inline references
     ref_hashes = {}
-    inline.inline_refs(new_doc, source, ref_hashes)
+    inline.inline_refs(new_doc, new_doc, source, ref_hashes)
     _set_doc(target, new_doc)
     return ref_hashes
 

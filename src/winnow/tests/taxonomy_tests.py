@@ -190,7 +190,7 @@ class TestTaxonomyValues(unittest.TestCase):
 
         source = self.premium_birch_ply
 
-        merged = _merge_option_dicts(source, options_dict_a, options_dict_b)
+        merged = _merge_option_dicts(source, options_dict_a, options_dict_b, {}, {})
 
         self.assertEquals(merged.keys(), [u'configuration', u'material-choices'])
 

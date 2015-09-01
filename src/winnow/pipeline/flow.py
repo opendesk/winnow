@@ -41,6 +41,8 @@ def get_customer_contexts(session_id):
 
     return []
 
+
+
 def get_default_product_options(db, product_path, session_id):
 
     context_paths = get_customer_contexts(session_id)
@@ -129,16 +131,31 @@ def get_manufacturing_spec(db, quantified_configuration, fileset):
 
     ms_doc = {}
     ms_doc[u"product"] = qc_doc[u"product"]
-    ms_doc[u"type"] = "manufacturing_spec"
-    ms_doc[u"schema"] = "https://opendesk.cc/schemata/options.json"
+    ms_doc[u"type"] = u"manufacturing_spec"
+    ms_doc[u"schema"] = u"https://opendesk.cc/schemata/options.json"
     ms_doc[u"fileset"] = fs_doc[u"path"]
     ms_doc[u"manufacturing"] = fs_doc[u"manufacturing"]
     ms_doc[u"files"] = fs_doc[u"files"]
 
-
     return WinnowQuantifiedConfiguration.merged(db, ms_doc, {}, fileset, quantified_configuration)
 
-
-
+#
+# def get_manufacturing_choices(db, maker_id)
+#
+#     context_paths = get_customer_contexts(session_id)
+#     product = WinnowProduct.get_from_path(db, product_path)
+#
+#     expanded = product.expanded() # no need to save this
+#
+#     for context_path in context_paths:
+#         context = WinnowVersion.get_from_path(db, context_path)
+#         expanded = expanded.merged(context)
+#
+#     scoped = expanded.scoped(u"customer")
+#     quantified = scoped.quantified()
+#
+#     return quantified
+#
+# def get_manufacturing_solution(db, )
 
 

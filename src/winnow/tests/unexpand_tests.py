@@ -59,7 +59,7 @@ class TestUnexpandReferences(unittest.TestCase):
 
         ref_hashes = {}
         expanded_doc = deepcopy(breed1.get_doc())
-        winnow.inline.inline_refs(expanded_doc, breed1, ref_hashes)
+        winnow.inline.inline_refs(expanded_doc, expanded_doc, breed1, ref_hashes)
         value = u"$ref:/choices/dog_choices~/options/colours"
         colour_options = self.dog_base_choices["options"]["colours"]
         hash = winnow.utils.get_doc_hash(winnow.utils.json_dumps(colour_options))
@@ -74,7 +74,7 @@ class TestUnexpandReferences(unittest.TestCase):
         ref_hashes = {}
         expanded_doc = deepcopy(breed1.get_doc())
 
-        winnow.inline.inline_refs(expanded_doc, breed1, ref_hashes)
+        winnow.inline.inline_refs(expanded_doc, expanded_doc, breed1, ref_hashes)
 
         ref_value = u"$ref:/choices/dog_choices~/options/colours"
         colour_options = self.dog_base_choices["options"]["colours"]
