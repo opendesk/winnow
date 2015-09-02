@@ -41,6 +41,9 @@ def get_customer_contexts(session_id):
 
     return []
 
+def get_maker_contexts(maker_id):
+
+    return []
 
 
 def get_default_product_options(db, product_path, session_id):
@@ -139,23 +142,19 @@ def get_manufacturing_spec(db, quantified_configuration, fileset):
 
     return WinnowQuantifiedConfiguration.merged(db, ms_doc, {}, fileset, quantified_configuration)
 
-#
-# def get_manufacturing_choices(db, maker_id)
-#
-#     context_paths = get_customer_contexts(session_id)
-#     product = WinnowProduct.get_from_path(db, product_path)
-#
-#     expanded = product.expanded() # no need to save this
-#
-#     for context_path in context_paths:
-#         context = WinnowVersion.get_from_path(db, context_path)
-#         expanded = expanded.merged(context)
-#
-#     scoped = expanded.scoped(u"customer")
-#     quantified = scoped.quantified()
-#
-#     return quantified
-#
-# def get_manufacturing_solution(db, )
 
+def get_manufacturing_choices(db, manufacturing_spec, maker_id):
+
+    context_paths = get_maker_contexts(maker_id)
+    merged = manufacturing_spec
+
+    for context_path in context_paths:
+        context = WinnowVersion.get_from_path(db, context_path)
+        merged = merged.merged(context)
+
+    scoped = merged.scoped(u"maker")
+    return scoped
+
+# def get_manufacturing_solution(db, )
+#
 

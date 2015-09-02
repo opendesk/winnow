@@ -1,0 +1,32 @@
+{
+    "schema": "https://opendesk.cc/schemata/finish.json",
+    "source": "https://github.com/opendesk/collection",
+    "type": "finish",
+    "name": "Premium Birch Ply Verbose",
+    "path": "/finishes/opendesk/premium-birch-ply-verbose",
+    "description": "Nice Birch ply",
+    "version": [0,0,1],
+    "changes": "changes",
+    "options":{
+        "material": {
+            "type": "set::resource",
+            "scopes": ["maker"],
+            "values": "$ref:/materials/sheets/wood/composite/plywood/birch-faced-plywood"
+        },
+        "processes": {
+            "type": "set::resource",
+            "scopes": ["maker"],
+            "values": [
+                {
+                    "$ref": "/processes/fine-sanding"
+                },
+                {
+                    "$ref": "/processes/oiling"
+                }
+
+            ]
+        }
+    }
+}
+
+

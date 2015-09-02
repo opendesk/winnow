@@ -113,17 +113,5 @@ class TestExpandReferences(unittest.TestCase):
         self.assertEqual(len(doc["options"]["size"]["values"]), 1)
 
 
-        # self.birch_ply_material
-
-
-
-    """
-    a merge should automatically expand and then unexpand
-    expanded things that remain unchanged after merge should be unexpanded again
-
-    """
-
-
-
-
-
+    def test_verbose_set_reference(self):
+        self.premium_birch_ply_verbose = self.add_doc_at_data_path("finishes/premium-birch-ply-verbose/finish.json")

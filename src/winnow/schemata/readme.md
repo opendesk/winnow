@@ -12,7 +12,6 @@ type - one of the following enum string values
 
 "set::string"
 
+"set::resource"
 
-"set::material"
-"set::finish"
-"set::process"
+
