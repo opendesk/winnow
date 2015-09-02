@@ -160,6 +160,11 @@ def is_allowed_by(filter_source, possible):
     return OptionsSet(possible.get_options_dict()).allows(filter_options)
 
 
+def disallowed_keys(filter_source, possible):
+    filter_options = OptionsSet(filter_source.get_options_dict())
+    return OptionsSet(possible.get_options_dict()).disallowed_keys(filter_options)
+
+
 def expand(source, target):
     new_doc = deepcopy(source.get_doc())
     target.clone_history_from(source)

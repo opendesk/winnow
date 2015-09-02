@@ -105,8 +105,18 @@ class TestExpandReferences(unittest.TestCase):
         manufacturing_spec = flow.get_manufacturing_spec(self.db, quantified_configuration, fileset)
 
         #
-        print manufacturing_spec
+        doc = manufacturing_spec.get_doc()
 
+        sizes = doc["options"]["material-choices"]["values"]["options"]["finish"]["values"]["options"]["material"]["options"]["size"]
+
+        values = sizes["values"]
+
+        possible_sizes =  [s["name"] for s in values]
+
+        self.assertEqual(possible_sizes, [u'1200x2400'])
+
+
+        # self.fail("fail")
 
 
         # files = fileset.get_doc()["files"]

@@ -319,8 +319,8 @@ class OptionNullWinnowValue(OptionStringWinnowValue):
 
         if isinstance(other, OptionNullWinnowValue):
 
-            this_options = self._get_options
-            that_options = other._get_options
+            this_options = self._get_options()
+            that_options = other._get_options()
 
             options = None
 

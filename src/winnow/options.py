@@ -122,11 +122,22 @@ class OptionsSet(collections.MutableMapping):
         return OptionsSet(options)
 
 
+    def disallowed_keys(self, other):
+        return self._disallowed(other)
+
+
     def allows(self, other):
+        disallowed = self._disallowed(other)
+        return not bool(disallowed)
+
+
+    def _disallowed(self, other):
         """
         An intersection of keys
         A subset check on values
         """
+
+        disallowed = []
 
         this_mega_store = self.mega_store(other)
         that_mega_store = other.mega_store(self)
@@ -140,8 +151,9 @@ class OptionsSet(collections.MutableMapping):
                     this = self._merge_value_array(key, this_mega_store[key])
                     that = self._merge_value_array(key, that_mega_store[key])
                     if not that.issubset(this):
-                        return False
-        return True
+                        disallowed.append(key)
+
+        return disallowed
 
 
     def default(self):
