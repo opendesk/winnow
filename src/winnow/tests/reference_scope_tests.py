@@ -45,6 +45,23 @@ class TestExpandReferences(unittest.TestCase):
         self.plywood = self.add_doc_at_data_path("plywood/material.json")
 
 
+    def test_minimal_ref(self):
+
+
+
+        doc = self.fine_sanding_process.get_doc()
+
+        as_dict = {
+            u"$ref": u"/materials/sheets/wood/composite/plywood"
+        }
+
+        inlined = winnow.inline.inline_refs(as_dict, doc, self.fine_sanding_process, {})
+
+        print winnow.utils.json_dumps(inlined)
+
+        self.fail("poo")
+
+
     def test_expand_refs_from_string(self):
 
         processes = self.premium_birch_ply.get_doc()[u"options"][u"processes"]

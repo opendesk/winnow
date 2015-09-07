@@ -62,9 +62,8 @@ def _find_expanded_ref(reference, doc, source, options, ref_hashes):
             raise OptionsExceptionReferenceError("Winnow Reference Error: Cannot find reference %s in %s" % (ref, source.get_doc()[u"path"]))
         existing_doc = wv.get_doc()
         referenced_doc = deepcopy(existing_doc)
-
     if referenced_doc is None:
-        return None
+        raise OptionsExceptionReferenceError("Winnow Reference Error: Cannot find reference %s in %s" % (ref, doc[u"path"]))
     else:
         if options is not None:
             # if the ref also has some options then pre merge them into the reference
@@ -78,7 +77,7 @@ def _find_expanded_ref(reference, doc, source, options, ref_hashes):
 
         new_doc = _extract_internal_path(referenced_doc, internal_path) if internal_path else referenced_doc
         # TODO revisit this use of doc as the reference doc to use
-        inline_refs(new_doc, doc, source, ref_hashes)
+        new_doc = inline_refs(new_doc, doc, source, ref_hashes)
         return new_doc
 
 def restore_unchanged_refs(node, ref_hashes):
@@ -115,7 +114,12 @@ def inline_refs(node, doc, source, ref_hashes):
 
     # walks list and dicts looking for refs
 
-    if isinstance(node, dict):
+
+    if isinstance(node, dict) and u"$ref" in node.keys():
+        new_node = _lookup_and_hash_ref(node[u"$ref"], doc, source, node.get(u"options"), node, ref_hashes)
+        return new_node
+
+    elif isinstance(node, dict):
         for key, child in node.iteritems():
             if isinstance(child, dict):
                 if u"$ref" in child.keys():
@@ -139,6 +143,8 @@ def inline_refs(node, doc, source, ref_hashes):
                     node[i] = _lookup_and_hash_ref(child[len(u"$ref:"):], doc, source, None, child, ref_hashes)
             if isinstance(child, list):
                 inline_refs(child, doc, source, ref_hashes)
+
+    return node
 
 
 def _extract_internal_path(doc, path):
