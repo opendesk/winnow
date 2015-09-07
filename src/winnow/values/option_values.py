@@ -209,6 +209,8 @@ class OptionStringWinnowValue(OptionWinnowValue):
 
         values = []
 
+        default = None
+
         if isinstance(other, OptionNullWinnowValue):
 
             other_options = other._get_options()
@@ -234,13 +236,17 @@ class OptionStringWinnowValue(OptionWinnowValue):
                 if this_options is not None:
                     new_value[u"options"] = OptionsSet(this_options).merge(OptionsSet(other_options)).store
 
+                default = self._default
+
                 values.append(new_value)
 
         else:
             other_keys = list(other.values_lookup.keys())
-            self_keys = list(self.values_lookup.keys())
+            # self_keys = list(self.values_lookup.keys())
             other_keys.sort()
 
+            this_default_allowed = False
+            that_default_allowed = False
 
             # find matching values
 
@@ -256,6 +262,12 @@ class OptionStringWinnowValue(OptionWinnowValue):
                     continue
                 other_value = other.values_lookup[value_id]
 
+                if self._default == value_id:
+                    this_default_allowed = True
+
+                if other._default == value_id:
+                    that_default_allowed = True
+
                 ## if they are both unicode just add the value
                 if isinstance(other_value, unicode) and isinstance(this_value, unicode):
                     values.append(this_value)
@@ -269,6 +281,16 @@ class OptionStringWinnowValue(OptionWinnowValue):
                 else:
                     raise Exception("this should never happen")
 
+
+                if this_default_allowed and that_default_allowed:
+                    default = self._default
+                elif this_default_allowed:
+                    default = self._default
+                elif that_default_allowed:
+                    default = other._default
+                else:
+                    default = None
+
         ## if there is no intersection return None
         if len(values) == 0:
             return None
@@ -276,6 +298,9 @@ class OptionStringWinnowValue(OptionWinnowValue):
         info = self.get_merged_info(other)
         info[u"type"] = self.type,
         info[VALUES_KEY_NAME] = values
+        if default is not None:
+            info[u"default"] = default
+
 
         return self.__class__(info)
 

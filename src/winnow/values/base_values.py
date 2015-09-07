@@ -20,15 +20,15 @@ class BaseWinnowValue(object):
             self.scopes = None
             self._default = None
 
-
-
     @property
     def default(self):
         return self.default_value
 
     @property
     def default_value(self):
-        return self._default if self._default is not None else self.get_default()
+        default = self._default if self._default is not None else self.get_default()
+        # print "default", default
+        return default
 
     def get_merged_info(self, other):
 

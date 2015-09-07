@@ -99,33 +99,43 @@ class TestExpandReferences(unittest.TestCase):
         filesets = flow.get_filesets_for_quantified_configuration(self.db, quantified_configuration)
         fileset = filesets[0]["fileset"]
 
-        # print fileset
-        # print quantified_configuration
+        manufacturing_spec = flow.get_manufacturing_spec(self.db, quantified_configuration, fileset)
+
+        doc = manufacturing_spec.get_doc()
+        finish = doc["options"]["material-choices"]["values"]["options"]["finish"]
+        strategy = finish ["values"]["options"]["material"]["options"]["strategy"]
+        size = strategy ["values"][0]["sheets"][0]["use"]["options"]["size"]["values"]["value"]
+        self.assertEqual(size, u'1200x2400')
+
+
+    def test_get_manufacturing_choices(self):
+
+        session_id = u"12345"
+        product_path = u"/ranges/lean/desk/mid-long-wide"
+        default_product_options = flow.get_default_product_options(self.db, product_path, session_id)
+        choices = {
+            u"configuration": u"strange-tops",
+            u"material-choices": {
+                u"type": u"set::string",
+                u"values": {
+                    u"type": u"string",
+                    u"value": u"birch-ply",
+                    u"options":{
+                        u"finish": u"$ref:/finishes/opendesk/premium-birch-ply"
+                    }
+                }
+            },
+            u"quantity": 1
+        }
+
+        quantified_configuration = flow.get_quantified_configuration(self.db, product_path, choices)
+        filesets = flow.get_filesets_for_quantified_configuration(self.db, quantified_configuration)
+        fileset = filesets[0]["fileset"]
 
         manufacturing_spec = flow.get_manufacturing_spec(self.db, quantified_configuration, fileset)
 
-        #
-        doc = manufacturing_spec.get_doc()
+        choices = flow.get_manufacturing_choices(self.db, manufacturing_spec, "fake_id")
 
-        sizes = doc["options"]["material-choices"]["values"]["options"]["finish"]["values"]["options"]["material"]["options"]["size"]
+        print "choices", choices
 
-        values = sizes["values"]
-
-        possible_sizes =  [s["name"] for s in values]
-
-        self.assertEqual(possible_sizes, [u'1200x2400'])
-
-
-        # self.fail("fail")
-
-
-        # files = fileset.get_doc()["files"]
-        # found_files = [f["asset"].split("/")[-1] for f in files]
-        # expected_files = [
-        #     "LEN_DSK_LGW_C-PT_A-SA_M-AP_cad-1_18.00~0.0.dxf",
-        #     "LEN_DSK_LGW_C-PT_A-SA_M-AP_cad-2_18.00~0.0.dxf",
-        #     "LEN_DSK_LGW_C-PT_A-SA_M-AP_cad-3_18.00~0.0.dxf",
-        #     "LEN_DSK_LGW_C-PT_A-SA_M-AP_cad-4_18.00~0.0.dxf"
-        # ]
-        #
-        # self.assertEqual(found_files, expected_files)
+        self.fail("failed")

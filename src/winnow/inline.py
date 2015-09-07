@@ -6,12 +6,24 @@ from winnow.options import OptionsSet
 
 
 
+
 def _lookup_and_hash_ref(reference, doc, source, options, node, ref_hashes):
 
     found = _find_expanded_ref(reference, doc, source, options, ref_hashes)
 
-    expanded_hash = utils.get_doc_hash(utils.json_dumps(found))
-    ref_hashes[expanded_hash] = node
+    # this ensures than only external references are unexpanded
+    if not reference.startswith("~"):
+        expanded_hash = utils.get_doc_hash(utils.json_dumps(found))
+        # if reference.endswith("birch-faced-plywood"):
+        #     print "*******************"
+        #     # print utils.json_dumps(found)
+        #     print found["options"]["thickness"]
+            #
+            # print "options", options
+            # print "expanded_hash", expanded_hash
+
+        ref_hashes[expanded_hash] = node
+
     return found
 
 
@@ -75,6 +87,13 @@ def restore_unchanged_refs(node, ref_hashes):
     if isinstance(node, dict):
         for key, child in node.iteritems():
             hash = utils.get_doc_hash(utils.json_dumps(child))
+            # if key.endswith("material"):
+            #     print "restore", key, hash
+            #     print "-------------------------"
+            #     options = child.get("options")
+            #     if "thickness" in options.keys():
+            #         print options["thickness"]
+                # print utils.json_dumps(child)
             if hash in ref_hashes.keys():
                 node[key] = ref_hashes[hash]
             elif isinstance(child, dict):
@@ -131,6 +150,6 @@ def _extract_internal_path(doc, path):
         walker = walker.get(part)
         if walker is None:
             raise OptionsExceptionReferenceError("internal_path reference couldn't find %s in %s" % (path, doc))
-    return walker
+    return deepcopy(walker)
 
 

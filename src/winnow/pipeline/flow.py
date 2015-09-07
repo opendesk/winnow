@@ -152,9 +152,8 @@ def get_manufacturing_choices(db, manufacturing_spec, maker_id):
         context = WinnowVersion.get_from_path(db, context_path)
         merged = merged.merged(context)
 
-    scoped = merged.scoped(u"maker")
+    scoped = merged.scoped([u"maker"])
     return scoped
 
-# def get_manufacturing_solution(db, )
-#
+
 

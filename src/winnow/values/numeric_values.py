@@ -146,7 +146,23 @@ class NumericWinnowValue(BaseWinnowValue):
         return True
 
 
+    def _default_for_values_list(self, other, values):
 
+        this_allowed_default = self._default if self._default in values else None
+        that_allowed_default = other._default if other._default in values else None
+
+        if this_allowed_default is not None and that_allowed_default is not None:
+            default = this_allowed_default
+        elif this_allowed_default is not None:
+            default = this_allowed_default
+        elif that_allowed_default is not None:
+            default = that_allowed_default
+        elif len(values) > 0:
+            default = sorted(values)[0]
+        else:
+            default = None
+
+        return default
 
 
     def isdisjoint(self, other):
@@ -219,6 +235,7 @@ class NumericSetWinnowValue(NumericWinnowValue):
 
     def __new__(cls, value):
 
+
         if isinstance(value, list) or isinstance(value, set):
             as_list = value
             if len(as_list) > MAX_VALUE_SET_SIZE:
@@ -285,8 +302,11 @@ class NumericSetWinnowValue(NumericWinnowValue):
             values = [v for v in self.possible_values() if v >= other.min and v <= other.max]
         else:
             values = self.possible_values().intersection(other.possible_values())
+
         info = self.get_merged_info(other)
         info[u"value"] = values
+        info[u"default"] = self._default_for_values_list(other, values)
+
         return NumericSetWinnowValue(info)
 
 
@@ -296,7 +316,9 @@ class NumericSetWinnowValue(NumericWinnowValue):
             "value": list(self.as_list)
         }
 
-        return self.update_with_info(as_json)
+        info = self.update_with_info(as_json)
+
+        return info
 
 
 """
@@ -336,6 +358,7 @@ class NumericRangeWinnowValue(NumericWinnowValue):
             info = self.get_merged_info(other)
             info[u"max"] = new_max
             info[u"min"] = new_min
+            # info[u"default"] = 100
             return NumericRangeWinnowValue(info)
 
         if type(other) == NumericStepWinnowValue:
@@ -349,12 +372,17 @@ class NumericRangeWinnowValue(NumericWinnowValue):
                 info[u"min"] = new_min
                 info[u"step"] = other.step
                 info[u"start"] = other.start
+                # info[u"default"] = 100
                 sieve = NumericStepWinnowValue.make(info)
             except OptionsExceptionFailedValidation:
                 return None
             return sieve
         else:
             values = [v for v in other.possible_values() if v >= self.min and v <= self.max]
+            default = self._default_for_values_list(other, values)
+            info = self.get_merged_info(other)
+            info[u"value"] = values
+            info[u"default"] = default
             return NumericSetWinnowValue(values)
 
 
