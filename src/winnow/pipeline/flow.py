@@ -1,6 +1,8 @@
 from copy import deepcopy
 import winnow
 
+from winnow.munge import remove_key_named
+
 from winnow.models.product import WinnowProduct
 from winnow.models.fileset import WinnowFileset
 from winnow.models.process import WinnowProcess
@@ -140,7 +142,30 @@ def get_manufacturing_spec(db, quantified_configuration, fileset):
     ms_doc[u"manufacturing"] = fs_doc[u"manufacturing"]
     ms_doc[u"files"] = fs_doc[u"files"]
 
-    return WinnowQuantifiedConfiguration.merged(db, ms_doc, {}, fileset, quantified_configuration)
+    spec = WinnowQuantifiedConfiguration.merged(db, ms_doc, {}, fileset, quantified_configuration)
+
+    return spec
+
+
+def coerce_material_to_most_specific(options):
+
+    # find material ref in material-choices
+
+    gatherer = {}
+
+    optionscopy = deepcopy(options)
+
+    remove_key_named(optionscopy["material-choices"], "material", gatherer)
+
+    material_values = gatherer["material"]["values"]
+
+    if len(material_values) == 1:
+        ref = material_values[0]["path"]
+
+        print "*************** FOUND ************", ref
+
+
+
 
 
 def get_manufacturing_choices(db, manufacturing_spec, maker_id):

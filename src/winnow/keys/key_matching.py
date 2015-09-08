@@ -52,8 +52,8 @@ class KeyMatcher():
 
 
     def set(self, key_path, options):
-        if not self.validate(key_path):
-            raise OptionsExceptionKeyError("invalid key %s" % key_path)
+        # if not self.validate(key_path):
+        #     raise OptionsExceptionKeyError("invalid key %s" % key_path)
         self.options[key_path] = options
 
     def get_matching_paths(self, key_path):

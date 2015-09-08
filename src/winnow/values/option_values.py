@@ -104,18 +104,20 @@ class OptionWinnowValue(BaseWinnowValue):
 
     def as_json(self):
 
-        values = self.values
+        # values = self.values if isinstance(self.values, list) else [self.values]
 
         ## return the value without metadata is there is none
         if self.name is None and self.scopes is None and self.description is None and self.image_url is None:
-            return values
+            # if not isinstance(self.values[0], dict):
+            return self.values
 
 
         ## otherwise wrap it in a dict
         value =  {
             u"type": self.type,
-            VALUES_KEY_NAME: values,
+            VALUES_KEY_NAME: self.values,
         }
+
 
         return self.update_with_info(value)
 
@@ -202,6 +204,8 @@ class OptionStringWinnowValue(OptionWinnowValue):
 
 
     def intersection(self, other):
+        #
+        # print "string intersection"
 
         from winnow.options import OptionsSet
 
@@ -500,7 +504,9 @@ class OptionResourceWinnowValue(OptionStringWinnowValue):
 
     def intersection(self, other):
 
-        # print "doing intersection"
+        # print " "
+        # print "****************  resource intersection ******************"
+        # print "self keys", self.values_lookup.keys()
 
         from winnow.options import OptionsSet
 
@@ -509,6 +515,8 @@ class OptionResourceWinnowValue(OptionStringWinnowValue):
         values = []
 
         if isinstance(other, OptionNullWinnowValue):
+
+            # print "a null resource"
 
             other_options = other._get_options()
             if other_options is None:
@@ -530,6 +538,10 @@ class OptionResourceWinnowValue(OptionStringWinnowValue):
                 values.append(new_value)
 
         else:
+
+            # print "a real resource"
+            #
+            # print "other keys", other.values_lookup.keys()
 
             # take a cope of the the possible values in a lookup table keyed by path
             all_values = deepcopy(self.values_lookup)
@@ -570,6 +582,7 @@ class OptionResourceWinnowValue(OptionStringWinnowValue):
 
                 values.append(new_value)
 
+        # print "values", json_dumps(values)
 
         ## if there is no intersection return None
         if len(values) == 0:

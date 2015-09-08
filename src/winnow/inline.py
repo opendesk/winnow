@@ -7,9 +7,9 @@ from winnow.options import OptionsSet
 
 
 
-def _lookup_and_hash_ref(reference, doc, source, options, node, ref_hashes):
+def _lookup_and_hash_ref(reference, doc, source, options, node, ref_hashes, default_scopes=None):
 
-    found = _find_expanded_ref(reference, doc, source, options, ref_hashes)
+    found = _find_expanded_ref(reference, doc, source, options, ref_hashes, default_scopes=default_scopes)
 
     # this ensures than only external references are unexpanded
     if not reference.startswith("~"):
@@ -40,13 +40,24 @@ def _merge_option_dicts(source, options_a, options_b, ref_doc_a, ref_doc_b):
     set_b = OptionsSet(options_b)
 
     merged_options = set_a.merge(set_b).store
+
+    # print " ***********  UNRESTORED *****************"
+    #
+    # print utils.json_dumps(merged_options)
+
     # un merge unchanged refs by looking at the ref_hashes
     restore_unchanged_refs(merged_options, ref_hashes)
+    #
+    # print " ***********  RESTORED *****************"
+    # #
+    # print utils.json_dumps(merged_options)
+
 
     return merged_options
 
 
-def _find_expanded_ref(reference, doc, source, options, ref_hashes):
+def _find_expanded_ref(reference, doc, source, options, ref_hashes, default_scopes=None):
+
 
     # looks up the contents of a reference
     if u"~" in reference:
@@ -74,6 +85,11 @@ def _find_expanded_ref(reference, doc, source, options, ref_hashes):
                 options_a = OptionsSet(referenced_options)
                 options_b = OptionsSet(options)
                 referenced_doc[u"options"] = _merge_option_dicts(source, options_a.store, options_b.store, referenced_doc, doc)
+
+            if default_scopes is not None:
+                for k, v in referenced_doc[u"options"].iteritems():
+                    if v.get("scopes") is None:
+                        v["scopes"] = default_scopes
 
         new_doc = _extract_internal_path(referenced_doc, internal_path) if internal_path else referenced_doc
         # TODO revisit this use of doc as the reference doc to use
@@ -123,7 +139,13 @@ def inline_refs(node, doc, source, ref_hashes):
         for key, child in node.iteritems():
             if isinstance(child, dict):
                 if u"$ref" in child.keys():
-                    node[key] = _lookup_and_hash_ref(child[u"$ref"], doc, source, child.get(u"options"), child, ref_hashes)
+                    node[key] = _lookup_and_hash_ref(child[u"$ref"],
+                                                     doc,
+                                                     source,
+                                                     child.get(u"options"),
+                                                     child,
+                                                     ref_hashes,
+                                                     default_scopes=child.get(u"scopes"))
                 else:
                     inline_refs(child, doc, source, ref_hashes)
             if isinstance(child, unicode):
@@ -135,7 +157,13 @@ def inline_refs(node, doc, source, ref_hashes):
         for i, child in enumerate(node[:]):
             if isinstance(child, dict):
                 if u"$ref" in child.keys():
-                    node[i] = _lookup_and_hash_ref(child[u"$ref"], doc, source, child.get(u"options"), child, ref_hashes)
+                    node[i] = _lookup_and_hash_ref(child[u"$ref"],
+                                                   doc,
+                                                   source,
+                                                   child.get(u"options"),
+                                                   child,
+                                                   ref_hashes,
+                                                   default_scopes=child.get(u"scopes"))
                 else:
                     inline_refs(child, doc, source, ref_hashes)
             if isinstance(child, unicode):

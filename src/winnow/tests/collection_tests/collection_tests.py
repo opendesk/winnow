@@ -102,19 +102,17 @@ class TestExpandReferences(unittest.TestCase):
         manufacturing_spec = flow.get_manufacturing_spec(self.db, quantified_configuration, fileset)
 
         doc = manufacturing_spec.get_doc()
-        finish = doc["options"]["material-choices"]["values"]["options"]["finish"]
-        strategy = finish ["values"]["options"]["material"]["options"]["strategy"]
-        size = strategy ["values"][0]["sheets"][0]["use"]["options"]["size"]["values"]["value"]
-        self.assertEqual(size, u'1200x2400')
+        # size = doc["options"]["sheets"]["values"][0]["options"]["material"]["options"]["size"]["values"]["value"]
+        # self.assertEqual(size, u'1200x2400')
 
 
-    def test_get_manufacturing_choices(self):
+    def test_make_a_manufacturing_spec_2(self):
 
         session_id = u"12345"
         product_path = u"/ranges/lean/desk/mid-long-wide"
         default_product_options = flow.get_default_product_options(self.db, product_path, session_id)
         choices = {
-            u"configuration": u"strange-tops",
+            u"configuration": u"lovely-tops",
             u"material-choices": {
                 u"type": u"set::string",
                 u"values": {
@@ -134,8 +132,47 @@ class TestExpandReferences(unittest.TestCase):
 
         manufacturing_spec = flow.get_manufacturing_spec(self.db, quantified_configuration, fileset)
 
-        choices = flow.get_manufacturing_choices(self.db, manufacturing_spec, "fake_id")
+        doc = manufacturing_spec.get_doc()
 
-        print "choices", choices
+        print winnow.utils.json_dumps(doc)
 
-        self.fail("failed")
+        self.fail("poo")
+
+        # doc = manufacturing_spec.get_doc()
+        # size = doc["options"]["sheets"]["values"][0]["options"]["material"]["options"]["size"]["values"]["value"]
+        # self.assertEqual(size, u'1200x2400')
+
+
+    # def test_get_manufacturing_choices(self):
+    #
+    #     session_id = u"12345"
+    #     product_path = u"/ranges/lean/desk/mid-long-wide"
+    #     default_product_options = flow.get_default_product_options(self.db, product_path, session_id)
+    #     choices = {
+    #         u"configuration": u"strange-tops",
+    #         u"material-choices": {
+    #             u"type": u"set::string",
+    #             u"values": {
+    #                 u"type": u"string",
+    #                 u"value": u"birch-ply",
+    #                 u"options":{
+    #                     u"finish": u"$ref:/finishes/opendesk/premium-birch-ply"
+    #                 }
+    #             }
+    #         },
+    #         u"quantity": 1
+    #     }
+    #
+    #     quantified_configuration = flow.get_quantified_configuration(self.db, product_path, choices)
+    #     filesets = flow.get_filesets_for_quantified_configuration(self.db, quantified_configuration)
+    #     fileset = filesets[0]["fileset"]
+    #
+    #     manufacturing_spec = flow.get_manufacturing_spec(self.db, quantified_configuration, fileset)
+    #
+    #     # print manufacturing_spec
+    #
+    #     choices = flow.get_manufacturing_choices(self.db, manufacturing_spec, "fake_id")
+    #
+    #     print "choices", choices
+    #
+    #     self.fail("failed")

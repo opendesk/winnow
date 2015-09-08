@@ -43,10 +43,10 @@ class TestExpandReferences(unittest.TestCase):
         self.standard_birch_ply = self.add_doc_at_data_path("finishes/standard-birch-ply/finish.json")
         self.premium_wisa = self.add_doc_at_data_path("finishes/premium-wisa/finish.json")
         self.plywood = self.add_doc_at_data_path("plywood/material.json")
+        self.plywood_scoped = self.add_doc_at_data_path("plywood_with_scopes/material.json")
 
 
     def test_minimal_ref(self):
-
 
 
         doc = self.fine_sanding_process.get_doc()
@@ -57,9 +57,9 @@ class TestExpandReferences(unittest.TestCase):
 
         inlined = winnow.inline.inline_refs(as_dict, doc, self.fine_sanding_process, {})
 
-        print winnow.utils.json_dumps(inlined)
+        self.assertNotEqual(as_dict, inlined)
 
-        self.fail("poo")
+
 
 
     def test_expand_refs_from_string(self):
@@ -132,3 +132,11 @@ class TestExpandReferences(unittest.TestCase):
 
     def test_verbose_set_reference(self):
         self.premium_birch_ply_verbose = self.add_doc_at_data_path("finishes/premium-birch-ply-verbose/finish.json")
+
+    def test_empty_scopes(self):
+
+        scoped = self.plywood_scoped.scoped(["client"])
+        doc = scoped.get_doc()
+        print scoped
+        self.assertEqual(len(doc["options"]), 2)
+

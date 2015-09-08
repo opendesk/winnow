@@ -17,9 +17,19 @@
                 },
                 "options":{
                      "type": "object"
+                },
+                "override":{
+                     "type": "boolean"
+                },
+                "scopes":{
+                    "type": "array",
+                    "items":{
+                        "type": "string"
+                    }
                 }
             },
-            "required": ["$ref"]
+            "required": ["$ref"],
+            "additionalProperties": false
         }
     ]
 }

@@ -1,0 +1,92 @@
+{
+    "schema": "https://opendesk.cc/schemata/material.json",
+    "source": "https://github.com/opendesk/collection",
+    "type": "material",
+    "name": "Ply Wood",
+    "path": "/materials/sheets/wood/composite/plywood-scoped",
+    "description": "Plywood",
+    "image_uri": {"asset": "http://something.com/khgfdkyg.png"},
+    "version": [0,0,1],
+    "changes": "changes",
+    "options":{
+        "quantity": {
+            "type": "numeric::step",
+            "name": "Quantity",
+            "default": 1,
+            "max": 10000,
+            "min": 0,
+            "start": 0,
+            "step": 1
+        },
+        "thickness":{
+            "scopes":[],
+            "type": "numeric::set",
+            "name": "Thickness",
+            "default": 18,
+            "description": "Available sheet thickness mm",
+            "value": [6.5, 9.0, 12, 15, 18, 21, 24, 27]
+        },
+        "size":{
+            "type": "set::string",
+            "name": "sizes",
+            "description": "available sheet sizes",
+            "values": [
+                {
+                    "type": "string",
+                    "name": "1200x2400",
+                    "description": "1200mm x 2400mm",
+                    "value": "1200x2400",
+                    "size":{
+                        "units": "mm",
+                        "width": 1200,
+                        "heights": 2400
+                    }
+                },
+                      {
+                    "type": "string",
+                    "name": "1220x2440",
+                    "description": "1220mm x 2440mm",
+                    "value": "1220x2440",
+                    "size":{
+                        "units": "mm",
+                        "width": 1220,
+                        "heights": 2440
+                    }
+                },
+                {
+                    "type": "string",
+                    "name": "1250x2500",
+                    "description": "1250mm x 2500mm",
+                    "value": "1250x2500",
+                    "size":{
+                        "units": "mm",
+                        "width": 1250,
+                        "heights": 2500
+                    }
+                },
+                {
+                    "type": "string",
+                    "name": "1500x3000",
+                    "description": "1500mm x 3000mm",
+                    "value": "1500x3000",
+                    "size":{
+                        "units": "mm",
+                        "width": 1500,
+                        "heights": 3000
+                    }
+                },
+                {
+                    "type": "string",
+                    "name": "1525x3050",
+                    "description": "1525mm x 3050mm",
+                    "value": "1525x3050",
+                    "size": {
+                        "units": "mm",
+                        "width": 1525,
+                        "heights": 3050
+                    }
+                }
+            ]
+        }
+    }
+}
