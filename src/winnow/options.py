@@ -4,6 +4,7 @@ from copy import deepcopy
 from winnow import utils
 
 from winnow.values import value_factory, value_path_factory
+from winnow.values.option_values import OptionResourceWinnowValue, OptionStringWinnowValue
 from winnow.keys.key_matching import KeyMatcher
 from winnow.exceptions import OptionsExceptionEmptyOptionValues, OptionsExceptionReferenceError
 
@@ -82,6 +83,11 @@ class OptionsSet(collections.MutableMapping):
         #     print type(v)
         #     print v
 
+        value_types = set([type(v) for v in values])
+        #
+        if value_types == {OptionStringWinnowValue, OptionResourceWinnowValue}:
+            raise Exception("cant mix strings and resources")
+
 
         if len(values) == 1:
             return values[0]
@@ -89,7 +95,24 @@ class OptionsSet(collections.MutableMapping):
         for v in values[1:]:
             result = result.intersection(v)
             if result == None:
-                raise OptionsExceptionEmptyOptionValues("The key %s has no possible values when %s are merged" % (key, [str(v) for v in values]))
+                for v in values:
+                    print "**********"
+                    print "value", type(v)
+                    print "keys", v.values_lookup.keys()
+                    print utils.json_dumps(v.as_json())
+                msg = "The key %s has no possible values when %s are merged" % (key, [v.as_json() for v in values])
+                raise OptionsExceptionEmptyOptionValues(msg)
+
+        # if len(value_types) == 1 and {type(result)} != value_types:
+        #     print "**********************************************"
+        #     print "result: ",  value_types, type(result)
+
+        # if result.as_json() == u"/processes/opendesk/fine-sanding":
+        #     print "*************** FUCK **********************"
+        #     print key
+        #     print values
+
+
         return result
 
 
@@ -113,11 +136,22 @@ class OptionsSet(collections.MutableMapping):
         # print this_keys, that_keys
 
         for key in this_keys.union(that_keys):
+
             all_values = this_mega_store.get(key, []) + that_mega_store.get(key, [])
+
+            options[key] = self._merge_value_array(key, all_values).as_json()
+
+            # if key == "processes":
+            #     print "xxxxxxxxxxxxxxxxxx"
+            #     print "self", utils.json_dumps(self.store)
+            #     print "other", utils.json_dumps(other.store)
+            #
+            #     print "result  ",  options[key]
+
             # print "key", key
             # print "all_values", all_values
 
-            options[key] = self._merge_value_array(key, all_values).as_json()
+
 
         return OptionsSet(options)
 

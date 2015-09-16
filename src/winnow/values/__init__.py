@@ -103,6 +103,8 @@ def value_factory(input_value, key=None):
         cls = NumericWinnowValue
 
     elif isinstance(value, unicode):
+        if value.startswith("$ref:"):
+            raise OptionsExceptionFailedValidation("this ref has not been derefferenced before merging %s" % value)
         cls = OptionWinnowValue
 
     elif isinstance(value, str):

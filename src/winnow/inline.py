@@ -40,20 +40,24 @@ def _merge_option_dicts(source, options_a, options_b, ref_doc_a, ref_doc_b):
     set_b = OptionsSet(options_b)
 
     merged_options = set_a.merge(set_b).store
-
-    # print " ***********  UNRESTORED *****************"
-    #
-    # print utils.json_dumps(merged_options)
-
     # un merge unchanged refs by looking at the ref_hashes
     restore_unchanged_refs(merged_options, ref_hashes)
-    #
-    # print " ***********  RESTORED *****************"
-    # #
-    # print utils.json_dumps(merged_options)
-
 
     return merged_options
+
+
+
+def get_inlined_options(source):
+
+    ref_doc = source.get_doc()
+
+    # expand all the refs
+    ref_hashes = {}
+    inlined = deepcopy(ref_doc["options"])
+    inline_refs(inlined, ref_doc, source, ref_hashes)
+    return inlined
+
+
 
 
 def _find_expanded_ref(reference, doc, source, options, ref_hashes, default_scopes=None):
@@ -166,6 +170,8 @@ def inline_refs(node, doc, source, ref_hashes):
                                                    default_scopes=child.get(u"scopes"))
                 else:
                     inline_refs(child, doc, source, ref_hashes)
+            if isinstance(child, str):
+                raise Exception("we shouldnt be getting a string in inline_refs")
             if isinstance(child, unicode):
                 if child.startswith(u"$ref:"):
                     node[i] = _lookup_and_hash_ref(child[len(u"$ref:"):], doc, source, None, child, ref_hashes)

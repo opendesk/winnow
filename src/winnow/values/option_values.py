@@ -1,6 +1,6 @@
 
 from base_values import BaseWinnowValue
-from winnow.exceptions import OptionsExceptionFailedValidation
+from winnow.exceptions import OptionsExceptionFailedValidation, OptionsExceptionIncompatibleTypes
 from winnow.constants import *
 from winnow.utils import json_dumps
 from copy import deepcopy
@@ -104,8 +104,6 @@ class OptionWinnowValue(BaseWinnowValue):
 
     def as_json(self):
 
-        # values = self.values if isinstance(self.values, list) else [self.values]
-
         ## return the value without metadata is there is none
         if self.name is None and self.scopes is None and self.description is None and self.image_url is None:
             # if not isinstance(self.values[0], dict):
@@ -140,11 +138,7 @@ class OptionStringWinnowValue(OptionWinnowValue):
 
         self.values_lookup = {}
         for v in value_list:
-            try:
-                single_value = v if isinstance(v, unicode) else v[u"value"]
-            except KeyError:
-                single_value = v if isinstance(v, unicode) else v[u"path"]
-
+            single_value = v if isinstance(v, unicode) else v[u"value"]
             self.validate_single_value(single_value)
             self.values_lookup[single_value] = v
 
@@ -152,17 +146,20 @@ class OptionStringWinnowValue(OptionWinnowValue):
     def get_default(self):
         return self._default if self._default is not None else self.values_lookup.keys()[0]
 
+    def get_default_key(self):
+        return self.get_default()
+
     @property
     def default(self):
         from winnow.options import OptionsSet
 
-        default_string = self._default if self._default is not None else self.values_lookup.keys()[0]
-        default_value = self.values_lookup[default_string]
+        default_key = self.get_default_key()
+        default_value = self.values_lookup[default_key]
         new_value = deepcopy(default_value)
 
         value_options = new_value.get(u"options") if hasattr(new_value, 'get') else None
         if value_options is None or value_options == {}:
-            return default_string
+            return self.get_default()
         new_value[u"options"] = OptionsSet(value_options).default().store
 
         info = self.get_merged_info(self)
@@ -204,8 +201,6 @@ class OptionStringWinnowValue(OptionWinnowValue):
 
 
     def intersection(self, other):
-        #
-        # print "string intersection"
 
         from winnow.options import OptionsSet
 
@@ -215,7 +210,11 @@ class OptionStringWinnowValue(OptionWinnowValue):
 
         default = None
 
-        if isinstance(other, OptionNullWinnowValue):
+        if type(other) == OptionResourceWinnowValue:
+            msg = "You cannot merge a string with a resource: self: %s\n other: %s" % (self, other)
+            raise OptionsExceptionIncompatibleTypes(msg)
+
+        elif isinstance(other, OptionNullWinnowValue):
 
             other_options = other._get_options()
             if other_options is None:
@@ -314,11 +313,19 @@ class OptionStringWinnowValue(OptionWinnowValue):
         return value.get(u"options")
 
     def munge_values(self, this_value, other_value):
+        #WTF is this really meant to do!!!!!
 
         from winnow.options import OptionsSet
 
-        new_value = deepcopy(other_value)
-        new_value.update(deepcopy(this_value))
+        try:
+            new_value = deepcopy(other_value)
+            new_value.update(deepcopy(this_value))
+        except Exception, e:
+            print "this_value", this_value
+            print "other_value", other_value
+            raise e
+
+
         ## and then merge their options
         this_options = self._get_options(this_value)
         that_options = self._get_options(other_value)
@@ -429,6 +436,31 @@ class OptionResourceWinnowValue(OptionStringWinnowValue):
         return OptionResourceWinnowValue(value)
 
 
+    def _set_value_list(self, value_list):
+        self.values_lookup = {}
+        for v in value_list:
+            if type(v) == unicode:
+                raise Exception("in _set_value_list the values should be dereferenced ")
+            single_value = v[u"path"]
+            self.validate_single_value(single_value)
+            self.values_lookup[single_value] = v
+
+
+    def get_default(self):
+        # should return a path with a ref at the front
+        default = self._default if self._default is not None else self.values_lookup.keys()[0]
+
+        if type(default)== dict:
+            default = default["path"]
+        if not default.startswith("$ref:"):
+            default = "$ref:%s" % default
+        return default
+
+
+    def get_default_key(self):
+
+        return self.get_default()[5:]
+
     @staticmethod
     def _are_related_in_taxonomy(path_a, path_b):
         return path_a == path_b or path_a.startswith(path_b) or path_b.startswith(path_a)
@@ -514,7 +546,7 @@ class OptionResourceWinnowValue(OptionStringWinnowValue):
 
         values = []
 
-        if isinstance(other, OptionNullWinnowValue):
+        if type(other) == OptionNullWinnowValue:
 
             # print "a null resource"
 
@@ -537,11 +569,10 @@ class OptionResourceWinnowValue(OptionStringWinnowValue):
 
                 values.append(new_value)
 
-        else:
+        elif type(other) == OptionStringWinnowValue:
+            raise OptionsExceptionIncompatibleTypes("You cannot merge and resource with a string: %s" % other)
 
-            # print "a real resource"
-            #
-            # print "other keys", other.values_lookup.keys()
+        else:
 
             # take a cope of the the possible values in a lookup table keyed by path
             all_values = deepcopy(self.values_lookup)
@@ -561,28 +592,19 @@ class OptionResourceWinnowValue(OptionStringWinnowValue):
             # for each intersecting path find the most specific option set on each side and merge them
             values = []
 
-            # print "intersecting_paths", intersecting_paths
-
             for path in intersecting_paths:
                 # find best fit values to get merged options
                 this_value = self.values_lookup[self._nearest_match(path, self_paths)]
                 other_value = other.values_lookup[self._nearest_match(path, other_paths)]
 
-                # print "this_value", this_value
-                # print "other_value", other_value
-
                 merged_value = self.munge_values(this_value, other_value)
 
-                # options = merged_value["options"]
-                # print "options xxx for %s" % path, options.keys()
                 # and then add these options to a copy of the origional value from all_values
                 new_value = all_values[path]
                 if "options" in merged_value:
                     new_value["options"] = merged_value["options"]
 
                 values.append(new_value)
-
-        # print "values", json_dumps(values)
 
         ## if there is no intersection return None
         if len(values) == 0:
@@ -593,6 +615,28 @@ class OptionResourceWinnowValue(OptionStringWinnowValue):
         info[VALUES_KEY_NAME] = values
 
         return self.__class__(info)
+
+
+    def as_json(self):
+
+        # values = self.values if isinstance(self.values, list) else [self.values]
+        if self.values == u"/processes/opendesk/fine-sanding":
+            raise Exception("fuckup")
+
+        ## return the value without metadata is there is none
+        if self.name is None and self.scopes is None and self.description is None and self.image_url is None:
+            # if not isinstance(self.values[0], dict):
+            return self.values
+
+
+        ## otherwise wrap it in a dict
+        value =  {
+            u"type": self.type,
+            VALUES_KEY_NAME: self.values,
+        }
+
+
+        return self.update_with_info(value)
 
 
 class OptionSizeWinnowValue(OptionStringWinnowValue):

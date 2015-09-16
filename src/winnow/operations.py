@@ -16,22 +16,31 @@ def add_doc(target, doc):
 
 
 def allows(source_a, source_b):
-    options_a = OptionsSet(source_a.get_options_dict())
-    options_b = OptionsSet(source_b.get_options_dict())
-    return options_a.allows(options_b)
+    set_a = OptionsSet(inline.get_inlined_options(source_a))
+    set_b = OptionsSet(inline.get_inlined_options(source_b))
+    return set_a.allows(set_b)
 
 
+def is_allowed_by(source_a, source_b):
+    return allows(source_b, source_a)
 
+
+def disallowed_keys(source_a, source_b):
+    set_a = OptionsSet(inline.get_inlined_options(source_a))
+    set_b = OptionsSet(inline.get_inlined_options(source_b))
+    return set_b.disallowed_keys(set_a)
+
+
+def filter_allows(filter_source, possible):
+    return [p for p in possible if allows(filter_source, p)]
+
+
+def filter_allowed_by(filter_source, possible):
+    return [p for p in possible if is_allowed_by(filter_source, p)]
 
 
 def merge(source_a, source_b, target, doc):
 
-    # print "source_a", source_a
-    # print "source_b", source_b
-    # print "target", target
-    # print "doc", doc
-
-    # print source_a, source_b
     doc_a = source_a.get_doc()
     doc_b = source_b.get_doc()
 
@@ -145,24 +154,12 @@ def _trim_out_off_scope(node, scopes):
                 _trim_out_off_scope(child, scopes)
 
 
-def filter_allows(filter_source, possible):
-    filter_options = OptionsSet(filter_source.get_options_dict())
-    return [p for p in possible if filter_options.allows(OptionsSet(p.get_options_dict()))]
 
 
-def filter_allowed_by(filter_source, possible):
-    filter_options = OptionsSet(filter_source.get_options_dict())
-    return [p for p in possible if OptionsSet(p.get_options_dict()).allows(filter_options)]
 
 
-def is_allowed_by(filter_source, possible):
-    filter_options = OptionsSet(filter_source.get_options_dict())
-    return OptionsSet(possible.get_options_dict()).allows(filter_options)
 
 
-def disallowed_keys(filter_source, possible):
-    filter_options = OptionsSet(filter_source.get_options_dict())
-    return OptionsSet(possible.get_options_dict()).disallowed_keys(filter_options)
 
 
 def expand(source, target):

@@ -384,39 +384,5 @@ class TestOptionSieveCreation(unittest.TestCase):
         self.assertTrue(option7 is None)
 
 
-    def test_is_subset_with_path(self):
-
-        option1 = value_factory({
-            u"type": VALUE_TYPE_SET_RESOURCE,
-            u"name": u"colour",
-            u"description": u"please choose one of the colours",
-            VALUES_KEY_NAME: [
-                u"red",
-            ]
-        })
-
-        option2 = value_factory({
-            u"type": VALUE_TYPE_SET_RESOURCE,
-            u"name": u"colour",
-            u"description": u"please choose one of the colours",
-            VALUES_KEY_NAME: [
-                {
-                    u"type": u"material",
-                    u"name": u"red",
-                    u"description": u"the colour red",
-                    u"image_uri": u"http://something.com/khgfdkyg.png",
-                    u"path": u"red",
-                },
-                {
-                    u"type": u"material",
-                    u"name": u"blue",
-                    u"description": u"the colour blue",
-                    u"image_uri": u"http://something.com/khgfdkyg.png",
-                    u"path": u"blue"
-                }
-            ]
-        })
-
-        self.assertTrue(option1.issubset(option2))
 
 
