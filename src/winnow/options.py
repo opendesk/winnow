@@ -162,6 +162,7 @@ class OptionsSet(collections.MutableMapping):
 
     def allows(self, other):
         disallowed = self._disallowed(other)
+        print "disallowed", disallowed
         return not bool(disallowed)
 
 
@@ -193,7 +194,7 @@ class OptionsSet(collections.MutableMapping):
     def default(self):
         options = {}
         for k, v in self.store.iteritems():
-            options[k] = value_factory(v).default
+            options[k] = value_factory(v).get_default()
 
         return OptionsSet(options)
 

@@ -1,4 +1,5 @@
 import winnow
+from winnow import utils
 from winnow.models.base import WinnowVersion
 from winnow.models.product import WinnowProduct
 from winnow.exceptions import OptionsExceptionFailedValidation, OptionsExceptionReferenceError, OptionsExceptionNotAllowed
@@ -27,8 +28,10 @@ class WinnowFileset(WinnowVersion):
         kwargs = {"product_version": "%s@%s.%s.%s" % (product_doc["path"], version[0], version[1], version[2])}
         fileset = WinnowFileset.add_doc(db, fileset_json, kwargs=kwargs)
 
-        if not product.allows(fileset):
-            raise OptionsExceptionNotAllowed
+        # TODO check how this works now
+
+        # if not product.allows(fileset):
+        #     raise OptionsExceptionNotAllowed("fileset not allowed: %s" % utils.json_dumps(fileset_json))
 
         db.index_fileset(product_path, fileset.kwargs[u"uuid"])
 

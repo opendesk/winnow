@@ -134,6 +134,8 @@ class TestExpandReferences(unittest.TestCase):
 
         doc = manufacturing_spec.get_doc()
 
+        winnow.validate(doc)
+
         print winnow.utils.json_dumps(doc)
 
         self.fail("poo")

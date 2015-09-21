@@ -149,6 +149,7 @@ class OptionStringWinnowValue(OptionWinnowValue):
     def get_default_key(self):
         return self.get_default()
 
+
     @property
     def default(self):
         from winnow.options import OptionsSet
@@ -160,6 +161,7 @@ class OptionStringWinnowValue(OptionWinnowValue):
         value_options = new_value.get(u"options") if hasattr(new_value, 'get') else None
         if value_options is None or value_options == {}:
             return self.get_default()
+
         new_value[u"options"] = OptionsSet(value_options).default().store
 
         info = self.get_merged_info(self)
