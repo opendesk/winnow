@@ -153,15 +153,6 @@ def _trim_out_off_scope(node, scopes):
             if isinstance(child, list):
                 _trim_out_off_scope(child, scopes)
 
-
-
-
-
-
-
-
-
-
 def expand(source, target):
     new_doc = deepcopy(source.get_doc())
     target.clone_history_from(source)

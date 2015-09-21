@@ -190,6 +190,12 @@ class OptionsSet(collections.MutableMapping):
 
         return disallowed
 
+    def minimal_default_value(self):
+        options = {}
+        for k, v in self.store.iteritems():
+            options[k] = value_factory(v).get_default()
+
+        return OptionsSet(options)
 
     def default(self):
         options = {}

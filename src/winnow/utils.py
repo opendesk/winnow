@@ -23,10 +23,10 @@ class DecimalEncoder(json.JSONEncoder):
     internally all numbers are stored as Decimals
     """
 
-    def encode(self, o):
-        if isinstance(o, list):
-            return super(DecimalEncoder, self).encode(sorted(o))
-        return super(DecimalEncoder, self).encode(o)
+    # def encode(self, o):
+    #     if isinstance(o, list):
+    #         return super(DecimalEncoder, self).encode(sorted(o))
+    #     return super(DecimalEncoder, self).encode(o)
 
 
     def default(self, o):
