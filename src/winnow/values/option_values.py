@@ -143,32 +143,30 @@ class OptionStringWinnowValue(OptionWinnowValue):
             self.values_lookup[single_value] = v
 
 
-    def get_default(self):
-        return self._default if self._default is not None else self.values_lookup.keys()[0]
-
-    def get_default_key(self):
-        return self.get_default()
-
-
     @property
     def default(self):
-        from winnow.options import OptionsSet
+        return self.values_lookup.keys()[0] if self._default is None else self._default
 
-        default_key = self.get_default_key()
-        default_value = self.values_lookup[default_key]
-        new_value = deepcopy(default_value)
-
-        value_options = new_value.get(u"options") if hasattr(new_value, 'get') else None
-        if value_options is None or value_options == {}:
-            return self.get_default()
-
-        new_value[u"options"] = OptionsSet(value_options).default().store
-
-        info = self.get_merged_info(self)
-        info[u"type"] = self.type,
-        info[VALUES_KEY_NAME] = [new_value]
-
-        return self.__class__(info).as_json()
+    #
+    # @property
+    # def default(self):
+    #     from winnow.options import OptionsSet
+    #
+    #     default_key = self.get_default_key()
+    #     default_value = self.values_lookup[default_key]
+    #     new_value = deepcopy(default_value)
+    #
+    #     value_options = new_value.get(u"options") if hasattr(new_value, 'get') else None
+    #     if value_options is None or value_options == {}:
+    #         return self.get_default()
+    #
+    #     new_value[u"options"] = OptionsSet(value_options).default().store
+    #
+    #     info = self.get_merged_info(self)
+    #     info[u"type"] = self.type,
+    #     info[VALUES_KEY_NAME] = [new_value]
+    #
+    #     return self.__class__(info).as_json()
 
 
     def isdisjoint(self, other):
@@ -447,21 +445,18 @@ class OptionResourceWinnowValue(OptionStringWinnowValue):
             self.validate_single_value(single_value)
             self.values_lookup[single_value] = v
 
-
-    def get_default(self):
-        # should return a path with a ref at the front
+    @property
+    def default(self):
+        # should return a path without a ref at the front
         default = self._default if self._default is not None else self.values_lookup.keys()[0]
-
         if type(default)== dict:
             default = default["path"]
-        if not default.startswith("$ref:"):
-            default = "$ref:%s" % default
+        if default.startswith("$ref:"):
+            default = default[5:]
+        # if not default.startswith("$ref:"):
+        #     default = "$ref:%s" % default
         return default
 
-
-    def get_default_key(self):
-
-        return self.get_default()[5:]
 
     @staticmethod
     def _are_related_in_taxonomy(path_a, path_b):

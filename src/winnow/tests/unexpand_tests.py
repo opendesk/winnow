@@ -3,6 +3,7 @@ from copy import deepcopy
 import unittest
 import winnow
 from winnow.models.base import WinnowVersion
+from winnow import utils
 
 from db import MockKVStore
 
@@ -153,6 +154,7 @@ class TestUnexpandReferences(unittest.TestCase):
         favs = WinnowVersion.get_from_path(self.db, "/prefs/favorites")
         merged = WinnowVersion.merged(self.db, breed1.get_doc(), {}, breed1, favs)
         merged_doc = merged.get_doc()
+        print utils.json_dumps(merged_doc)
         self.assertEqual(merged_doc["options"]["colours"], u"$ref:/choices/dog_choices~/options/colours")
 
 

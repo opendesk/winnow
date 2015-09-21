@@ -191,7 +191,8 @@ class NumericNumberWinnowValue(NumericWinnowValue):
     def possible_values(self):
         return {self.number}
 
-    def get_default(self):
+    @property
+    def default(self):
         return self.number
 
 
@@ -291,8 +292,9 @@ class NumericSetWinnowValue(NumericWinnowValue):
     def possible_values(self):
         return set(self.as_list)
 
-    def get_default(self):
-        return min(self.as_list)
+    @property
+    def default(self):
+        return min(self.as_list) if self._default is None else self._default
 
 
     def intersection(self, other):
@@ -340,8 +342,9 @@ class NumericRangeWinnowValue(NumericWinnowValue):
         if self.max < self.min:
             raise OptionsExceptionFailedValidation("NumericRangeSieveValue: max %s less than min %s" % (self.max, self.min))
 
-    def get_default(self):
-        return self.min
+    @property
+    def default(self):
+        return self.min if self._default is None else self._default
 
     def possible_values(self):
         return None
@@ -461,8 +464,9 @@ class NumericStepWinnowValue(NumericRangeWinnowValue):
             info[u"value"] = values
             return NumericSetWinnowValue(info)
 
-    def get_default(self):
-        return min(self.possible_values())
+    @property
+    def default(self):
+        return min(self.possible_values()) if self._default is None else self._default
 
     def possible_values(self):
         poss = []

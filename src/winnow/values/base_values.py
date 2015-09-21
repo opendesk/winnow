@@ -22,13 +22,13 @@ class BaseWinnowValue(object):
 
     @property
     def default(self):
-        return self.default_value
+        return self._default
 
-    @property
-    def default_value(self):
-        default = self._default if self._default is not None else self.get_default()
-        # print "default", default
-        return default
+    # @property
+    # def default_value(self):
+    #     default = self._default if self._default is not None else self.get_default()
+    #     # print "default", default
+    #     return default
 
     def get_merged_info(self, other):
 
@@ -62,7 +62,7 @@ class BaseWinnowValue(object):
         if self.scopes is not None:
             as_json[u"scopes"] = self.scopes
 
-        as_json[u"default"] = self.default_value
+        as_json[u"default"] = self.default
 
         return as_json
 

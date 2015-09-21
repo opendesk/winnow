@@ -42,8 +42,9 @@ class BooleanWinnowValue(BaseWinnowValue):
     def from_value(cls, value):
         return cls(value)
 
-    def get_default(self):
-        return False
+    @property
+    def default(self):
+        return False if self._default is None else self._default
 
     def as_json(self):
 
