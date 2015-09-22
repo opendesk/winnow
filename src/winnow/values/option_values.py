@@ -424,7 +424,7 @@ class OptionResourceWinnowValue(OptionStringWinnowValue):
         self.values_lookup = {}
         for v in value_list:
             if type(v) == unicode:
-                raise Exception("got a string in _set_value_list fro refs this should be a dict by now")
+                raise Exception("got a string in _set_value_list from refs this should be a dict by now: %s" % v)
             single_value = v[u"path"]
             self.validate_single_value(single_value)
             self.values_lookup[single_value] = v
