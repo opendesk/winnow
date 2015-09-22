@@ -21,7 +21,7 @@ class TestUnexpandReferences(unittest.TestCase):
             "type": "choices",
             "path": "/choices/dog_choices",
             "options":{
-                "colours": ["brown", "white", "red"],
+                "colours": ["brown", "red", "white"],
             }
         }
 
@@ -108,7 +108,7 @@ class TestUnexpandReferences(unittest.TestCase):
             "type": "prefs",
             "path": "/prefs/favorites",
             "options":{
-                "colours": ["red", "white", "green"]
+                "colours": ["green","red", "white"]
             }
         }
         
@@ -145,7 +145,7 @@ class TestUnexpandReferences(unittest.TestCase):
             "type": "prefs",
             "path": "/prefs/favorites",
             "options":{
-                "colours": ["brown", "white", "red"]
+                "colours": ["brown", "red", "white"]
             }
         }
 

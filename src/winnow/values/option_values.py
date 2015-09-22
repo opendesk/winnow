@@ -18,7 +18,6 @@ class OptionWinnowValue(BaseWinnowValue):
         else:
             self.set_my_values(value)
 
-
     def __len__(self):
         return len(self.values_lookup)
 
@@ -37,8 +36,6 @@ class OptionWinnowValue(BaseWinnowValue):
             return True
         elif isinstance(self.value, dict):
             return True
-
-
 
 
     @classmethod
@@ -97,7 +94,7 @@ class OptionWinnowValue(BaseWinnowValue):
                 first = list_or_single[0]
                 self.values = first
             else:
-                self.values = list_or_single
+                self.values = sorted(list_or_single)
         else:
             self._set_value_list([list_or_single])
             self.values = list_or_single
@@ -141,7 +138,6 @@ class OptionStringWinnowValue(OptionWinnowValue):
             single_value = v if isinstance(v, unicode) else v[u"value"]
             self.validate_single_value(single_value)
             self.values_lookup[single_value] = v
-
 
     @property
     def default(self):
@@ -385,8 +381,6 @@ class OptionNullWinnowValue(OptionStringWinnowValue):
         return None
 
 
-
-
     def isdisjoint(self, other):
         return False
 
@@ -408,22 +402,12 @@ class OptionNullWinnowValue(OptionStringWinnowValue):
         if options is None:
             return None
 
-        # values = None
-        #
-        # ## return the value without metadata is there is none
-        # if self.name is None and self.scopes is None and self.description is None and self.image_url is None:
-        #     return values
-
-        ## otherwise wrap it in a dict
         value =  {
             u"type": self.type,
             u"options": options,
         }
 
-
         return value
-
-
 
 
 class OptionResourceWinnowValue(OptionStringWinnowValue):
