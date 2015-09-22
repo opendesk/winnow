@@ -194,7 +194,12 @@ class OptionsSet(collections.MutableMapping):
         options = {}
         for k, v in self.store.iteritems():
             options[k] = value_factory(v).default
+        return OptionsSet(options)
 
+    def default_full_values(self):
+        options = {}
+        for k, v in self.store.iteritems():
+            options[k] = value_factory(v).default_full_value
         return OptionsSet(options)
 
     #

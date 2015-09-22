@@ -424,22 +424,34 @@ class OptionResourceWinnowValue(OptionStringWinnowValue):
         self.values_lookup = {}
         for v in value_list:
             if type(v) == unicode:
-                raise Exception("in _set_value_list the values should be dereferenced ")
+                raise Exception("got a string in _set_value_list fro refs this should be a dict by now")
             single_value = v[u"path"]
             self.validate_single_value(single_value)
             self.values_lookup[single_value] = v
 
     @property
     def default(self):
-        # should return a path without a ref at the front
+        # should return a path WITH a ref at the front
         default = self._default if self._default is not None else self.values_lookup.keys()[0]
         if type(default)== dict:
             default = default["path"]
-        if default.startswith("$ref:"):
-            default = default[5:]
-        # if not default.startswith("$ref:"):
-        #     default = "$ref:%s" % default
+        # if default.startswith("$ref:"):
+        #     default = default[5:]
+        if not default.startswith("$ref:"):
+            default = "$ref:%s" % default
         return default
+
+    #
+    # @property
+    # def default_full_value(self):
+    #
+    #     default = self._default if self._default is not None else self.values_lookup.keys()[0]
+    #     if type(default)== dict:
+    #         return default
+    #     if not default.startswith("$ref:"):
+    #         default = "$ref:%s" % default
+    #     return self.values_lookup[default]
+
 
 
     @staticmethod
@@ -557,6 +569,7 @@ class OptionResourceWinnowValue(OptionStringWinnowValue):
 
             # take a cope of the the possible values in a lookup table keyed by path
             all_values = deepcopy(self.values_lookup)
+
             all_values.update(deepcopy(other.values_lookup))
 
             # prune and child nodes from each set

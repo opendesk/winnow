@@ -20,6 +20,11 @@ class BaseWinnowValue(object):
             self.scopes = None
             self._default = None
 
+
+    @property
+    def default_full_value(self):
+        return self.default
+
     @property
     def default(self):
         return self._default
