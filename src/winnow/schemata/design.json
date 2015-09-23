@@ -77,6 +77,18 @@
                     },
                     "required": ["value"]
                 },
+                "estimated_cost": {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "type": "number"
+                        },
+                        "type":{
+                            "currency": "string"
+                        }
+                    },
+                    "required": ["value"]
+                },
                 "point": {
                     "properties": {
                         "lat": {
@@ -113,5 +125,3 @@
         }
     ]
 }
-
-

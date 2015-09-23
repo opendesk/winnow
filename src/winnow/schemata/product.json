@@ -21,6 +21,18 @@
                 "version": {},
                 "changes": {},
                 "shortcode": {},
+                "estimated_cost": {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "type": "number"
+                        },
+                        "type":{
+                            "currency": "string"
+                        }
+                    },
+                    "required": ["value"]
+                },
                 "components": {},
                 "type": {
                     "type": "string",
