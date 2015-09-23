@@ -275,7 +275,6 @@ class NumericSetWinnowValue(NumericWinnowValue):
                 raise OptionsExceptionFailedValidation("NumericNumberSieveValue must be a Decimal")
             self.as_list = as_list
 
-
         for v in self.as_list:
             if not isinstance(v, Decimal):
                 raise OptionsExceptionFailedValidation("NumericSetSieveValue all values must be Decimals")
@@ -334,7 +333,6 @@ class NumericRangeWinnowValue(NumericWinnowValue):
     def __init__(self, value):
 
         super(NumericRangeWinnowValue, self).__init__(value)
-
         self.max = value[u"max"]
         self.min = value[u"min"]
         if self.max < self.min:

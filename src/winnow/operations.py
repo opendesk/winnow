@@ -101,13 +101,11 @@ def default_choices(source, scopes):
 def quantify(source, target, doc):
 
     quantity_options =  {
-            u"type": u"numeric::step",
+            u"type": u"numeric::range",
             u"name": u"Quantity",
             u"default": Decimal("1"),
-            u"max": Decimal("10000"),
+            u"max": Decimal("100"),
             u"min": Decimal("1"),
-            u"start": Decimal("0"),
-            u"step": Decimal("1")
         }
 
 

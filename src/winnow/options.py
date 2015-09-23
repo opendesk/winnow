@@ -7,6 +7,7 @@ from winnow.values import value_factory, value_path_factory
 from winnow.values.option_values import OptionResourceWinnowValue, OptionStringWinnowValue
 from winnow.keys.key_matching import KeyMatcher
 from winnow.exceptions import OptionsExceptionEmptyOptionValues, OptionsExceptionReferenceError
+import time
 
 """
 
@@ -194,7 +195,9 @@ class OptionsSet(collections.MutableMapping):
         options = {}
         for k, v in self.store.iteritems():
             options[k] = value_factory(v).default
+
         return OptionsSet(options)
+
 
     def default_full_values(self):
         options = {}
