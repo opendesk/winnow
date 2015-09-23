@@ -92,11 +92,11 @@ class NumericWinnowValue(BaseWinnowValue):
                 return NumericRangeWinnowValue(value)
             elif numeric_type == VALUE_TYPE_NUMERIC_STEP:
                 step = NumericStepWinnowValue(value)
-                possible = step.possible_values()
-                if len(possible) == 0:
+                first = step.first_value()
+                if first is None:
                     raise OptionsExceptionFailedValidation("NumericSieveValue: empty set")
-                elif len(possible) == 1:
-                    return NumericNumberWinnowValue(list(possible)[0])
+                elif first + step.step > step.max:
+                    return NumericNumberWinnowValue(first)
                 else:
                     return step
         else:
@@ -242,7 +242,6 @@ class NumericSetWinnowValue(NumericWinnowValue):
             if len(as_list) > MAX_VALUE_SET_SIZE:
                 raise OptionsExceptionNotAllowed("maximum value set size exceeded")
             elif len(as_list) == 0:
-                print "should be this"
                 return None
             elif len(as_list) == 1:
                 return NumericNumberWinnowValue(list(as_list)[0])
@@ -279,7 +278,6 @@ class NumericSetWinnowValue(NumericWinnowValue):
 
         for v in self.as_list:
             if not isinstance(v, Decimal):
-                print v
                 raise OptionsExceptionFailedValidation("NumericSetSieveValue all values must be Decimals")
 
         if len(self.as_list) == 0:
@@ -410,10 +408,11 @@ class NumericStepWinnowValue(NumericRangeWinnowValue):
     def make(cls, value):
 
         step = cls(value)
-        poss = step.possible_values()
-        if len(poss) == 1:
+
+        first = step.first_value()
+        if first + step.step > step.max:
             kwargs = {
-                u"value": poss[0]
+                u"value": first
             }
             if value.get(u"name") != None:
                 kwargs[u"name"] = value.get(u"name")
@@ -433,8 +432,7 @@ class NumericStepWinnowValue(NumericRangeWinnowValue):
         self.start = value[u"start"]
         self.step = value[u"step"]
 
-        if len(self.possible_values()) == 0:
-
+        if self.first_value() is None:
             raise OptionsExceptionFailedValidation("NumericStepSieveValue: empty set")
 
 
@@ -466,7 +464,15 @@ class NumericStepWinnowValue(NumericRangeWinnowValue):
 
     @property
     def default(self):
-        return min(self.possible_values()) if self._default is None else self._default
+        return self.first_value() if self._default is None else self._default
+
+
+    def first_value(self):
+        v = self.start
+        while v < self.min:
+            v += self.step
+        return v if v >= self.min else None
+
 
     def possible_values(self):
         poss = []
