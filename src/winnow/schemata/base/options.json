@@ -38,7 +38,10 @@
                             "$ref": "https://opendesk.cc/schemata/base/reference.json#"
                         }
                     },
-                    {"type": "string"},
+                    {
+                        "type": "string",
+                        "pattern": "^([$]ref[:]){1}([\/A-Za-z0-9]*)$|^([\/A-Za-z0-9]*)$"
+                    },
                     {"$ref": "https://opendesk.cc/schemata/base/set.json#"},
                     {"$ref": "https://opendesk.cc/schemata/base/numeric.json#"},
                     {"$ref": "https://opendesk.cc/schemata/base/reference.json#"},
