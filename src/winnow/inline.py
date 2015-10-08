@@ -92,7 +92,7 @@ def _find_expanded_ref(reference, doc, source, options, ref_hashes, default_scop
 
             if default_scopes is not None:
                 for k, v in referenced_doc[u"options"].iteritems():
-                    if isinstance(v, dict) and v.get("scopes") is None:
+                    if hasattr(v, 'get') and v.get("scopes") is None:
                         v["scopes"] = default_scopes
 
         new_doc = _extract_internal_path(referenced_doc, internal_path) if internal_path else referenced_doc
