@@ -1,10 +1,13 @@
 {
     "id": "https://opendesk.cc/schemata/base/option.json",
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "title": "Winnow Value",
+    "title": "Winnow Option",
     "type": "object",
     "properties": {
         "name":{
+            "type": "string"
+        },
+        "type":{
             "type": "string"
         },
         "description":{

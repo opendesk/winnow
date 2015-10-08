@@ -29,7 +29,7 @@ class TestUnexpandReferences(unittest.TestCase):
             "type": "dog",
             "path": "/breeds/collie",
             "options":{
-                "colours": "$ref:/choices/dog_choices~/options/colours",
+                "colours": "$ref:/choices/dog_choices#/options/colours",
                 "size": ["big", "small"]
             }
         }
@@ -38,7 +38,7 @@ class TestUnexpandReferences(unittest.TestCase):
             "type": "dog",
             "path": "/breeds/sausage",
             "options":{
-                "colours": "$ref:/choices/dog_choices~/options/colours"
+                "colours": "$ref:/choices/dog_choices#/options/colours"
             }
         }
 
@@ -61,11 +61,11 @@ class TestUnexpandReferences(unittest.TestCase):
         ref_hashes = {}
         expanded_doc = deepcopy(breed1.get_doc())
         winnow.inline.inline_refs(expanded_doc, expanded_doc, breed1, ref_hashes)
-        value = u"$ref:/choices/dog_choices~/options/colours"
+        value = u"$ref:/choices/dog_choices#/options/colours"
         colour_options = self.dog_base_choices["options"]["colours"]
         hash = winnow.utils.get_doc_hash(winnow.utils.json_dumps(colour_options))
         self.assertEqual(ref_hashes.get(hash), value)
-        self.assertEqual(expanded_doc["options"]["colours"], ["brown", "white", "red"])
+        self.assertEqual(expanded_doc["options"]["colours"], ["brown", "red", "white"])
 
 
     def test_unexpand(self):
@@ -77,14 +77,13 @@ class TestUnexpandReferences(unittest.TestCase):
 
         winnow.inline.inline_refs(expanded_doc, expanded_doc, breed1, ref_hashes)
 
-        ref_value = u"$ref:/choices/dog_choices~/options/colours"
+        ref_value = u"$ref:/choices/dog_choices#/options/colours"
         colour_options = self.dog_base_choices["options"]["colours"]
         hash = winnow.utils.get_doc_hash(winnow.utils.json_dumps(colour_options))
         self.assertEqual(ref_hashes.get(hash), ref_value)
-        self.assertEqual(expanded_doc["options"]["colours"], ["brown", "white", "red"])
+        self.assertEqual(expanded_doc["options"]["colours"], ["brown", "red", "white"])
         winnow.inline.restore_unchanged_refs(expanded_doc, ref_hashes)
         self.assertEqual(expanded_doc["options"]["colours"], ref_value)
-
 
 
     def test_expand_key_hash_creation_2(self):
@@ -95,7 +94,7 @@ class TestUnexpandReferences(unittest.TestCase):
         expanded = breed1.__class__(breed1.db, kwargs)
         ref_hashes = winnow.expand(breed1, expanded)
         breed1.db.set(expanded.kwargs[u"uuid"], expanded.kwargs)
-        value = u"$ref:/choices/dog_choices~/options/colours"
+        value = u"$ref:/choices/dog_choices#/options/colours"
         colour_options = self.dog_base_choices["options"]["colours"]
         hash = winnow.utils.get_doc_hash(winnow.utils.json_dumps(colour_options))
 
@@ -136,7 +135,7 @@ class TestUnexpandReferences(unittest.TestCase):
         favs = WinnowVersion.get_from_path(self.db, "/prefs/favorites")
         merged = WinnowVersion.merged(self.db, breed1.get_doc(), {}, breed1, favs)
         merged_doc = merged.get_doc()
-        self.assertEqual(merged_doc["options"]["colours"], u"$ref:/choices/dog_choices~/options/colours")
+        self.assertEqual(merged_doc["options"]["colours"], u"$ref:/choices/dog_choices#/options/colours")
 
 
     def test_merge_unexpands_unaffected_2(self):
@@ -155,7 +154,7 @@ class TestUnexpandReferences(unittest.TestCase):
         merged = WinnowVersion.merged(self.db, breed1.get_doc(), {}, breed1, favs)
         merged_doc = merged.get_doc()
         print utils.json_dumps(merged_doc)
-        self.assertEqual(merged_doc["options"]["colours"], u"$ref:/choices/dog_choices~/options/colours")
+        self.assertEqual(merged_doc["options"]["colours"], u"$ref:/choices/dog_choices#/options/colours")
 
 
     def test_merge_unexpands_unaffected_3(self):
@@ -173,7 +172,7 @@ class TestUnexpandReferences(unittest.TestCase):
         favs = WinnowVersion.get_from_path(self.db, "/prefs/favorites")
         merged = WinnowVersion.merged(self.db, breed1.get_doc(), {}, breed1, favs)
         merged_doc = merged.get_doc()
-        self.assertEqual(merged_doc["options"]["colours"], u"$ref:/choices/dog_choices~/options/colours")
+        self.assertEqual(merged_doc["options"]["colours"], u"$ref:/choices/dog_choices#/options/colours")
 
 
     def test_merge_unexpands_unaffected_4(self):

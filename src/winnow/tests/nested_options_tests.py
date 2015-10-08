@@ -264,7 +264,7 @@ class TestNestedOptionSieveCreation(unittest.TestCase):
         self.assertTrue(d[VALUES_KEY_NAME][1][u"value"] == u"red")
         self.assertTrue(d[VALUES_KEY_NAME][1][u"options"][u"paint_coats"][u"max"] == Decimal(6))
         options = d[VALUES_KEY_NAME][1][u"options"]
-        self.assertTrue(options[u"apples"] == [u"cox", u"jazz", u"bramley"])
+        self.assertTrue(options[u"apples"] == [u"bramley", u"cox", u"jazz"])
 
     def test_intersection_2(self):
         ## if have no options just copies

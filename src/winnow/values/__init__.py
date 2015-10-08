@@ -78,7 +78,7 @@ def value_path_factory(key, input_value):
 
 
 def value_factory(input_value, key=None):
-
+    #
     # print "***************"
     # print "key", key
     # print "input_value", utils.json_dumps(input_value)
@@ -130,7 +130,10 @@ def value_factory(input_value, key=None):
                     u"values": value
                 }
             else:
-                cls = VALUE_TYPES[v["type"]]
+                if v["type"] == VALUE_TYPE_VALUE_STRING:
+                    cls = OptionWinnowValue
+                else:
+                    cls = VALUE_TYPES[v["type"]]
     else:
         pass
 
@@ -152,6 +155,7 @@ VALUE_TYPES = {
     VALUE_TYPE_NUMERIC_SET: NumericWinnowValue,
     VALUE_TYPE_NUMERIC_STEP: NumericWinnowValue,
     VALUE_TYPE_SET_STRING: OptionWinnowValue,
+    VALUE_TYPE_VALUE_STRING: OptionWinnowValue,
     VALUE_TYPE_SET_COLOUR: OptionWinnowValue,
     VALUE_TYPE_SET_SIZE: OptionWinnowValue,
     VALUE_TYPE_SET_RESOURCE: OptionResourceWinnowValue,

@@ -6,6 +6,9 @@ class OptionsInterface(object):
     def set_is_expanded(self):
         raise OptionsExceptionMissingInterfaceMethod("set_is_expanded")
 
+    def get_type(self):
+        raise OptionsExceptionMissingInterfaceMethod("get_type")
+
     def set_doc_hash(self, hash):
         raise OptionsExceptionMissingInterfaceMethod("set_doc_hash")
 

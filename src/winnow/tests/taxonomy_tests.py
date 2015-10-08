@@ -83,7 +83,7 @@ class TestTaxonomyValuesWithCollection(unittest.TestCase):
                         "value": "A",
                         "sheets": [
                             {
-                                "sheet": "$ref:~/files/airfix-0",
+                                "sheet": "$ref:#/files/airfix-0",
                                 "use": "$ref:/materials"
                             }
                         ]
@@ -97,13 +97,13 @@ class TestTaxonomyValuesWithCollection(unittest.TestCase):
                         "options": {
                             "strategy": {
                                 "type": "set::string",
-                                "default": "$ref:~/manufacturing/strategies/A",
+                                "default": "$ref:#/manufacturing/strategies/A",
                                 "scopes": [
                                     "maker",
                                     "operator"
                                 ],
                                 "values": [
-                                    "$ref:~/manufacturing/strategies/A"
+                                    "$ref:#/manufacturing/strategies/A"
                                 ]
                             }
                         }

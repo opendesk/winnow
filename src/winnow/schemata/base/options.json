@@ -7,7 +7,7 @@
         "options": {
             "type": "object",
             "patternProperties": {
-                "[/*]?[a-z]": {"oneOf": [
+                "^(([*]\/)?[_0-9a-zA-Z-]{1,}((\/([_0-9a-zA-Z-]){1,}))*)$": {"oneOf": [
                     {
                         "type": "array",
                         "items": {
@@ -17,34 +17,12 @@
                     {
                         "type": "array",
                         "items": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "type": "array",
-                        "items": {
                             "type": "boolean"
                         }
                     },
-                    {
-                        "type": "array",
-                        "items": {
-                            "$ref": "https://opendesk.cc/schemata/resource.json#"
-                        }
-                    },
-                    {
-                        "type": "array",
-                        "items": {
-                            "$ref": "https://opendesk.cc/schemata/base/reference.json#"
-                        }
-                    },
-                    {
-                        "type": "string"
-                    },
-                    {"$ref": "https://opendesk.cc/schemata/base/set.json#"},
+                    {"$ref": "https://opendesk.cc/schemata/base/set_string.json#"},
+                    {"$ref": "https://opendesk.cc/schemata/base/set_resource.json#"},
                     {"$ref": "https://opendesk.cc/schemata/base/numeric.json#"},
-                    {"$ref": "https://opendesk.cc/schemata/base/reference.json#"},
-                    {"$ref": "https://opendesk.cc/schemata/resource.json#"},
                     {"type": "number"},
                     {"type": "null"},
                     {"type": "boolean"}

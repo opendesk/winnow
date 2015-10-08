@@ -4,15 +4,12 @@ from winnow.exceptions import OptionsExceptionReferenceError
 from winnow.options import OptionsSet
 
 
-
-
-
 def _lookup_and_hash_ref(reference, doc, source, options, node, ref_hashes, default_scopes=None):
 
     found = _find_expanded_ref(reference, doc, source, options, ref_hashes, default_scopes=default_scopes)
 
     # this ensures than only external references are unexpanded
-    if not reference.startswith("~"):
+    if reference.startswith(u"~") or reference.startswith(u"#"):
         expanded_hash = utils.get_doc_hash(utils.json_dumps(found))
         # if reference.endswith("birch-faced-plywood"):
         #     print "*******************"
@@ -34,6 +31,19 @@ def _merge_option_dicts(source, options_a, options_b, ref_doc_a, ref_doc_b):
 
     inline_refs(options_a, ref_doc_a, source, ref_hashes)
     inline_refs(options_b, ref_doc_b, source, ref_hashes)
+
+
+    # print "***************** doc a expanded ***********************"
+    #
+    # print utils.json_dumps(options_a)
+    #
+    #
+    # print "***************** doc b expanded ***********************"
+    #
+    #
+    # print utils.json_dumps(options_b)
+    #
+
 
     # do the merge
     set_a = OptionsSet(options_a)
@@ -64,11 +74,17 @@ def _find_expanded_ref(reference, doc, source, options, ref_hashes, default_scop
 
 
     # looks up the contents of a reference
+
+
     if u"~" in reference:
         ref, internal_path = reference.split(u"~")
+    elif u"#" in reference:
+        ref, internal_path = reference.split(u"#")
     else:
         ref = reference
         internal_path = None
+
+
     if ref == "":
         referenced_doc = doc
     else:
@@ -90,10 +106,12 @@ def _find_expanded_ref(reference, doc, source, options, ref_hashes, default_scop
                 options_b = OptionsSet(options)
                 referenced_doc[u"options"] = _merge_option_dicts(source, options_a.store, options_b.store, referenced_doc, doc)
 
-            if default_scopes is not None:
-                for k, v in referenced_doc[u"options"].iteritems():
-                    if hasattr(v, 'get') and v.get("scopes") is None:
-                        v["scopes"] = default_scopes
+            ## TODO look again at the the default scopes thing
+            # if default_scopes is not None:
+            #     for k, v in referenced_doc[u"options"].iteritems():
+            #         print v
+            #         if v.get("scopes") is None:
+            #             v["scopes"] = default_scopes
 
         new_doc = _extract_internal_path(referenced_doc, internal_path) if internal_path else referenced_doc
         # TODO revisit this use of doc as the reference doc to use

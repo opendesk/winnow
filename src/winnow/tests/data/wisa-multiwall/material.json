@@ -15,25 +15,7 @@
     "options":{
         "colour":{
             "type": "set::string",
-            "name": "Colour",
-            "description": "please choose one of the colours",
-            "default": "white",
-            "values": [
-                {
-                    "type": "string",
-                    "name": "White",
-                    "description": "Standard White",
-                    "value": "white",
-                    "RAL": "9010"
-                },
-                {
-                    "type": "string",
-                    "name": "Grey",
-                    "description": "Standard Grey",
-                    "value": "grey",
-                    "RAL": "7001"
-                }
-            ]
+            "values": ["blue", "green"]
         }
     }
 }
