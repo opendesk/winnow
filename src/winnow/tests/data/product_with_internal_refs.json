@@ -18,15 +18,14 @@
             "description": "Choose one of the materials",
             "values": [
                 {
-                    "type": "material",
-                    "path": "/materials/opendesk/sheets/wood/composite/plywood/pre-laminated-plywood/wisa-multiwall",
+
+                    "$ref": "/materials/opendesk/sheets/wood/composite/plywood/pre-laminated-plywood/wisa-multiwall",
                     "options": {
-                        "colour": "$ref:~definitions/colour"
+                        "colour": "$ref:~/definitions/colour"
                     }
                 },
                 {
-                    "type": "material",
-                    "path": "/materials/sheets/wood/composite/plywood/birch-faced-plywood"
+                    "$ref": "/materials/sheets/wood/composite/plywood/birch-faced-plywood"
                 }
 
             ]

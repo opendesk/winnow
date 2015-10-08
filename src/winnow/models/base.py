@@ -8,9 +8,11 @@ from winnow.constants import *
 
 class WinnowVersion(OptionsInterface):
 
-    def __init__(self, db, kwargs):
+    cls_db = None
+
+    def __init__(self, db=None, kwargs={}):
         self.kwargs = deepcopy(kwargs)
-        self.db = db
+        self.db = db if db else self.cls_db
         if self.kwargs.get("uuid") is None:
             self.kwargs["uuid"] = unicode(uuid.uuid4())
 
@@ -94,6 +96,9 @@ class WinnowVersion(OptionsInterface):
 
     def set_doc_hash(self, hash):
         self.kwargs[u"doc_hash"] = hash
+
+    def get_type(self):
+        return self.kwargs[u"doc"][u"type"]
 
     def get_doc_hash(self):
         return self.kwargs[u"doc_hash"]

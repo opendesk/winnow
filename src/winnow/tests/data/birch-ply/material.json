@@ -10,7 +10,7 @@
     "changes": "changes",
     "upstream": "/materials/sheets/wood/composite/plywood",
     "options":{
-        "size" : "$ref:/materials/sheets/wood/composite/plywood~/options/size"
+        "size" : "$ref:/materials/sheets/wood/composite/plywood#/options/size"
     }
 }
 

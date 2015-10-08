@@ -89,7 +89,7 @@ class TestExpandReferences(unittest.TestCase):
         product = self.add_doc_at_data_path("product_with_internal_refs.json")
         expanded = product.expanded()
         doc = expanded.get_doc()
-        self.assertEqual(doc[u"definitions"][u"colour"], doc[u"options"][u"material"][u"values"][0]["options"]["colour"])
+        self.assertEqual(u"blue", doc[u"options"][u"material"][u"values"][0]["options"]["colour"]["values"])
 
     def test_inline_and_scope(self):
         product = self.add_doc_at_data_path("product_with_finishes.json")

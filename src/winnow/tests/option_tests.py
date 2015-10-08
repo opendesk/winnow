@@ -52,7 +52,7 @@ class TestOptionSieveCreation(unittest.TestCase):
         d = option.as_json()
 
         self.assertTrue(isinstance(option, OptionStringWinnowValue))
-        self.assertEqual(d, [u"red", u"blue"])
+        self.assertEqual(d, [u"blue", u"red"])
 
         values = option.values
 
@@ -65,6 +65,57 @@ class TestOptionSieveCreation(unittest.TestCase):
 
         self.assertTrue(isinstance(option, OptionStringWinnowValue))
         self.assertEqual(d, u"red")
+
+
+    def test_create_from_dict_full(self):
+
+        option = value_factory({
+            u"type": VALUE_TYPE_SET_STRING,
+            u"name": u"colour",
+            u"description": u"please choose one of the colours",
+            VALUES_KEY_NAME: [
+                {
+                    u"type": VALUE_TYPE_VALUE_STRING,
+                    u"name": u"red",
+                    u"description": u"the colour red",
+                    u"image_uri": u"http://something.com/khgfdkyg.png",
+                    u"value": u"red",
+                },
+                {
+                    u"type": VALUE_TYPE_VALUE_STRING,
+                    u"name": u"blue",
+                    u"description": u"the colour blue",
+                    u"image_uri": u"http://something.com/khgfdkyg.png",
+                    u"value": u"blue"
+                }
+            ]
+        })
+
+        self.assertTrue(isinstance(option, OptionStringWinnowValue))
+
+        values = option.values
+
+        print values
+
+
+    def test_create_from_dict(self):
+
+        v = {
+            u"type": u"string",
+            u"value": u"red"
+        }
+
+        option = value_factory(v)
+        d = option.as_json()
+
+        self.assertTrue(isinstance(option, OptionStringWinnowValue))
+        self.assertEqual(d, {u'type': u'string', u'value': u'red'})
+        #
+        values = option.values
+
+        self.assertTrue(isinstance(values, dict))
+        self.assertTrue(isinstance(values["value"], unicode))
+        self.assertEqual(values["value"], u"red")
 
 
     def test_create_proper_string_single(self):
@@ -100,7 +151,7 @@ class TestOptionSieveCreation(unittest.TestCase):
         self.assertTrue(isinstance(option, OptionStringWinnowValue))
         self.assertEqual(option.type, VALUE_TYPE_SET_STRING)
         self.assertTrue(isinstance(d, dict))
-        self.assertEqual(d[VALUES_KEY_NAME], [u"red", u"blue"])
+        self.assertEqual(d[VALUES_KEY_NAME], [u"blue", u"red"])
 
 
     def test_create_proper_string_proper_list(self):
@@ -114,7 +165,7 @@ class TestOptionSieveCreation(unittest.TestCase):
         self.assertTrue(isinstance(d, dict))
         self.assertTrue(isinstance(d[VALUES_KEY_NAME], list))
         self.assertTrue(isinstance(d[VALUES_KEY_NAME][0], dict))
-        self.assertEqual(d[VALUES_KEY_NAME][0]["value"], u"red")
+        self.assertEqual(d[VALUES_KEY_NAME][1]["value"], u"red")
 
 
     def test_is_subset(self):

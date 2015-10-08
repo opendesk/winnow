@@ -1,6 +1,6 @@
 
 from base_values import BaseWinnowValue
-from winnow.exceptions import OptionsExceptionFailedValidation, OptionsExceptionIncompatibleTypes
+from winnow.exceptions import OptionsExceptionFailedValidation, OptionsExceptionIncompatibleTypes, OptionsExceptionEmptyOptionValues
 from winnow.constants import *
 from winnow.utils import json_dumps
 from copy import deepcopy
@@ -13,7 +13,15 @@ class OptionWinnowValue(BaseWinnowValue):
         super(OptionWinnowValue, self).__init__(value)
 
         if isinstance(value, dict):
-            self.set_my_values(value.get(VALUES_KEY_NAME))
+            # this is if it is a option object
+            if "values" in value:
+                self.set_my_values(value.get(VALUES_KEY_NAME))
+            # it is just a value unwrapped
+            elif "value" in value:
+                self.set_my_values(value)
+            else:
+                raise Exception("invalid dcict passed into OptionWinnowValue")
+
 
         else:
             self.set_my_values(value)
@@ -22,8 +30,11 @@ class OptionWinnowValue(BaseWinnowValue):
         return len(self.values_lookup)
 
 
-    def _get_value_options(self, value_id):
+    def get_value_options(self, value_id):
         value = self.values_lookup.get(value_id)
+        if value is None and value_id.startswith("$ref:"):
+            value = self.values_lookup.get(value_id[5:])
+
         if isinstance(value, unicode):
             return None
         return value.get(u"options")
@@ -66,6 +77,8 @@ class OptionWinnowValue(BaseWinnowValue):
                 return OptionResourceWinnowValue(value)
             elif option_type == VALUE_TYPE_SET_NULL:
                 return OptionNullWinnowValue(value)
+            elif option_type == VALUE_TYPE_VALUE_STRING:
+                return OptionStringWinnowValue(value)
             else:
                 raise OptionsExceptionFailedValidation("OptionSieveValue unrecognised value type")
         elif value is None:
@@ -188,8 +201,8 @@ class OptionStringWinnowValue(OptionWinnowValue):
 
         ## if self and other have matching values that both have have nested options check them too
         for key in self_keys:
-            this_options = self._get_value_options(key)
-            that_options = other._get_value_options(key)
+            this_options = self.get_value_options(key)
+            that_options = other.get_value_options(key)
             if this_options is not None and that_options is not None:
                 if not OptionsSet(that_options).allows(OptionsSet(this_options)):
                     return False
@@ -197,6 +210,12 @@ class OptionStringWinnowValue(OptionWinnowValue):
 
 
     def intersection(self, other):
+        #
+        #
+        # print "++++++++++++++++++++++++++++++++++++++  me  +++++++++++++++++++++++++++++++++++++++++++"
+        # print self.values_lookup.keys()
+        #
+
 
         from winnow.options import OptionsSet
 
@@ -222,7 +241,7 @@ class OptionStringWinnowValue(OptionWinnowValue):
                 this_value = self.values_lookup.get(value_id)
                 if isinstance(this_value, dict):
                     new_value = deepcopy(this_value)
-                    this_options = self._get_value_options(value_id)
+                    this_options = self.get_value_options(value_id)
                 elif isinstance(this_value, unicode):
                     new_value = {
                         "type": u"string",
@@ -233,11 +252,14 @@ class OptionStringWinnowValue(OptionWinnowValue):
                     raise Exception("This shouldn't ever happen")
 
                 if this_options is not None:
-                    new_value[u"options"] = OptionsSet(this_options).merge(OptionsSet(other_options)).store
+                    try:
+                        new_value[u"options"] = OptionsSet(this_options).merge(OptionsSet(other_options)).store
+                    except OptionsExceptionEmptyOptionValues as e:
+                        new_value = None
 
                 default = self._default
-
-                values.append(new_value)
+                if new_value is not None:
+                    values.append(new_value)
 
         else:
             other_keys = list(other.values_lookup.keys())
@@ -553,14 +575,29 @@ class OptionResourceWinnowValue(OptionStringWinnowValue):
                 this_value = self.values_lookup.get(value_id)
                 if isinstance(this_value, dict):
                     new_value = deepcopy(this_value)
-                    this_options = self._get_value_options(value_id)
+                    this_options = self.get_value_options(value_id)
                 else:
                     raise Exception("This shouldn't ever happen")
 
-                if this_options is not None:
-                    new_value[u"options"] = OptionsSet(this_options).merge(OptionsSet(other_options)).store
+                # if this_options is not None:
+                #
+                #     new_value[u"options"] = OptionsSet(this_options).merge(OptionsSet(other_options)).store
+                #
+                # values.append(new_value)
+                #
+                #
+                #
+                #
 
-                values.append(new_value)
+                if this_options is not None:
+                    try:
+                        new_value[u"options"] = OptionsSet(this_options).merge(OptionsSet(other_options)).store
+                    except OptionsExceptionEmptyOptionValues as e:
+                        new_value = None
+
+
+                if new_value is not None:
+                    values.append(new_value)
 
         elif type(other) == OptionStringWinnowValue:
             raise OptionsExceptionIncompatibleTypes("You cannot merge and resource with a string: %s" % other)
@@ -613,20 +650,20 @@ class OptionResourceWinnowValue(OptionStringWinnowValue):
 
     def as_json(self):
 
-        # values = self.values if isinstance(self.values, list) else [self.values]
-        if self.values == u"/processes/opendesk/fine-sanding":
-            raise Exception("fuckup")
+
+        values = self.values
+
 
         ## return the value without metadata is there is none
         if self.name is None and self.scopes is None and self.description is None and self.image_url is None:
             # if not isinstance(self.values[0], dict):
-            return self.values
+            return values
 
 
         ## otherwise wrap it in a dict
         value =  {
             u"type": self.type,
-            VALUES_KEY_NAME: self.values,
+            VALUES_KEY_NAME: values,
         }
 
 

@@ -2,6 +2,7 @@ import collections
 from copy import deepcopy
 
 from winnow import utils
+from winnow.values.option_values import OptionWinnowValue
 
 from winnow.values import value_factory, value_path_factory
 from winnow.values.option_values import OptionResourceWinnowValue, OptionStringWinnowValue
@@ -74,7 +75,7 @@ class OptionsSet(collections.MutableMapping):
 
 
     def _merge_value_array(self, key, values):
-        #
+
         # print ""
         # print "key", key
         #
@@ -97,21 +98,12 @@ class OptionsSet(collections.MutableMapping):
             result = result.intersection(v)
             if result == None:
                 for v in values:
-                    print "**********"
-                    print "value", type(v)
-                    print "keys", v.values_lookup.keys()
-                    print utils.json_dumps(v.as_json())
+                    print "**** empty ****"
+                    # print "value", type(v)
+                    # print "keys", v.values_lookup.keys()
+                    # print utils.json_dumps(v.as_json())
                 msg = "The key %s has no possible values when %s are merged" % (key, [v.as_json() for v in values])
                 raise OptionsExceptionEmptyOptionValues(msg)
-
-        # if len(value_types) == 1 and {type(result)} != value_types:
-        #     print "**********************************************"
-        #     print "result: ",  value_types, type(result)
-
-        # if result.as_json() == u"/processes/opendesk/fine-sanding":
-        #     print "*************** FUCK **********************"
-        #     print key
-        #     print values
 
 
         return result
@@ -122,11 +114,11 @@ class OptionsSet(collections.MutableMapping):
         A union of all keys
         An intersection of values
         """
-
+        # #
         # print "***********  merge  **************"
         # print self.store
         # print utils.json_dumps(other.store)
-        #
+
 
         options = {}
         this_mega_store = self.mega_store(other)
@@ -139,8 +131,11 @@ class OptionsSet(collections.MutableMapping):
         for key in this_keys.union(that_keys):
 
             all_values = this_mega_store.get(key, []) + that_mega_store.get(key, [])
-
             options[key] = self._merge_value_array(key, all_values).as_json()
+
+
+
+
 
             # if key == "processes":
             #     print "xxxxxxxxxxxxxxxxxx"
@@ -191,11 +186,22 @@ class OptionsSet(collections.MutableMapping):
         return disallowed
 
 
+
     def default(self):
+
         options = {}
         for k, v in self.store.iteritems():
-            options[k] = value_factory(v).default
-
+            value = value_factory(v)
+            options[k] = value.default
+            if isinstance(value, OptionWinnowValue):
+                default_value_key = value.default
+                child_options = value.get_value_options(value.default)
+                if child_options is not None:
+                    childSet = OptionsSet(child_options)
+                    child_defaults = childSet.default().store
+                    for ck, cv in child_defaults.iteritems():
+                        path = "{}/{}".format(k, ck)
+                        options[path] = cv
         return OptionsSet(options)
 
 

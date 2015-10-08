@@ -25,6 +25,7 @@ FACTORY_LOOKUP = {
     "fileset" : WinnowFileset,
     "context" : WinnowVersion,
     "choice" : WinnowVersion,
+    "size" : WinnowVersion,
     "contextualised_product" : WinnowVersion,
     "quantified_configuration" : WinnowQuantifiedConfiguration,
 }

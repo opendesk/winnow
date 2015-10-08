@@ -122,10 +122,10 @@ class TestSieveMerge(unittest.TestCase):
                         u"color": [u"blue", u"red"],
                         u"size": [u"big", u"small"],
                         u"tool": [u"cnc", u"laser"],
-                        u"material": [u"wood", u"metal", u"plastic"],
-                        u"days": [u"tuesday", u"thursday"],
+                        u"material": [u"metal", u"plastic", u"wood"],
+                        u"days": [u"thursday", u"tuesday"],
                         u"drinks": [u"beer", u"coffee"],
-                        u"snacks": [u"crisps", u"cheese", u"apple"]
+                        u"snacks": [u"apple", u"cheese", u"crisps"]
                     }
                 }
 
