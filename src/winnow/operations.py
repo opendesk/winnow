@@ -70,8 +70,11 @@ def scope(source, scopes, target, doc):
     _add_start_if_needed(source, target)
     _set_doc(target, new_doc)
 
+    # TODO this is a hack while I think how to rsolve the scopes things
+    scope = scopes[0] if isinstance(scopes, list) else scopes
+
     target.add_history_action(action=HISTORY_ACTION_SCOPE,
-                              scope=scopes,
+                              scope=scope,
                               output_type=doc.get("type"))
 
 

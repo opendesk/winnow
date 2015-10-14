@@ -83,18 +83,16 @@ def _find_expanded_ref(reference, doc, source, options, ref_hashes, default_scop
     else:
         ref = reference
         internal_path = None
-
-
     if ref == "":
         referenced_doc = doc
     else:
         wv = source.lookup(ref)
         if wv is None:
-            raise OptionsExceptionReferenceError("Winnow Reference Error: Cannot find reference %s in %s" % (ref, source.get_doc()[u"path"]))
+            raise OptionsExceptionReferenceError("Winnow Reference Error: Failed to find resource %s" % ref)
         existing_doc = wv.get_doc()
         referenced_doc = deepcopy(existing_doc)
     if referenced_doc is None:
-        raise OptionsExceptionReferenceError("Winnow Reference Error: Cannot find reference %s in %s" % (ref, doc[u"path"]))
+        raise OptionsExceptionReferenceError("Winnow Reference Error: Cannot find reference %s as ref doc is None" % ref)
     else:
         if options is not None:
             # if the ref also has some options then pre merge them into the reference
