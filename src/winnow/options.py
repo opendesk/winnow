@@ -75,7 +75,7 @@ class OptionsSet(collections.MutableMapping):
 
 
     def _merge_value_array(self, key, values):
-
+        #
         # print ""
         # print "key", key
         #
@@ -97,8 +97,8 @@ class OptionsSet(collections.MutableMapping):
         for v in values[1:]:
             result = result.intersection(v)
             if result == None:
-                for v in values:
-                    print "**** empty ****"
+                # for v in values:
+                    # print "**** empty ****"
                     # print "value", type(v)
                     # print "keys", v.values_lookup.keys()
                     # print utils.json_dumps(v.as_json())

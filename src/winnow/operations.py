@@ -70,10 +70,6 @@ def scope(source, scopes, target, doc):
     _add_start_if_needed(source, target)
     _set_doc(target, new_doc)
 
-    target.add_history_action(action=HISTORY_ACTION_SCOPE,
-                              scope=scopes,
-                              output_type=doc.get("type"))
-
 
 def default_choices(source, scopes):
 
