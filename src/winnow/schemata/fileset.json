@@ -35,14 +35,49 @@
                 "licenses": {},
                 "manufacturing": {
                     "type": "object",
-                    "properties":{}
+                    "properties":{
+                        "strategies":{
+                            "type": "object",
+                            "patternProperties": {
+                                "^[_a-zA-Z-]{1,}$":{
+                                    "allOf": [
+                                        {"$ref": "https://opendesk.cc/schemata/base/options.json#"},
+                                        {"$ref": "https://opendesk.cc/schemata/base/value.json#"},
+                                        {
+                                            "type": "object",
+                                            "properties":{
+                                                 "type": {
+                                                     "type": "string"
+                                                 },
+                                                 "options":{
+                                                     "type": "object",
+                                                     "properties":{
+                                                         "^[_a-zA-Z-]{1,}$":{
+                                                             "$ref": "#/definitions/sheet"
+                                                         }
+                                                     }
+                                                 },
+                                                 "value":{}
+                                            },
+                                            "required": ["type", "value", "options"],
+                                            "additionalProperties": false
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        "unit":{},
+                        "cutting":{}
+                    },
+                    "required": ["strategies"]
+
                 },
                 "files": {
                     "oneOf": [
                         {
                             "type": "object",
                             "patternProperties": {
-                                "^[_0-9a-zA-Z-]{1,}$": {
+                                "^[_a-zA-Z-]{1,}$": {
                                     "type": "object",
                                     "properties": {
                                         "asset": {
