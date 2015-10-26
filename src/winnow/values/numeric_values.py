@@ -56,7 +56,7 @@ VALUE_TYPE_NUMERIC_STEP = "numeric::step"
 
 
 """
-from copy import deepcopy
+from winnow.utils import deep_copy_dict as deepcopy
 from decimal import Decimal
 from base_values import BaseWinnowValue
 from winnow.exceptions import OptionsExceptionFailedValidation, OptionsExceptionIncompatibleTypes, OptionsExceptionNotAllowed

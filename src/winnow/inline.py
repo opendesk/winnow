@@ -1,4 +1,4 @@
-from copy import deepcopy
+from winnow.utils import deep_copy_dict as deepcopy
 from winnow import utils
 from winnow.exceptions import OptionsExceptionReferenceError
 from winnow.options import OptionsSet

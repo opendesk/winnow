@@ -1,5 +1,5 @@
 import os
-from copy import deepcopy
+from winnow.utils import deep_copy_dict as deepcopy
 import unittest
 import winnow
 from winnow.models.base import WinnowVersion

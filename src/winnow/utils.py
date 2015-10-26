@@ -2,6 +2,8 @@ import hashlib
 import json
 import decimal
 import uuid
+import copy
+import cPickle
 
 
 def get_doc_hash(data):
@@ -50,4 +52,8 @@ def json_dumps(an_obj):
 
 
 
-
+def deep_copy_dict(as_dict):
+    # return cPickle.loads(cPickle.dumps(as_dict, -1))
+    return copy.deepcopy(as_dict)
+    # asString = json_dumps(as_dict)
+    # return json_loads(asString)

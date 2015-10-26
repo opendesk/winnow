@@ -1,4 +1,4 @@
-from copy import deepcopy
+from winnow.utils import deep_copy_dict as deepcopy
 import winnow
 
 # from winnow.munge import remove_key_named

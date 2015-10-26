@@ -2,7 +2,7 @@ import uuid
 import winnow
 from winnow.interface import OptionsInterface
 from winnow.utils import json_dumps
-from copy import deepcopy
+from winnow.utils import deep_copy_dict as deepcopy
 
 from winnow.constants import *
 
@@ -158,3 +158,10 @@ class WinnowVersion(OptionsInterface):
 
     def history_is_empty(self):
         return  not bool(self.kwargs.get(u"history"))
+
+
+    @property
+    def version_str(self):
+        doc = self.get_doc()
+        version = doc["version"]
+        return "{}.{}.{}".format(version[0], version[1], version[2])

@@ -1,5 +1,6 @@
 import collections
-from copy import deepcopy
+from winnow.utils import deep_copy_dict as deepcopy
+# from copy import deepcopy
 
 from winnow import utils
 from winnow.values.option_values import OptionWinnowValue

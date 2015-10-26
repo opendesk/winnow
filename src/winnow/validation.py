@@ -23,6 +23,7 @@ def add_file(store, dir_name, names):
                     store[schema["id"]] = schema
 
 def validate(doc):
+
     type = doc.get("schema")
     if type is None:
         return
@@ -31,15 +32,15 @@ def validate(doc):
     schema = reference_store[type]
     resolver = jsonschema.RefResolver(type, schema, store=reference_store)
     validator = jsonschema.Draft4Validator(schema, resolver=resolver)
-    try:
-        validator.validate(doc)
-    except Exception, e:
-        print "***** SCHEMA *****"
-        print json_dumps(schema,)
-        print "***** DOCUMENT *****"
-        print json_dumps(doc)
-
-        raise e
+    validator.validate(doc)
+    # try:
+    #     validator.validate(doc)
+    # except Exception, e:
+    #     print "***** SCHEMA *****"
+    #     print json_dumps(schema,)
+    #     print "***** DOCUMENT *****"
+    #     print json_dumps(doc)
+    #     raise e
 
 
 os.path.walk(SCHEMA_DIR, add_file, reference_store)
