@@ -11,8 +11,8 @@ from winnow.exceptions import OptionsExceptionFailedValidation, OptionsException
 from winnow.constants import *
 
 
-def add_doc(target, doc):
-    _set_doc(target,  deepcopy(doc))
+def add_doc(target, doc, validation=True):
+    _set_doc(target,  deepcopy(doc), validation=validation)
 
 
 def allows(source_a, source_b):
@@ -39,7 +39,7 @@ def filter_allowed_by(filter_source, possible):
     return [p for p in possible if is_allowed_by(filter_source, p)]
 
 
-def merge(source_a, source_b, target, doc):
+def merge(source_a, source_b, target, doc, validation=True):
 
     doc_a = source_a.get_doc()
     doc_b = source_b.get_doc()
@@ -56,7 +56,7 @@ def merge(source_a, source_b, target, doc):
 
     target.clone_history_from(source_a)
     _add_start_if_needed(source_a, target)
-    _set_doc(target, new_doc)
+    _set_doc(target, new_doc, validation=validation)
 
     target.add_history_action(action=HISTORY_ACTION_MERGE,
                               input=source_b,
@@ -94,7 +94,7 @@ def default_choices(source, scopes):
 
 
 
-def quantify(source, target, doc):
+def quantify(source, target, doc, validation=True):
 
     quantity_options =  {
             u"type": u"numeric::range",
@@ -112,7 +112,7 @@ def quantify(source, target, doc):
     new_doc[OPTIONS_KEY] = options_dict
     target.clone_history_from(source)
     _add_start_if_needed(source, target)
-    _set_doc(target, new_doc)
+    _set_doc(target, new_doc, validation=validation)
 
     target.add_history_action(action=HISTORY_ACTION_QUANTIFY,
                               output_type=doc.get("type"))
@@ -147,13 +147,13 @@ def _trim_out_off_scope(node, scopes):
             if isinstance(child, list):
                 _trim_out_off_scope(child, scopes)
 
-def expand(source, target):
+def expand(source, target, validation=True):
     new_doc = deepcopy(source.get_doc())
     target.clone_history_from(source)
     ## inline references
     ref_hashes = {}
     inline.inline_refs(new_doc, new_doc, source, ref_hashes)
-    _set_doc(target, new_doc)
+    _set_doc(target, new_doc, validation=validation)
     return ref_hashes
 
 
@@ -228,7 +228,8 @@ def validate(doc):
         raise OptionsExceptionFailedValidation(e)
 
 
-def _set_doc(target, doc):
-    validate(doc)
+def _set_doc(target, doc, validation=True):
+    if validation:
+        validate(doc)
     target.set_doc(doc)
     target.set_doc_hash(utils.get_doc_hash(utils.json_dumps(doc)))

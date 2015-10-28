@@ -21,24 +21,27 @@ class TestNumberSieveCreation(unittest.TestCase):
 
         self.assertTrue(isinstance(number, NumericNumberWinnowValue))
         self.assertEqual(value[u"type"], VALUE_TYPE_NUMERIC_NUMBER)
-        self.assertTrue(isinstance(value[u"value"], Decimal))
-        self.assertEqual(value[u"value"], Decimal(2))
+        self.assertTrue(isinstance(number.number, Decimal))
+        self.assertTrue(isinstance(value[u"value"], int))
+        self.assertEqual(value[u"value"], 2)
 
-        number = value_factory(2.5)
+        number = value_factory(2.2)
         value = number.as_json()
 
         self.assertTrue(isinstance(number, NumericNumberWinnowValue))
         self.assertEqual(value[u"type"], VALUE_TYPE_NUMERIC_NUMBER)
-        self.assertTrue(isinstance(value[u"value"], Decimal))
-        self.assertEqual(value[u"value"], Decimal(2.5))
+        self.assertTrue(isinstance(number.number, Decimal))
+        self.assertTrue(isinstance(value[u"value"], float))
+        self.assertEqual(value[u"value"], 2.2)
 
-        number = value_factory(Decimal(2.5))
+        number = value_factory(Decimal(2.2))
         value = number.as_json()
 
         self.assertTrue(isinstance(number, NumericNumberWinnowValue))
         self.assertEqual(value[u"type"], VALUE_TYPE_NUMERIC_NUMBER)
-        self.assertTrue(isinstance(value[u"value"], Decimal))
-        self.assertEqual(value[u"value"], Decimal(2.5))
+        self.assertTrue(isinstance(number.number, Decimal))
+        self.assertTrue(isinstance(value[u"value"], float))
+        self.assertEqual(value[u"value"], 2.2)
 
 
     def test_convienence_methods_lists(self):
@@ -48,16 +51,18 @@ class TestNumberSieveCreation(unittest.TestCase):
 
         self.assertTrue(isinstance(number, NumericNumberWinnowValue))
         self.assertEqual(value[u"type"], VALUE_TYPE_NUMERIC_NUMBER)
-        self.assertTrue(isinstance(value[u"value"], Decimal))
-        self.assertEqual(value[u"value"], Decimal("2"))
+        self.assertTrue(isinstance(value[u"value"], int))
 
-        number = value_factory([2, 3.8])
+        self.assertEqual(value[u"value"], 2)
+
+        number = value_factory([2.2, 3.8])
         value = number.as_json()
 
         self.assertTrue(isinstance(number, NumericSetWinnowValue))
         self.assertEqual(value[u"type"], VALUE_TYPE_NUMERIC_SET)
         self.assertTrue(isinstance(value[u"value"], list))
-        self.assertEqual(value[u"value"], [Decimal("2"), Decimal(3.8)])
+        self.assertTrue(isinstance(number.as_list[0], Decimal))
+        self.assertEqual(value[u"value"], [2.2, 3.8])
 
         number = value_factory([2, 3.8, "5"])
         value = number.as_json()
@@ -65,27 +70,56 @@ class TestNumberSieveCreation(unittest.TestCase):
         self.assertTrue(isinstance(number, NumericSetWinnowValue))
         self.assertEqual(value[u"type"], VALUE_TYPE_NUMERIC_SET)
         self.assertTrue(isinstance(value[u"value"], list))
-        self.assertEqual(value[u"value"], [Decimal("2"), Decimal(3.8), Decimal("5")])
+        self.assertTrue(isinstance(number.as_list[0], Decimal))
+        self.assertEqual(value[u"value"], [2, 3.8, 5])
 
         self.assertRaises(OptionsExceptionFailedValidation, value_factory, [2, 3.8, "poo"])
 
 
-    #     TODO think about nan
 
 
     def test_create_numbers(self):
 
         number = value_factory({
             "type": VALUE_TYPE_NUMERIC_NUMBER,
-            "value": Decimal(2)
+            "value": 2.2
         })
 
         value = number.as_json()
 
         self.assertTrue(isinstance(number, NumericNumberWinnowValue))
         self.assertEqual(value[u"type"], VALUE_TYPE_NUMERIC_NUMBER)
-        self.assertTrue(isinstance(value[u"value"], Decimal))
-        self.assertEqual(value[u"value"], Decimal(2))
+        self.assertTrue(isinstance(value[u"value"], float))
+        self.assertTrue(isinstance(number.number, Decimal))
+        self.assertEqual(value[u"value"], 2.2)
+
+
+        number = value_factory({
+            "type": VALUE_TYPE_NUMERIC_NUMBER,
+            "value": 2
+        })
+
+        value = number.as_json()
+
+        self.assertTrue(isinstance(number, NumericNumberWinnowValue))
+        self.assertEqual(value[u"type"], VALUE_TYPE_NUMERIC_NUMBER)
+        self.assertTrue(isinstance(value[u"value"], int))
+        self.assertTrue(isinstance(number.number, Decimal))
+        self.assertEqual(value[u"value"], 2)
+
+        number = value_factory({
+            "type": VALUE_TYPE_NUMERIC_NUMBER,
+            "value": Decimal("2.2")
+        })
+
+        value = number.as_json()
+
+        self.assertTrue(isinstance(number, NumericNumberWinnowValue))
+        self.assertEqual(value[u"type"], VALUE_TYPE_NUMERIC_NUMBER)
+        self.assertTrue(isinstance(value[u"value"], float))
+        self.assertTrue(isinstance(number.number, Decimal))
+        self.assertEqual(value[u"value"], 2.2)
+
 
 
     def test_create_set(self):
@@ -100,7 +134,25 @@ class TestNumberSieveCreation(unittest.TestCase):
         self.assertTrue(isinstance(number, NumericSetWinnowValue))
         self.assertEqual(value[u"type"], VALUE_TYPE_NUMERIC_SET)
         self.assertTrue(isinstance(value[u"value"], list))
-        self.assertEqual(value[u"value"],  [Decimal("2"), Decimal("17.4")])
+        self.assertTrue(isinstance(number.as_list[0], Decimal))
+        self.assertTrue(isinstance(value[u"value"][0], int))
+        self.assertEqual(value[u"value"],  [2, 17.4])
+
+
+        number = value_factory({
+            "type": VALUE_TYPE_NUMERIC_SET,
+            "value": [Decimal("2"), 17.4]
+        })
+
+        value = number.as_json()
+
+        self.assertTrue(isinstance(number, NumericSetWinnowValue))
+        self.assertEqual(value[u"type"], VALUE_TYPE_NUMERIC_SET)
+        self.assertTrue(isinstance(value[u"value"], list))
+        self.assertTrue(isinstance(number.as_list[0], Decimal))
+        self.assertTrue(isinstance(value[u"value"][0], int))
+        self.assertEqual(value[u"value"],  [2, 17.4])
+
 
         # casts down
         number = value_factory({
@@ -112,8 +164,9 @@ class TestNumberSieveCreation(unittest.TestCase):
 
         self.assertTrue(isinstance(number, NumericNumberWinnowValue))
         self.assertEqual(value[u"type"], VALUE_TYPE_NUMERIC_NUMBER)
-        self.assertTrue(isinstance(value[u"value"], Decimal))
-        self.assertEqual(value[u"value"], Decimal("2"))
+        self.assertTrue(isinstance(value[u"value"], int))
+        self.assertTrue(isinstance(number.number, Decimal))
+        self.assertEqual(value[u"value"], 2)
 
 
     def test_create_range(self):
@@ -128,29 +181,63 @@ class TestNumberSieveCreation(unittest.TestCase):
         self.assertTrue(isinstance(number, NumericRangeWinnowValue))
 
         self.assertEqual(value[u"type"], VALUE_TYPE_NUMERIC_RANGE)
-        self.assertTrue(isinstance(value[u"max"], Decimal))
-        self.assertTrue(isinstance(value[u"min"], Decimal))
-        self.assertEqual(value[u"max"],  Decimal("21.5"))
-        self.assertEqual(value[u"min"],  Decimal("13.4"))
+        self.assertTrue(isinstance(value[u"max"], float))
+        self.assertTrue(isinstance(value[u"min"], float))
+        self.assertEqual(value[u"max"],  21.5)
+        self.assertEqual(value[u"min"],  13.4)
+
+
+        self.assertTrue(isinstance(number.max, Decimal))
+        self.assertTrue(isinstance(number.min, Decimal))
+        self.assertEqual(number.max,  Decimal("21.5"))
+        self.assertEqual(number.min,  Decimal("13.4"))
+
+
+        number = value_factory({
+            "type": VALUE_TYPE_NUMERIC_RANGE,
+            "max": 21.5,
+            "min": 13.4,
+        })
+
+        value = number.as_json()
+        self.assertTrue(isinstance(number, NumericRangeWinnowValue))
+
+        self.assertEqual(value[u"type"], VALUE_TYPE_NUMERIC_RANGE)
+        self.assertTrue(isinstance(value[u"max"], float))
+        self.assertTrue(isinstance(value[u"min"], float))
+        self.assertEqual(value[u"max"],  21.5)
+        self.assertEqual(value[u"min"],  13.4)
+
+
+        self.assertTrue(isinstance(number.max, Decimal))
+        self.assertTrue(isinstance(number.min, Decimal))
+        self.assertEqual(number.max,  Decimal("21.5"))
+        self.assertEqual(number.min,  Decimal("13.4"))
 
 
     def test_create_step(self):
 
         number = value_factory({
             "type": VALUE_TYPE_NUMERIC_STEP,
-            "max": Decimal("21.5"),
-            "min": Decimal("13.4"),
-            "start": Decimal("13.4"),
-            "step": Decimal("3.0"),
+            "max": 21.5,
+            "min": 13.4,
+            "start": 13.4,
+            "step": 3.0,
         })
 
         value = number.as_json()
         self.assertTrue(isinstance(number, NumericStepWinnowValue))
         self.assertEqual(value[u"type"], VALUE_TYPE_NUMERIC_STEP)
-        self.assertTrue(isinstance(value[u"max"], Decimal))
-        self.assertTrue(isinstance(value[u"min"], Decimal))
-        self.assertEqual(value[u"max"],  Decimal("21.5"))
-        self.assertEqual(value[u"min"],  Decimal("13.4"))
+        self.assertTrue(isinstance(value[u"max"], float))
+        self.assertTrue(isinstance(value[u"min"], float))
+        self.assertTrue(isinstance(value[u"step"], int))
+        self.assertTrue(isinstance(value[u"start"], float))
+        self.assertTrue(isinstance(number.max, Decimal))
+        self.assertTrue(isinstance(number.min, Decimal))
+        self.assertTrue(isinstance(number.step, Decimal))
+        self.assertTrue(isinstance(number.start, Decimal))
+        self.assertEqual(value[u"max"],  21.5)
+        self.assertEqual(value[u"min"],  13.4)
         self.assertEqual(number.possible_values(), {Decimal("13.4"), Decimal("16.4"), Decimal("19.4")})
 
         # casts down
@@ -165,8 +252,8 @@ class TestNumberSieveCreation(unittest.TestCase):
         value = number.as_json()
         self.assertTrue(isinstance(number, NumericNumberWinnowValue))
         self.assertEqual(value[u"type"], VALUE_TYPE_NUMERIC_NUMBER)
-        self.assertTrue(isinstance(value[u"value"], Decimal))
-        self.assertEqual(value[u"value"], Decimal("13.4"))
+        self.assertTrue(isinstance(value[u"value"], float))
+        self.assertEqual(value[u"value"], 13.4)
 
 
 

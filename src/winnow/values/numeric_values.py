@@ -57,6 +57,7 @@ VALUE_TYPE_NUMERIC_STEP = "numeric::step"
 
 """
 from winnow.utils import deep_copy_dict as deepcopy
+from winnow.utils import from_decimal, to_decimal
 from decimal import Decimal
 from base_values import BaseWinnowValue
 from winnow.exceptions import OptionsExceptionFailedValidation, OptionsExceptionIncompatibleTypes, OptionsExceptionNotAllowed
@@ -66,11 +67,27 @@ from winnow.constants import *
 class NumericWinnowValue(BaseWinnowValue):
 
 
+
+    def __init__(self, value):
+
+        if isinstance(value, dict):
+            self.name = value.get("name")
+            self.description = value.get("description")
+            self.image_url = value.get("image_url")
+            self.scopes = value.get("scopes")
+            self._default = to_decimal(value.get("default")) if value.get("default") else None
+        else:
+            self.name = None
+            self.description = None
+            self.image_url = None
+            self.scopes = None
+            self._default = None
+
     @classmethod
     def from_value(cls, value):
         if isinstance(value, list):
             try:
-                decimal_list = [Decimal(v) for v in value]
+                decimal_list = [to_decimal(v) for v in value]
             except:
                 raise OptionsExceptionFailedValidation("NumericSieveValue unrecognised value type")
             numeric = NumericSetWinnowValue(decimal_list)
@@ -101,7 +118,7 @@ class NumericWinnowValue(BaseWinnowValue):
                     return step
         else:
             try:
-                d = Decimal(value)
+                d = to_decimal(value)
             except:
                 raise OptionsExceptionFailedValidation("NumericSieveValue unrecognised value type")
             return NumericNumberWinnowValue(d)
@@ -182,7 +199,7 @@ class NumericNumberWinnowValue(NumericWinnowValue):
         if isinstance(value, Decimal):
             self.number = value
         else:
-            number = value[u"value"]
+            number = to_decimal(value[u"value"])
             if not isinstance(number, Decimal):
                 raise OptionsExceptionFailedValidation("NumericNumberSieveValue must be a Decimal")
             self.number = number
@@ -193,14 +210,14 @@ class NumericNumberWinnowValue(NumericWinnowValue):
 
     @property
     def default(self):
-        return self.number
+        return from_decimal(self.number)
 
 
     def as_json(self):
 
         as_json =  {
             "type": self.type,
-            "value": self.number
+            "value": from_decimal(self.number)
         }
 
         return self.update_with_info(as_json)
@@ -210,9 +227,13 @@ class NumericNumberWinnowValue(NumericWinnowValue):
         self.check_class(other)
         intersects = False
 
-        if type(other) in (NumericNumberWinnowValue, NumericSetWinnowValue, NumericStepWinnowValue):
+        if type(other) in (NumericNumberWinnowValue, NumericSetWinnowValue):
             if self.number in other.possible_values():
                 intersects = True
+        elif type(other) == NumericStepWinnowValue:
+            if self.number >= other.min and self.number <= other.max:
+                if (self.number - other.start) % other.step == 0:
+                    intersects = True
         elif type(other) == NumericRangeWinnowValue:
             if self.number >= other.min and self.number <= other.max:
                 intersects = True
@@ -270,7 +291,7 @@ class NumericSetWinnowValue(NumericWinnowValue):
         if isinstance(value, list) or isinstance(value, set):
             self.as_list = value
         else:
-            as_list = value[u"value"]
+            as_list = [to_decimal(d) for d in value[u"value"]]
             if not (isinstance(as_list, list) or isinstance(as_list, set)):
                 raise OptionsExceptionFailedValidation("NumericNumberSieveValue must be a Decimal")
             self.as_list = as_list
@@ -291,7 +312,8 @@ class NumericSetWinnowValue(NumericWinnowValue):
 
     @property
     def default(self):
-        return min(self.as_list) if self._default is None else self._default
+        d = min(self.as_list) if self._default is None else self._default
+        return from_decimal(d)
 
 
     def intersection(self, other):
@@ -312,7 +334,7 @@ class NumericSetWinnowValue(NumericWinnowValue):
     def as_json(self):
         as_json = {
             "type": self.type,
-            "value": list(self.as_list)
+            "value": [from_decimal(d) for d in list(self.as_list)]
         }
 
         info = self.update_with_info(as_json)
@@ -333,14 +355,15 @@ class NumericRangeWinnowValue(NumericWinnowValue):
     def __init__(self, value):
 
         super(NumericRangeWinnowValue, self).__init__(value)
-        self.max = value[u"max"]
-        self.min = value[u"min"]
+        self.max = to_decimal(value[u"max"])
+        self.min = to_decimal(value[u"min"])
         if self.max < self.min:
             raise OptionsExceptionFailedValidation("NumericRangeSieveValue: max %s less than min %s" % (self.max, self.min))
 
     @property
     def default(self):
-        return self.min if self._default is None else self._default
+        d = self.min if self._default is None else self._default
+        return from_decimal(d)
 
     def possible_values(self):
         return None
@@ -388,8 +411,8 @@ class NumericRangeWinnowValue(NumericWinnowValue):
     def as_json(self):
         as_json =  {
             "type": self.type,
-            "max": self.max,
-            "min":self.min,
+            "max": from_decimal(self.max),
+            "min": from_decimal(self.min),
         }
 
         return self.update_with_info(as_json)
@@ -427,8 +450,8 @@ class NumericStepWinnowValue(NumericRangeWinnowValue):
     def __init__(self, value):
 
         super(NumericStepWinnowValue, self).__init__(value)
-        self.start = value[u"start"]
-        self.step = value[u"step"]
+        self.start = to_decimal(value[u"start"])
+        self.step = to_decimal(value[u"step"])
 
         if self.first_value() is None:
             raise OptionsExceptionFailedValidation("NumericStepSieveValue: empty set")
@@ -454,15 +477,23 @@ class NumericStepWinnowValue(NumericRangeWinnowValue):
             except OptionsExceptionFailedValidation:
                 return None
             return sieve
+        elif type(other) == NumericNumberWinnowValue:
+            if other.number >= self.min and other.number <= self.max:
+                if (other.number - self.start) % self.step == 0:
+                    info = self.get_merged_info(other)
+                    info[u"value"] = other.number
+                    return NumericNumberWinnowValue(info)
         else:
             values = self.possible_values().intersection(other.possible_values())
             info = self.get_merged_info(other)
             info[u"value"] = values
             return NumericSetWinnowValue(info)
 
+
     @property
     def default(self):
-        return self.first_value() if self._default is None else self._default
+        d = self.first_value() if self._default is None else self._default
+        return from_decimal(d)
 
 
     def first_value(self):
@@ -485,10 +516,10 @@ class NumericStepWinnowValue(NumericRangeWinnowValue):
     def as_json(self):
         as_json = {
             "type": self.type,
-            "max": self.max,
-            "min":self.min,
-            "start": self.start,
-            "step": self.step
+            "max": from_decimal(self.max),
+            "min": from_decimal(self.min),
+            "start": from_decimal(self.start),
+            "step": from_decimal(self.step)
         }
 
         return self.update_with_info(as_json)
