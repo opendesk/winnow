@@ -1,4 +1,4 @@
-from copy import deepcopy
+from winnow.utils import deep_copy_dict as deepcopy
 
 # def remove_key_named(node, key_name, collecting_node=None):
 #

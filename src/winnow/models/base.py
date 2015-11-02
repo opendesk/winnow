@@ -2,7 +2,7 @@ import uuid
 import winnow
 from winnow.interface import OptionsInterface
 from winnow.utils import json_dumps
-from copy import deepcopy
+from winnow.utils import deep_copy_dict as deepcopy
 
 from winnow.constants import *
 
@@ -62,9 +62,9 @@ class WinnowVersion(OptionsInterface):
         db.set(wv.kwargs[u"uuid"], wv.kwargs)
         return wv
 
-    def quantified(self, kwargs={}):
+    def quantified(self, kwargs={}, validation=True):
         wv = self.__class__(self.db, kwargs)
-        winnow.quantify(self, wv, self.get_doc())
+        winnow.quantify(self, wv, self.get_doc(), validation=validation)
         self.db.set(wv.kwargs[u"uuid"], wv.kwargs)
         return wv
 
@@ -74,9 +74,9 @@ class WinnowVersion(OptionsInterface):
         self.db.set(wv.kwargs[u"uuid"], wv.kwargs)
         return wv
 
-    def expanded(self, kwargs={}):
+    def expanded(self, kwargs={}, validation=True):
         wv = self.__class__(self.db, kwargs)
-        winnow.expand(self, wv)
+        winnow.expand(self, wv, validation=validation)
         self.db.set(wv.kwargs[u"uuid"], wv.kwargs)
         return wv
 
@@ -158,3 +158,10 @@ class WinnowVersion(OptionsInterface):
 
     def history_is_empty(self):
         return  not bool(self.kwargs.get(u"history"))
+
+
+    @property
+    def version_str(self):
+        doc = self.get_doc()
+        version = doc["version"]
+        return "{}.{}.{}".format(version[0], version[1], version[2])

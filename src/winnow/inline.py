@@ -1,4 +1,4 @@
-from copy import deepcopy
+from winnow.utils import deep_copy_dict as deepcopy
 from winnow import utils
 from winnow.exceptions import OptionsExceptionReferenceError
 from winnow.options import OptionsSet
@@ -7,18 +7,9 @@ from winnow.options import OptionsSet
 def _lookup_and_hash_ref(reference, doc, source, options, node, ref_hashes, default_scopes=None):
 
     found = _find_expanded_ref(reference, doc, source, options, ref_hashes, default_scopes=default_scopes)
-
     # this ensures than only external references are unexpanded
-    if reference.startswith(u"~") or reference.startswith(u"#"):
+    if not(reference.startswith(u"~") or reference.startswith(u"#")):
         expanded_hash = utils.get_doc_hash(utils.json_dumps(found))
-        # if reference.endswith("birch-faced-plywood"):
-        #     print "*******************"
-        #     # print utils.json_dumps(found)
-        #     print found["options"]["thickness"]
-            #
-            # print "options", options
-            # print "expanded_hash", expanded_hash
-
         ref_hashes[expanded_hash] = node
 
     return found
@@ -31,19 +22,6 @@ def _merge_option_dicts(source, options_a, options_b, ref_doc_a, ref_doc_b):
 
     inline_refs(options_a, ref_doc_a, source, ref_hashes)
     inline_refs(options_b, ref_doc_b, source, ref_hashes)
-
-
-    # print "***************** doc a expanded ***********************"
-    #
-    # print utils.json_dumps(options_a)
-    #
-    #
-    # print "***************** doc b expanded ***********************"
-    #
-    #
-    # print utils.json_dumps(options_b)
-    #
-
 
     # do the merge
     set_a = OptionsSet(options_a)
@@ -60,7 +38,6 @@ def _merge_option_dicts(source, options_a, options_b, ref_doc_a, ref_doc_b):
 def get_inlined_options(source):
 
     ref_doc = source.get_doc()
-
     # expand all the refs
     ref_hashes = {}
     inlined = deepcopy(ref_doc["options"])

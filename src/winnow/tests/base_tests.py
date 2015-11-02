@@ -2,7 +2,7 @@ import unittest
 from winnow.utils import json_dumps, json_loads
 import winnow
 from winnow.models.base import WinnowVersion
-from copy import deepcopy
+from winnow.utils import deep_copy_dict as deepcopy
 from winnow.exceptions import OptionsExceptionFailedValidation
 
 

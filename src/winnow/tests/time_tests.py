@@ -26,11 +26,11 @@ class TestNumericTimings(unittest.TestCase):
         def doit(max):
             v = {
                 'name': u'Quantity',
-                'min': Decimal('1'),
-                'default': Decimal('1'),
+                'min': 1,
+                'default': 1,
                 'max': max,
-                'start': Decimal('0'),
-                'step': Decimal('1'),
+                'start': 0,
+                'step': 1,
                 'type': u'numeric::step'
             }
             t1 = time.time()
@@ -39,8 +39,8 @@ class TestNumericTimings(unittest.TestCase):
             return (t2 - t1)
 
 
-        dur = doit(Decimal('1000000000'))
-        print dur
+        dur = doit(1000000000)
+
         self.assertTrue(dur < 0.005)
 
 
@@ -49,8 +49,8 @@ class TestNumericTimings(unittest.TestCase):
         def doit(max):
             v = {
                 'name': u'Quantity',
-                'min': Decimal('1'),
-                'default': Decimal('1'),
+                'min': 1,
+                'default': 1,
                 'max': max,
                 'type': u'numeric::range'
             }
@@ -60,8 +60,9 @@ class TestNumericTimings(unittest.TestCase):
             return (t2 - t1)
 
 
-        dur = doit(Decimal('1000000000'))
+        dur = doit(1000000000)
         self.assertTrue(dur < 0.005)
+
 
 
     def test_numeric_merge_timings(self):
@@ -69,11 +70,11 @@ class TestNumericTimings(unittest.TestCase):
         def doit(max):
             v1 = {
                 'name': u'Quantity',
-                'min': Decimal('1'),
-                'default': Decimal('1'),
+                'min': 1,
+                'default': 1,
                 'max': max,
-                'start': Decimal('0'),
-                'step': Decimal('1'),
+                'start': 0,
+                'step': 1,
                 'type': u'numeric::step'
             }
 
@@ -88,6 +89,6 @@ class TestNumericTimings(unittest.TestCase):
             return (t2 - t1)
 
 
-        dur = doit(Decimal('1000000000'))
+        dur = doit(100000)
         print dur
         self.assertTrue(dur < 0.005)

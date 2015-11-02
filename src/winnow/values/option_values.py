@@ -3,7 +3,7 @@ from base_values import BaseWinnowValue
 from winnow.exceptions import OptionsExceptionFailedValidation, OptionsExceptionIncompatibleTypes, OptionsExceptionEmptyOptionValues
 from winnow.constants import *
 from winnow.utils import json_dumps
-from copy import deepcopy
+from winnow.utils import deep_copy_dict as deepcopy
 
 class OptionWinnowValue(BaseWinnowValue):
 
