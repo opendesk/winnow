@@ -89,6 +89,9 @@
                     },
                     "required": ["value"]
                 },
+                "minimum_quantity": {
+                    "type": "number"
+                },
                 "point": {
                     "properties": {
                         "lat": {
