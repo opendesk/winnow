@@ -1,7 +1,7 @@
 {
-    "id": "https://opendesk.cc/schemata/part.json",
+    "id": "https://opendesk.cc/schemata/accessory.json",
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "title": "Winnow Hardware Part",
+    "title": "Winnow Accessory",
     "type": "object",
     "allOf": [
         {"$ref": "https://opendesk.cc/schemata/base/value.json#"},
@@ -11,7 +11,7 @@
             "properties": {
                 "type": {
                     "type": "string",
-                    "pattern": "part"
+                    "pattern": "accessory"
                 },
                 "is_public": {},
                 "shortcode": {}
