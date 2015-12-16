@@ -31,7 +31,8 @@
                     "type": "string",
                     "pattern": "range"
                 },
-                "options": {}
+                "options": {},
+                "errors": {}
             },
             "additionalProperties": false,
             "requiredProperties": [

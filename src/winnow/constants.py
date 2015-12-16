@@ -21,6 +21,8 @@ VALUE_TYPE_SET_SIZE        = u"set::size"
 
 VALUE_TYPE_SET_NULL        = u"set::null"
 
+VALUE_TYPE_EXCEPTION   = u"exception"
+
 VALUE_TYPE_VALUE_STRING    = u"string"
 VALUE_TYPE_VALUE_COLOUR    = u"colour"
 VALUE_TYPE_VALUE_SIZE      = u"size"

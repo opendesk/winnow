@@ -48,11 +48,15 @@ def merge(source_a, source_b, target, doc, validation=True):
     options_a = deepcopy(source_a.get_options_dict())
     options_b = deepcopy(source_b.get_options_dict())
 
-    merged_options = inline._merge_option_dicts(source_a, options_a, options_b, doc_a, doc_b)
+    errors = []
+
+    merged_options = inline._merge_option_dicts(source_a, options_a, options_b, doc_a, doc_b, errors=errors)
 
     # put this merged options into a copy of the doc
     new_doc = deepcopy(doc)
     new_doc[OPTIONS_KEY] = merged_options
+    if errors:
+        new_doc["errors"] = errors
 
     target.clone_history_from(source_a)
     _add_start_if_needed(source_a, target)
@@ -146,6 +150,7 @@ def _trim_out_off_scope(node, scopes):
                     _trim_out_off_scope(child, scopes)
             if isinstance(child, list):
                 _trim_out_off_scope(child, scopes)
+
 
 def expand(source, target, validation=True):
     new_doc = deepcopy(source.get_doc())

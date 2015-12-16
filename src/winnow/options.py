@@ -7,8 +7,10 @@ from winnow.values.option_values import OptionWinnowValue
 
 from winnow.values import value_factory, value_path_factory
 from winnow.values.option_values import OptionResourceWinnowValue, OptionStringWinnowValue
+from winnow.values.exception_values import ExceptionWinnowValue
+
 from winnow.keys.key_matching import KeyMatcher
-from winnow.exceptions import OptionsExceptionEmptyOptionValues, OptionsExceptionReferenceError
+from winnow.exceptions import OptionsExceptionSetWithException
 import time
 
 """
@@ -76,15 +78,7 @@ class OptionsSet(collections.MutableMapping):
 
 
     def _merge_value_array(self, key, values):
-        #
-        # print ""
-        # print "key", key
-        #
-        # print "************  values  **************\n",
-        # #
-        # for v in values:
-        #     print type(v)
-        #     print v
+
 
         value_types = set([type(v) for v in values])
         #
@@ -98,16 +92,17 @@ class OptionsSet(collections.MutableMapping):
         for v in values[1:]:
             result = result.intersection(v)
             if result == None:
-                # for v in values:
-                    # print "**** empty ****"
-                    # print "value", type(v)
-                    # print "keys", v.values_lookup.keys()
-                    # print utils.json_dumps(v.as_json())
-                msg = "The key %s has no possible values when %s are merged" % (key, [v.as_json() for v in values])
-                raise OptionsExceptionEmptyOptionValues(msg)
-
+                return ExceptionWinnowValue(key, [v.as_json() for v in values])
 
         return result
+
+    def _check_for_exceptions(self, all_values):
+
+        for v in all_values:
+            if isinstance(v, ExceptionWinnowValue):
+                return v
+
+        return None
 
 
     def merge(self, other):
@@ -115,42 +110,32 @@ class OptionsSet(collections.MutableMapping):
         A union of all keys
         An intersection of values
         """
-        # #
-        # print "***********  merge  **************"
-        # print self.store
-        # print utils.json_dumps(other.store)
-
 
         options = {}
         this_mega_store = self.mega_store(other)
         that_mega_store = other.mega_store(self)
         this_keys = set(this_mega_store.keys())
         that_keys = set(that_mega_store.keys())
-        #
+        emptyValues = []
+
         # print this_keys, that_keys
-
         for key in this_keys.union(that_keys):
-
             all_values = this_mega_store.get(key, []) + that_mega_store.get(key, [])
-            options[key] = self._merge_value_array(key, all_values).as_json()
+            exception_value = self._check_for_exceptions(all_values)
+            if exception_value:
+                merged_value = exception_value
+            else:
+                merged_value = self._merge_value_array(key, all_values)
+            options[key] = merged_value.as_json()
+            if isinstance(merged_value, ExceptionWinnowValue):
+                emptyValues.append(options[key])
 
+        options_set = OptionsSet(options)
 
+        if emptyValues:
+            raise OptionsExceptionSetWithException(options_set, emptyValues)
 
-
-
-            # if key == "processes":
-            #     print "xxxxxxxxxxxxxxxxxx"
-            #     print "self", utils.json_dumps(self.store)
-            #     print "other", utils.json_dumps(other.store)
-            #
-            #     print "result  ",  options[key]
-
-            # print "key", key
-            # print "all_values", all_values
-
-
-
-        return OptionsSet(options)
+        return options_set
 
 
     def disallowed_keys(self, other):
@@ -179,17 +164,19 @@ class OptionsSet(collections.MutableMapping):
             all_keys = this_keys.intersection(that_keys)
             if all_keys is not None:
                 for key in all_keys:
-                    this = self._merge_value_array(key, this_mega_store[key])
-                    that = self._merge_value_array(key, that_mega_store[key])
-                    if not that.issubset(this):
+                    all_values = this_mega_store.get(key, []) + that_mega_store.get(key, [])
+                    exception_value = self._check_for_exceptions(all_values)
+                    if exception_value:
                         disallowed.append(key)
-
+                    else:
+                        this = self._merge_value_array(key, this_mega_store[key])
+                        that = self._merge_value_array(key, that_mega_store[key])
+                        if not that.issubset(this):
+                            disallowed.append(key)
         return disallowed
 
 
-
     def default(self):
-
         options = {}
         for k, v in self.store.iteritems():
             value = value_factory(v)

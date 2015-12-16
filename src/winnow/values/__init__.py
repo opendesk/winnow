@@ -2,6 +2,7 @@ from decimal import Decimal
 from numeric_values import NumericNumberWinnowValue, NumericWinnowValue
 from option_values import OptionWinnowValue, OptionNullWinnowValue, OptionResourceWinnowValue
 from boolean_values import BooleanWinnowValue
+from exception_values import ExceptionWinnowValue
 from winnow.constants import *
 from winnow import utils
 from winnow.exceptions import OptionsExceptionFailedValidation
@@ -137,7 +138,6 @@ def value_factory(input_value, key=None):
     else:
         pass
 
-    # print "found class", cls
     if cls:
         result = cls.from_value(value)
 
@@ -159,5 +159,6 @@ VALUE_TYPES = {
     VALUE_TYPE_SET_COLOUR: OptionWinnowValue,
     VALUE_TYPE_SET_SIZE: OptionWinnowValue,
     VALUE_TYPE_SET_RESOURCE: OptionResourceWinnowValue,
-    VALUE_TYPE_SET_NULL: OptionNullWinnowValue
+    VALUE_TYPE_SET_NULL: OptionNullWinnowValue,
+    VALUE_TYPE_EXCEPTION: ExceptionWinnowValue
 }

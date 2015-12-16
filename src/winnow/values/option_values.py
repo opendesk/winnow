@@ -1,6 +1,6 @@
 
 from base_values import BaseWinnowValue
-from winnow.exceptions import OptionsExceptionFailedValidation, OptionsExceptionIncompatibleTypes, OptionsExceptionEmptyOptionValues
+from winnow.exceptions import OptionsExceptionFailedValidation, OptionsExceptionIncompatibleTypes, OptionsExceptionSetWithException
 from winnow.constants import *
 from winnow.utils import json_dumps
 from winnow.utils import deep_copy_dict as deepcopy
@@ -254,7 +254,7 @@ class OptionStringWinnowValue(OptionWinnowValue):
                 if this_options is not None:
                     try:
                         new_value[u"options"] = OptionsSet(this_options).merge(OptionsSet(other_options)).store
-                    except OptionsExceptionEmptyOptionValues as e:
+                    except OptionsExceptionSetWithException as e:
                         new_value = None
 
                 default = self._default
@@ -592,7 +592,7 @@ class OptionResourceWinnowValue(OptionStringWinnowValue):
                 if this_options is not None:
                     try:
                         new_value[u"options"] = OptionsSet(this_options).merge(OptionsSet(other_options)).store
-                    except OptionsExceptionEmptyOptionValues as e:
+                    except OptionsExceptionSetWithException as e:
                         new_value = None
 
 

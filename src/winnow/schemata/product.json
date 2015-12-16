@@ -39,6 +39,7 @@
                     "pattern": "product"
                 },
                 "options": {"type": "object"},
+                "errors": {},
                 "upstream": {"type": "string"},
                 "upstream_at": {"type": "string"},
                 "licenses": {},

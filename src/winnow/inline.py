@@ -1,6 +1,6 @@
 from winnow.utils import deep_copy_dict as deepcopy
 from winnow import utils
-from winnow.exceptions import OptionsExceptionReferenceError
+from winnow.exceptions import OptionsExceptionReferenceError, OptionsExceptionSetWithException
 from winnow.options import OptionsSet
 
 
@@ -15,7 +15,7 @@ def _lookup_and_hash_ref(reference, doc, source, options, node, ref_hashes, defa
     return found
 
 
-def _merge_option_dicts(source, options_a, options_b, ref_doc_a, ref_doc_b):
+def _merge_option_dicts(source, options_a, options_b, ref_doc_a, ref_doc_b, errors=[]):
 
     # expand the options dicts collecting their replaced refs
     ref_hashes = {}
@@ -27,7 +27,21 @@ def _merge_option_dicts(source, options_a, options_b, ref_doc_a, ref_doc_b):
     set_a = OptionsSet(options_a)
     set_b = OptionsSet(options_b)
 
-    merged_options = set_a.merge(set_b).store
+    #catch the exception and add some info
+
+    try:
+        merged_options = set_a.merge(set_b).store
+    except OptionsExceptionSetWithException as e:
+        errors.append(e.exception_infos)
+        merged_options = e.set.store
+        for ex_info in e.exception_infos:
+            ex_info["context"] = {
+                "type_a": ref_doc_a.get("type"),
+                "type_b": ref_doc_b.get("type"),
+                "path_a": ref_doc_a.get("path"),
+                "path_b": ref_doc_b.get("path")
+            }
+
     # un merge unchanged refs by looking at the ref_hashes
     restore_unchanged_refs(merged_options, ref_hashes)
 
