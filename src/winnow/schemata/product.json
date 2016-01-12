@@ -20,6 +20,7 @@
                 "base": {},
                 "version": {},
                 "changes": {},
+                "costs": {},
                 "shortcode": {},
                 "estimated_cost": {
                     "type": "object",

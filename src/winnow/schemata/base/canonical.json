@@ -30,6 +30,28 @@
         "changes": {
             "type": "string"
         },
+        "costs": {
+            "type": "object",
+            "patternProperties": {
+                "^[/][/.\\w-]{,254}$": {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "type": "number"
+                        },
+                        "currency": {
+                            "type": "string"
+                        },
+                        "is_taxable": {
+                            "type": "boolean"
+                        },
+                        "type": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "shortcode": {
             "type": "string"
         },
