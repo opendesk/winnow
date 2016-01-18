@@ -100,21 +100,22 @@ def default_choices(source, scopes):
 
 def quantify(source, target, doc, validation=True):
 
-    quantity_options =  {
-            u"type": u"numeric::range",
-            u"name": u"Quantity",
-            u"default": Decimal("1"),
-            u"max": Decimal("100"),
-            u"min": Decimal("1"),
-        }
-
+    default_quantity = {
+        u"type": u"numeric::range",
+        u"name": u"Quantity",
+        u"default": Decimal("1"),
+        u"max": Decimal("100"),
+        u"min": Decimal("1"),
+    }
 
     options_dict = source.get_options_dict()
-    options_dict["quantity"] = quantity_options
+    options_dict.setdefault('quantity', default_quantity)
 
     new_doc = deepcopy(doc)
     new_doc[OPTIONS_KEY] = options_dict
+
     target.clone_history_from(source)
+
     _add_start_if_needed(source, target)
     _set_doc(target, new_doc, validation=validation)
 
