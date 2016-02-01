@@ -34,19 +34,22 @@
             "type": "object",
             "patternProperties": {
                 "^[/][/.\\w-]{,254}$": {
-                    "type": "object",
-                    "properties": {
-                        "value": {
-                            "type": "number"
-                        },
-                        "currency": {
-                            "type": "string"
-                        },
-                        "is_taxable": {
-                            "type": "boolean"
-                        },
-                        "type": {
-                            "type": "string"
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "value": {
+                                "type": "number"
+                            },
+                            "currency": {
+                                "type": "string"
+                            },
+                            "is_taxable": {
+                                "type": "boolean"
+                            },
+                            "type": {
+                                "type": "string"
+                            }
                         }
                     }
                 }
