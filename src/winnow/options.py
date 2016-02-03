@@ -182,7 +182,6 @@ class OptionsSet(collections.MutableMapping):
             value = value_factory(v)
             options[k] = value.default
             if isinstance(value, OptionWinnowValue):
-                default_value_key = value.default
                 child_options = value.get_value_options(value.default)
                 if child_options is not None:
                     childSet = OptionsSet(child_options)

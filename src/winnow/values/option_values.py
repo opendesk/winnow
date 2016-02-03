@@ -34,7 +34,6 @@ class OptionWinnowValue(BaseWinnowValue):
         value = self.values_lookup.get(value_id)
         if value is None and value_id.startswith("$ref:"):
             value = self.values_lookup.get(value_id[5:])
-
         if isinstance(value, unicode):
             return None
         return value.get(u"options")
@@ -154,7 +153,14 @@ class OptionStringWinnowValue(OptionWinnowValue):
 
     @property
     def default(self):
-        return self.values_lookup.keys()[0] if self._default is None else self._default
+        first = self.values_lookup.keys()[0]
+        if self._default is None:
+            return first
+        if not self._default in self.values_lookup:
+            return first
+        return self._default
+
+
 
     #
     # @property
@@ -453,14 +459,29 @@ class OptionResourceWinnowValue(OptionStringWinnowValue):
 
     @property
     def default(self):
+
         # should return a path WITH a ref at the front
         default = self._default if self._default is not None else self.values_lookup.keys()[0]
+
+        # first ensure that any non string value in _default actually refers to a value we have
+        first = self.values_lookup.keys()[0]
+        if self._default is None:
+            default = first
+        elif type(default) != dict and not self._default in self.values_lookup:
+            default = first
+        else:
+            default = self._default
+
+        # if its a dict get its path
         if type(default)== dict:
             default = default["path"]
         # if default.startswith("$ref:"):
         #     default = default[5:]
+
+        # if it doesnt have a ref add one
         if not default.startswith("$ref:"):
             default = "$ref:%s" % default
+
         return default
 
     #
