@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # product
 
 A product is a family of versions of a design that are defined by a set of options.

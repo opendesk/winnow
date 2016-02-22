@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # fileset
 
 A set of files that are useful for making all or a subset of a product family

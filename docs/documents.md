@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # documents 
 
 Some winnow documents represent named resources others do not. All documents have these attributes 

@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # winnow
 
 Winnow is a json exchange format for publishing families of configurable products. It has several distinct parts:

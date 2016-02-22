@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # options and values
 
 The options set is the core of winnows functionality. Each key in an options object is a named option and its value describes a set of possible values for this key, for example available colours or sizes - like this:

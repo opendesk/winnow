@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # range
 
 A collection of related designs with common authorship.
