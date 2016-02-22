@@ -2,10 +2,11 @@
 layout: default
 ---
 
-# options and values
+# options
 
 The options set is the core of winnows functionality. Each key in an options object is a named option and its value describes a set of possible values for this key, for example available colours or sizes - like this:
 
+ 
  ```json
  {
     "options":{
@@ -23,7 +24,7 @@ Winnow provides both a json language for defining these options and a set of ope
 
 There are currently three main types of value for options set, numeric and boolean. In the example above ```"colour"``` is a set, ```"wheels"``` is a numeric and ```"varnished"``` is a boolean. These types can be written to include additional information and have sub-types. 
 
-Currently there are seven types and sub-types of value you can use:
+Currently there are six types and sub-types of value you can use:
 
 + **set::string**
 + **numeric::number**
@@ -32,17 +33,17 @@ Currently there are seven types and sub-types of value you can use:
 + **numeric::step**
 + **boolean**
 
-## set values
-
-Set value types are used to express discrete optional variation in a product attribute. There are two set types, string and resource. String values are used to express any arbitrary values types, and resource types refer to other winnow resource documents by path.
-
 ### set::string
 
-+ **type** - The type of value, One of the six types below  *(required)*
+Sets strings are used to express discrete optional variation in a product attribute. String values are used to express any arbitrary values types. They can also be used to refer to other resources by using references in their values.
+
+To express a choice between other resource documents references can be used as the values. See [references](references.html)
+
++ **type** - set::string
 + **name** - A display name  *(optional)*
 + **scopes** - A list of scopes that limit the visibility of this value in the winnow pipeline *(optional)*
 + **description** - A short description  *(optional)*
-+ **image_uri** - A reference to an image used to represent this range. Given as an object with a single key "asset" and a value giving a path relative to the location of this document. *(optional)*
++ **images**  - A array of images. Each is an object with the key ```asset``` giving a relative file path and ```type``` giving further usage information. *(array, optional)*
 + **values** - A list of string values objects  *(required)*
 + **default** - The value in the default value object  *(optional)*
 
@@ -192,6 +193,7 @@ set::string can also contain nested options sets. The parent of a nested option 
     ]
 }
 ```
+
 
 ## numeric values
 
@@ -364,3 +366,4 @@ A boolean value is normally written as ```[true, false]```. The long version loo
     "varnished" : [true, false]
  }
  ```
+ 

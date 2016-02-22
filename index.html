@@ -31,7 +31,9 @@
           <h1>
 <a id="winnow" class="anchor" href="#winnow" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>winnow</h1>
 
-<p>Winnow is a json interchange format for publishing families of configurable products. It has several distinct parts:</p>
+<p>Winnow is a json interchange format for publishing families of configurable products. </p>
+
+<p>It has several distinct parts:</p>
 
 <ul>
 <li>A set of json schemata for documents describing products and associated information.</li>
@@ -40,14 +42,15 @@
 <li>A python library that implements these operations</li>
 </ul>
 
-<p>In order to write and publish winnow documents you use the first two of these as they define how winnow documents are constructed. To apply logical operations to, and manipulate, winnow documents you will need to understand winnow's operations and it's library that implements them.</p>
+<p>In order to write and publish winnow documents you use the first two of these as they define how winnow documents are constructed.
+    To apply logical operations to, and manipulate, winnow documents you will need to understand winnow's operations and it's library that implements them.</p>
 
 <h2>
 <a id="resources-and-documents" class="anchor" href="#resources-and-documents" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>resources and documents</h2>
 
-<p>Some winnow documents describe named resources others do not. </p>
+<p>Most winnow documents describe named resources. Resource documents are discoverable, composed and versioned.</p>
 
-<p>Resource documents have certain features: they are discoverable at a permanent url defined in the document itself; they are versioned and use Semantic Version numbers; these versions are themselves discoverable and resources may inherit from another resource of the same type.</p>
+<p>You can read about  <a href="documents.html">resource documents in more detail here</a> and how they are composed with <a href="references.html">references here</a></p>
 
 <p>Eight resource types are currently defined in winnow. Follow links to see their full descriptions.</p>
 
@@ -70,12 +73,6 @@
 <em>context</em> - An collection of options used to filter or extend a product's options</li>
 </ul>
 
-<p>Winnow also defines two document types that are not named resources, but are created as intermediate files during processing:</p>
-
-<ul>
-<li><em>choice</em></li>
-<li><em>quantified_configuration</em></li>
-</ul>
 
 <h2>
 <a id="validation" class="anchor" href="#validation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>validation</h2>
@@ -113,6 +110,7 @@
 <li>
 <em>add_doc</em> </li>
 <li><em>allows</em></li>
+<li><em>is_allowed</em></li>
 <li><em>merge</em></li>
 <li><em>scope</em></li>
 <li><em>default_choices</em></li>
@@ -125,8 +123,6 @@
 <li><em>validate</em></li>
 </ul>
 
-<h2>
-<a id="library" class="anchor" href="#library" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>library</h2>
         </section>
 
         <aside id="sidebar">
