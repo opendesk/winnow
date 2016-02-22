@@ -2,8 +2,6 @@
 layout: default
 ---
 
-{% include content.md %}
-
 # winnow
 
 Winnow is a json interchange format for publishing families of configurable products. It has several distinct parts:
