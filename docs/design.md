@@ -1,6 +1,8 @@
 ---
-title: design
+layout: default
 ---
+
+{% include content.md %}
 
 # design
 
