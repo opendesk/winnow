@@ -2,8 +2,6 @@
 layout: default
 ---
 
-{% include content.md %}
-
 # design
 
 A design
