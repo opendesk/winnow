@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='winnow',
-    version='0.1.4',
+    version='0.1.5',
     description='Winnow is a JSON-schema based library for publishing and manipulating families of products.',
     url='https://github.com/opendesk/winnow',
     classifiers=[
