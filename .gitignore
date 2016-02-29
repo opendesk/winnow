@@ -3,3 +3,7 @@
 *.pyc
 *.pyo
 src/winnow.egg-info/
+
+Gemfile
+Gemfile.lock
+_site/

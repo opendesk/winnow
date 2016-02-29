@@ -409,6 +409,11 @@ class OptionNullWinnowValue(OptionStringWinnowValue):
         return None
 
 
+    @property
+    def default(self):
+        return None
+
+
     def isdisjoint(self, other):
         return False
 
