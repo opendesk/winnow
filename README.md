@@ -50,7 +50,7 @@ Some winnow documents have a top level ```options``` attribute.  This object des
  {
     "options":{
         "colour": ["red", "blue", "green"],
-        "size": ["big", "small],
+        "size": ["big", "small"],
         "wheels": [4, 6]
      }
      ...
