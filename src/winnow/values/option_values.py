@@ -30,6 +30,9 @@ class OptionWinnowValue(BaseWinnowValue):
         return len(self.values_lookup)
 
 
+    def get_default_value_options(self):
+        return self.get_value_options(self.default)
+
     def get_value_options(self, value_id):
         value = self.values_lookup.get(value_id)
         if value is None and value_id.startswith("$ref:"):
@@ -419,6 +422,10 @@ class OptionNullWinnowValue(OptionStringWinnowValue):
 
     def issubset(self, other):
         return isinstance(other, OptionNullWinnowValue)
+
+
+    def get_default_value_options(self):
+        return self._get_options()
 
 
     def _get_options(self):
