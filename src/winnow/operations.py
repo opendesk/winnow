@@ -109,7 +109,7 @@ def quantify(source, target, doc, validation=True):
     }
 
     options_dict = source.get_options_dict()
-    options_dict.setdefault('quantity', default_quantity)
+    options_dict.setdefault(u'quantity', default_quantity)
 
     new_doc = deepcopy(doc)
     new_doc[OPTIONS_KEY] = options_dict
@@ -121,7 +121,6 @@ def quantify(source, target, doc, validation=True):
 
     target.add_history_action(action=HISTORY_ACTION_QUANTIFY,
                               output_type=doc.get("type"))
-
 
 
 def _trim_out_off_scope(node, scopes):

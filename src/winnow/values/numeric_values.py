@@ -216,8 +216,8 @@ class NumericNumberWinnowValue(NumericWinnowValue):
     def as_json(self):
 
         as_json =  {
-            "type": self.type,
-            "value": from_decimal(self.number)
+            u"type": self.type,
+            u"value": from_decimal(self.number)
         }
 
         return self.update_with_info(as_json)
@@ -333,8 +333,8 @@ class NumericSetWinnowValue(NumericWinnowValue):
 
     def as_json(self):
         as_json = {
-            "type": self.type,
-            "value": [from_decimal(d) for d in list(self.as_list)]
+            u"type": self.type,
+            u"value": [from_decimal(d) for d in list(self.as_list)]
         }
 
         info = self.update_with_info(as_json)
@@ -410,9 +410,9 @@ class NumericRangeWinnowValue(NumericWinnowValue):
 
     def as_json(self):
         as_json =  {
-            "type": self.type,
-            "max": from_decimal(self.max),
-            "min": from_decimal(self.min),
+            u"type": self.type,
+            u"max": from_decimal(self.max),
+            u"min": from_decimal(self.min),
         }
 
         return self.update_with_info(as_json)
@@ -515,11 +515,11 @@ class NumericStepWinnowValue(NumericRangeWinnowValue):
 
     def as_json(self):
         as_json = {
-            "type": self.type,
-            "max": from_decimal(self.max),
-            "min": from_decimal(self.min),
-            "start": from_decimal(self.start),
-            "step": from_decimal(self.step)
+            u"type": self.type,
+            u"max": from_decimal(self.max),
+            u"min": from_decimal(self.min),
+            u"start": from_decimal(self.start),
+            u"step": from_decimal(self.step)
         }
 
         return self.update_with_info(as_json)

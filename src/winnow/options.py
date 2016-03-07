@@ -97,7 +97,6 @@ class OptionsSet(collections.MutableMapping):
         return result
 
     def _check_for_exceptions(self, all_values):
-
         for v in all_values:
             if isinstance(v, ExceptionWinnowValue):
                 return v
