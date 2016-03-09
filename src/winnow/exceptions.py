@@ -8,26 +8,26 @@ class OptionsExceptionIncompatibleTypes(OptionsExceptionBase):pass
 
 class OptionsExceptionNotAllowed(OptionsExceptionBase):pass
 
-# class OptionsExceptionEmptyOptionValues(OptionsExceptionBase):
-#
-#     def __init__(self, key, values):
-#         self.key = key
-#         self.values = values
-#          msg = "The key %s has no possible values when %s are merged" % (key, [v.as_json() for v in values])
-#         super(OptionsExceptionEmptyOptionValues, self).__init__(msg)
-#
-#     def as_json(self):
-#
-#         return {
-#             "key": self.key,
-#             "type": VALUE_TYPE_EXCEPTION,
-#             "msg": self.message,
-#             "values": [v.as_json() for v in self.values]
-#         }
-#
-#     @classmethod
-#     def from_value(cls, value):
-#         cls()
+class OptionsExceptionEmptyOptionValues(OptionsExceptionBase):
+
+    def __init__(self, key, values):
+        self.key = key
+        self.values = values
+        msg = "The key %s has no possible values when %s are merged" % (key, [v.as_json() for v in values])
+        super(OptionsExceptionEmptyOptionValues, self).__init__(msg)
+
+    def as_json(self):
+
+        return {
+            "key": self.key,
+            "type": VALUE_TYPE_EXCEPTION,
+            "msg": self.message,
+            "values": [v.as_json() for v in self.values]
+        }
+
+    @classmethod
+    def from_value(cls, value):
+        cls()
 
 
 

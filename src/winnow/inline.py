@@ -1,6 +1,6 @@
 from winnow.utils import deep_copy_dict as deepcopy
 from winnow import utils
-from winnow.exceptions import OptionsExceptionReferenceError, OptionsExceptionSetWithException
+from winnow.exceptions import OptionsExceptionReferenceError, OptionsExceptionSetWithException, OptionsExceptionEmptyOptionValues
 from winnow.options import OptionsSet
 
 
@@ -27,20 +27,39 @@ def _merge_option_dicts(source, options_a, options_b, ref_doc_a, ref_doc_b, erro
     set_a = OptionsSet(options_a)
     set_b = OptionsSet(options_b)
 
-    #catch the exception and add some info
-
     try:
         merged_options = set_a.merge(set_b).store
     except OptionsExceptionSetWithException as e:
-        errors.append(e.exception_infos)
         merged_options = e.set.store
         for ex_info in e.exception_infos:
-            ex_info["context"] = {
-                "type_a": ref_doc_a.get("type"),
-                "type_b": ref_doc_b.get("type"),
-                "path_a": ref_doc_a.get("path"),
-                "path_b": ref_doc_b.get("path")
-            }
+            key = ex_info[0]
+            values = ex_info[1]
+
+            msg = """***** Merge Error ****
+
+Merging:
+
+type: {type_a}
+path: {path_a}
+
+with
+
+type: {type_b}
+path: {path_b}
+
+Gave an empty result for the key: {key}
+
+When using these values:
+{values}
+        """.format(type_a=ref_doc_a.get("type"),
+                   type_b=ref_doc_b.get("type"),
+                   path_a=ref_doc_a.get("path"),
+                   path_b=ref_doc_b.get("path"),
+                   key=key,
+                   values = "\n".join([utils.json_dumps(v.as_json()) for v in values])
+                   )
+
+            errors.append(msg)
 
     # un merge unchanged refs by looking at the ref_hashes
     restore_unchanged_refs(merged_options, ref_hashes)
@@ -178,7 +197,8 @@ def inline_refs(node, doc, source, ref_hashes):
                 else:
                     inline_refs(child, doc, source, ref_hashes)
             if isinstance(child, str):
-                raise Exception("we shouldnt be getting a string in inline_refs {}".format(child))
+                if not "Merge Error" in child:
+                    raise Exception("we shouldnt be getting a string in inline_refs {}".format(child))
             if isinstance(child, unicode):
                 if child.startswith(u"$ref:"):
                     node[i] = _lookup_and_hash_ref(child[len(u"$ref:"):], doc, source, None, child, ref_hashes)

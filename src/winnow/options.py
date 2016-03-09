@@ -125,9 +125,11 @@ class OptionsSet(collections.MutableMapping):
                 merged_value = exception_value
             else:
                 merged_value = self._merge_value_array(key, all_values)
+
             options[key] = merged_value.as_json()
             if isinstance(merged_value, ExceptionWinnowValue):
-                emptyValues.append(options[key])
+                options[key] = None
+                emptyValues.append((key, all_values))
 
         options_set = OptionsSet(options)
 

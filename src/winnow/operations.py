@@ -52,6 +52,15 @@ def merge(source_a, source_b, target, doc, validation=True):
 
     errors = []
 
+    # carry any errors through
+    errors_a = doc_a.get("errors")
+    if errors_a:
+        errors += errors_a
+
+    errors_b = doc_b.get("errors")
+    if errors_b:
+        errors += errors_b
+
     merged_options = inline._merge_option_dicts(source_a, options_a, options_b, doc_a, doc_b, errors=errors)
 
     # put this merged options into a copy of the doc
