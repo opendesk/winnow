@@ -177,9 +177,7 @@ class TestNestedOptionSieveCreation(unittest.TestCase):
     def test_intersection(self):
         """
         if there are matching values both with options then their options are merged
-
         """
-
 
         NESTED_OPTIONS_STRING_2 = {
             u"type": VALUE_TYPE_SET_STRING,

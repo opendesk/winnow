@@ -178,7 +178,7 @@ def inline_refs(node, doc, source, ref_hashes):
                 else:
                     inline_refs(child, doc, source, ref_hashes)
             if isinstance(child, str):
-                raise Exception("we shouldnt be getting a string in inline_refs")
+                raise Exception("we shouldnt be getting a string in inline_refs {}".format(child))
             if isinstance(child, unicode):
                 if child.startswith(u"$ref:"):
                     node[i] = _lookup_and_hash_ref(child[len(u"$ref:"):], doc, source, None, child, ref_hashes)

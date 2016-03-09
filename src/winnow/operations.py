@@ -39,6 +39,8 @@ def filter_allowed_by(filter_source, possible):
     return [p for p in possible if is_allowed_by(filter_source, p)]
 
 
+
+
 def merge(source_a, source_b, target, doc, validation=True):
 
     doc_a = source_a.get_doc()

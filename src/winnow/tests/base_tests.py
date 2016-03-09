@@ -54,8 +54,14 @@ class TestSieveAllows(unittest.TestCase):
         configured_option = deepcopy(BASE_PRODUCT)
         configured_option[u"options"][u"color"] = [u"red", u"green"]
 
+        # the values for given keys are a subset
         configured_version = WinnowVersion.add_doc(self.db, configured_option, {})
         self.assertTrue(winnow.allows(self.base_version, configured_version))
+        self.assertFalse(winnow.allows(configured_version, self.base_version))
+
+        self.assertFalse(winnow.is_allowed_by(self.base_version, configured_version))
+        self.assertTrue(winnow.is_allowed_by(configured_version, self.base_version))
+
 
         configured_option = deepcopy(BASE_PRODUCT)
         configured_option[u"options"][u"color"] = [u"red", u"green"]
@@ -65,13 +71,12 @@ class TestSieveAllows(unittest.TestCase):
         self.assertTrue(winnow.allows(self.base_version, configured_version))
 
 
-
     def test_allows_subset_without_a_key(self):
 
         configured_option = deepcopy(BASE_PRODUCT)
         del configured_option[u"options"][u"color"]
         configured_version = WinnowVersion.add_doc(self.db, configured_option, {})
-        self.assertTrue(winnow.allows(self.base_version, configured_version))
+        self.assertTrue(winnow.allows(configured_version, self.base_version))
 
 
     def test_allows_subset_with_an_extra_key(self):
@@ -86,12 +91,27 @@ class TestSieveAllows(unittest.TestCase):
 
 
     def test_allows_fails(self):
-
         configured_option = deepcopy(BASE_PRODUCT)
         configured_option[u"options"][u"color"] = u"purple"
         configured_version = WinnowVersion.add_doc(self.db, configured_option, {})
         self.assertFalse(winnow.allows(self.base_version, configured_version))
         self.assertFalse(self.base_version.allows(configured_version))
+
+
+
+
+    #
+    # def test_allows_fails(self):
+    #
+    #     configured_option = deepcopy(BASE_PRODUCT)
+    #     configured_option[u"options"][u"color"] = u"purple"
+    #     configured_version = WinnowVersion.add_doc(self.db, configured_option, {})
+    #     self.assertFalse(winnow.allows(self.base_version, configured_version))
+    #     self.assertFalse(self.base_version.allows(configured_version))
+
+
+
+
 
 
 
