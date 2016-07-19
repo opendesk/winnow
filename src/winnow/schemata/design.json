@@ -125,7 +125,8 @@
                 "source",
                 "path",
                 "version",
-                "changes"
+                "changes",
+                "instructions_template_image"
             ]
         }
     ]
