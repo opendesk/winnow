@@ -122,6 +122,35 @@
                         }
                     ]
                 },
+                "injects": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "pattern": "inject"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "category": {
+                                "type": "string"
+                            },
+                            "file": {
+                                "properties": {
+                                    "asset": {
+                                        "type": "string"
+                                    },
+                                    "type":{
+                                        "type": "string"
+                                    }
+                                },
+                                "required": ["asset"]
+                            }
+                        }
+                    }
+                },
                 "is_default": {},
                 "is_public": {}
             },
